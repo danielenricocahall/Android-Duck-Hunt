@@ -6,6 +6,18 @@ import java.util.ArrayList;
  * Created by danie on 11/25/2017.
  */
 
+
+/* There's a fundamental flaw here.
+    While I've made this pretty OOPish, the abstraction means that
+    vectors of differing dimensions can be manipulated together
+    which shouldn't be the case (it could break things if not careful). I could add dimensional checks for safety -
+    but it's midnight on a Saturday, I'm drinking a chocolate milk stout, and
+    I'm feeling lazy. Maybe later...*/
+/*Also, some extra computations are being used in the 1D case which could be refactored
+    if they are found to be a performance bottleneck
+ */
+
+
 public abstract class Vector {
     protected float[] dimensions;
     protected float magnitude;
@@ -69,9 +81,7 @@ public abstract class Vector {
 
     public void setX(float x)
     {
-        dimensions[0] = x;
-        computeMagnitude();
-        computeTheta();
+        setDimension(0, x);
     }
 
     public void setDimension(int i, float v)

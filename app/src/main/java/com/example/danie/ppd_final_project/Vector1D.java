@@ -9,20 +9,16 @@ public class Vector1D extends Vector {
     public Vector1D(float x)
     {
        dimensions = new float[]{x};
-        dimensions[0] = x;
         magnitude = x;
-        //theta = 0;
+        theta = 0.0f;
     }
 
     public Vector1D()
     {
         this(0.0f);
-    }
+    }//added a default constructor for funsies
 
-    public Vector1D(Vector1D vec)
-    {
-        dimensions = vec.dimensions;
-    }
+    public Vector1D(Vector1D vec) {this(vec.dimensions[0]);}//effectively a constructor for copying another vector
 
     public void computeTheta()
     {

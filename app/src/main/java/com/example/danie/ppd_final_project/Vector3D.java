@@ -18,12 +18,8 @@ public class Vector3D extends Vector {
     public Vector3D()
     {
         this(0.0f, 0.0f, 0.0f);
-    }
-    public Vector3D(Vector2D vec)
-    {
-        dimensions = new float[]{vec.dimensions[0],vec.dimensions[1], vec.dimensions[2]};
-
-    }
+    }//added a default constructor for funsies
+    public Vector3D(Vector2D vec) {this(vec.dimensions[0],vec.dimensions[1], vec.dimensions[2]);}//effectively a constructor for copying another vector
     public void setY(float y)
     {
         setDimension(1,y);
@@ -43,7 +39,7 @@ public class Vector3D extends Vector {
     {
         phi = (float)Math.atan2(dimensions[1], dimensions[0]);
     }
-    public Vector crossProduct(Vector vector)
+    public Vector crossProduct(Vector vector) //not sure if this will be used but if so this 100% needs to be double checked
     {
         return new Vector3D(
                 dimensions[1]*vector.dimensions[2]-dimensions[2]*vector.dimensions[1],
