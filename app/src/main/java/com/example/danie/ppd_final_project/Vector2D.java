@@ -1,37 +1,69 @@
 package com.example.danie.ppd_final_project;
 
+import java.util.ArrayList;
+
 /**
  * Created by danie on 11/25/2017.
  */
 
-public class Vector2D extends Vector {
+
+
+public class Vector2D {
+    public float x;
+    public float y;
+    //public float theta;
+
 
 
     public Vector2D(float x, float y)
     {
-        dimensions = new float[]{x,y};
-        theta = (float)Math.atan2(y,x);
-        computeMagnitude();
+        this.x = x;
+        this.y = y;
     }
+
     public Vector2D()
     {
         this(0.0f, 0.0f);
-    } //added a default constructor for funsies
-    public Vector2D(Vector2D vec) {this(vec.dimensions[0],vec.dimensions[1]);}//effectively a constructor for copying another vector
-    public Vector crossProduct(Vector vector)
+    }
+    public void add(Vector2D vector)
     {
-        return new Vector3D(0, 0,dimensions[0]*vector.dimensions[1] - dimensions[1]*dimensions[0]);
+        this.x += vector.x;
+        this.y += vector.y;
+    }
+    public void subtract(Vector2D vector)
+    {
+        this.x -= vector.x;
+        this.y -= vector.y;
     }
 
-    public void setY(float y)
+    public float computeMagnitude()
     {
-        setDimension(1,y);
+        return this.x*this.x + this.y*this.y;
     }
 
-    public void computeTheta()
+    public void scalarMultiply(float a)
     {
-        theta = (float)Math.atan2(dimensions[1], dimensions[0]);
+        this.x *= a;
+        this.y *= a;
     }
+
+    public float dotProduct(Vector2D vector)
+    {
+        return this.x*vector.x + this.y*vector.y;
+    }
+
+    public void normalize()
+    {
+        float magnitude = computeMagnitude();
+        this.x /= magnitude;
+        this.y /= magnitude;
+    }
+
+    public float getTheta()
+    {
+        return (float) Math.atan2(this.y, this.x);
+    }
+
 
 
 }

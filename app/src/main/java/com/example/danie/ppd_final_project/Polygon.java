@@ -67,19 +67,19 @@ public class Polygon extends GameObject {
         for(int ii = 0; ii < length-1; ++ii )
         {
 
-            temp = new Vector2D(position);
-            temp2 = new Vector2D(position);
+            temp = new Vector2D(position.x, position.y);
+            temp2 = new Vector2D(position.x, position.y);
 
             temp.add(points[ii]);
             temp2.add(points[ii+1]);
             //temp2 = Vector2D.addVectors(position, points[ii+1]);
-            canvas.drawLine(temp.dimensions[0], temp.dimensions[1], temp2.dimensions[0], temp2.dimensions[1], paint);
+            canvas.drawLine(temp.x, temp.y, temp2.x, temp2.y, paint);
         }
-        temp = new Vector2D(position);
-        temp2 = new Vector2D(position);
+        temp = new Vector2D(position.x, position.y);
+        temp2 = new Vector2D(position.x, position.y);
         temp.add(points[0]);
         temp2.add(points[length-1]);
-        canvas.drawLine(temp.dimensions[0], temp.dimensions[1], temp2.dimensions[0], temp2.dimensions[1], paint);
+        canvas.drawLine(temp.x, temp.y, temp2.x, temp2.y, paint);
     }
 
     @Override
