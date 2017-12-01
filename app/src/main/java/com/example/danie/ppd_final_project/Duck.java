@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 public class Duck extends GameObject {
 
     public Vector2D position;
+    private boolean isAlive;
 
     public Duck()
     {

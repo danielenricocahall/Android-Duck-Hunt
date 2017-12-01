@@ -44,7 +44,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
         //gameObjects.add(new StarField(600, 3.0f));
-        gameObjects.add(new Polygon(new Vector2D(getScreenWidth()/2.0f, getScreenHeight()/2.0f), 5, 60.0f));
+        //gameObjects.add(new Polygon(new Vector2D(getScreenWidth()/2.0f, getScreenHeight()/2.0f), 5, 60.0f));
         this.setOnTouchListener(this);
     }
 
