@@ -29,11 +29,10 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     private long currentTimeMillis;
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private Paint paint;
-    private int numSides = 3;
 
-    private static int SCREEN_HEIGHT;
+    public static int SCREEN_HEIGHT;
 
-    private static int SCREEN_WIDTH;
+    public static int SCREEN_WIDTH;
 
     public static float DELTA_TIME;
 
@@ -43,9 +42,12 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
-        //gameObjects.add(new StarField(600, 3.0f));
-        //gameObjects.add(new Polygon(new Vector2D(getScreenWidth()/2.0f, getScreenHeight()/2.0f), 5, 60.0f));
-        this.setOnTouchListener(this);
+
+        gameObjects.add(new Duck(getContext(),SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+        gameObjects.add(new Duck(getContext(),SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+        gameObjects.add(new Duck(getContext(),SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+
+        //this.setOnTouchListener(this);
     }
 
     @Override
@@ -56,7 +58,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
             update();
             draw();
             currentTimeMillis = System.currentTimeMillis();
-            DELTA_TIME = (currentTimeMillis = previousTimeMillis)/1000.0f;
+            DELTA_TIME = (currentTimeMillis - previousTimeMillis)/1000.0f;
             try{
                 gameThread.sleep(TIME_BETWEEN_FRAMES);
             }
@@ -81,7 +83,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         if(surfaceHolder.getSurface().isValid())
         {
             Canvas canvas = surfaceHolder.lockCanvas();
-            canvas.drawColor(Color.argb(255,0,0,0));
+            canvas.drawColor(Color.WHITE);
 
             for(int ii = 0; ii < gameObjects.size(); ++ii)
             {
@@ -132,8 +134,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
-                gameObjects.add(new Polygon(new Vector2D(event.getX(), event.getY()), numSides, 60.0f));
-                numSides++;
+                //gameObjects.add(new Polygon(new Vector2D(event.getX(), event.getY()), numSides, 60.0f));
                 break;
             case MotionEvent.ACTION_UP:
                 break;
