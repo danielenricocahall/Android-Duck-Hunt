@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -29,12 +30,8 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     private long previousTimeMillis;
     private long currentTimeMillis;
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
-    private Paint paint;
-
     public static int SCREEN_HEIGHT;
-
     public static int SCREEN_WIDTH;
-
     public static float DELTA_TIME;
 
     public GameView(Context context, Point point) {
@@ -43,11 +40,9 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
-
-        gameObjects.add(new Duck(getContext(),new Random().nextInt(SCREEN_WIDTH), 1100.0f));
-        gameObjects.add(new Duck(getContext(),new Random().nextInt(SCREEN_WIDTH), 1100.0f));
-        gameObjects.add(new Duck(getContext(),new Random().nextInt(SCREEN_WIDTH), 1100.0f));
-
+        for(int ii = 0; ii < 5; ++ii) {
+            gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
+        }
         this.setOnTouchListener(this);
     }
 
@@ -73,10 +68,25 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
 
     public void update()
     {
-        for(int ii = 0; ii < gameObjects.size(); ++ii)
+        for (Iterator<GameObject> iterator = gameObjects.iterator(); iterator.hasNext();) {
+            GameObject gameObject = iterator.next();
+            if(gameObject.destroy)
+            {
+                iterator.remove();
+            }
+            else
+            {
+                gameObject.onUpdate();
+            }
+        }
+        /*for(int ii = 0; ii < gameObjects.size(); ++ii)
         {
             gameObjects.get(ii).onUpdate();
-        }
+            if(gameObjects.get(ii).destroy)
+            {
+                gameObjects.remove(ii);
+            }
+        }*/
     }
 
     public void draw()
@@ -142,13 +152,12 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
                         float delta_x = event.getRawX() - ((Duck) o).position.x;
                         float delta_y = event.getRawY() - ((Duck) o).position.y;
                         float distance = (float) Math.sqrt(delta_x*delta_x + delta_y*delta_y);
-                        if(distance < 200.0f)
+                        if(distance < 100.0f)
                         {
                             ((Duck) o).isAlive = false;
                         }
                     }
                 }
-                //gameObjects.add(new Polygon(new Vector2D(event.getX(), event.getY()), numSides, 60.0f));
                 break;
             case MotionEvent.ACTION_UP:
                 break;

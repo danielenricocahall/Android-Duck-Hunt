@@ -9,6 +9,8 @@ import android.graphics.Canvas;
 public abstract class GameObject {
 
 
+    public boolean destroy = false;
+
     public abstract void init();
 
     public abstract void onDraw(Canvas canvas);

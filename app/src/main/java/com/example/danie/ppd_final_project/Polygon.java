@@ -49,7 +49,6 @@ public class Polygon extends GameObject {
                     radius * (float)Math.sin(cumulativeRadians + accumulatedAngle));
             cumulativeRadians += deltaAngle;
         }
-       // points[points.length-1] =
     }
 
 

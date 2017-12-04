@@ -18,7 +18,6 @@ public class Duck extends GameObject {
 
     public Vector2D position;
     public boolean isAlive;
-    protected String bitmapName;
     protected Bitmap bitmap;
     protected Vector2D forward;
     protected Paint paint;
@@ -131,7 +130,7 @@ public class Duck extends GameObject {
     public void checkBorder()
     {
         Matrix matrix = new Matrix();
-        if (this.position.x > (GameView.getScreenWidth() -
+        if (this.position.x > (GameView.SCREEN_WIDTH -
                 bitmap.getWidth())) {
             this.position.x =
                     GameView.SCREEN_WIDTH - bitmap.getWidth();
@@ -150,6 +149,10 @@ public class Duck extends GameObject {
             this.forward.normalize();
             matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
             flipSprites(matrix);
+        }
+        if (this.position.y < 0 || this.position.y > (GameView.SCREEN_HEIGHT -
+                bitmap.getHeight())) {
+            this.destroy = true;
         }
     }
 
