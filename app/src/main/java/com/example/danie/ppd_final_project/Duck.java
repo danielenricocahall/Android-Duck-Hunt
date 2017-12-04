@@ -25,6 +25,7 @@ public class Duck extends GameObject {
     int frame = 0;
     int duckOrientation;
     float timeSinceShot;
+    int timeToSwitchOrientation;
 
     public Duck(Context context,
                 //String bitmapName,
@@ -36,15 +37,13 @@ public class Duck extends GameObject {
         forward.x = new Random().nextFloat();
         sprites = new Bitmap[4][3];
         duckOrientation = GameConstants.DIAGONAL;//they'll all start diagonally
-        int duck_type = new Random().nextInt(2);
+        int duck_type = new Random().nextInt(3);
         populateDuckSprites(duck_type, context);
         bitmap = sprites[0][new Random().nextInt(2)];//determines their initial flapping position
         boolean isFlipped = new Random().nextInt(1000) % 2 == 0;
         if(isFlipped)
         {
-            Matrix matrix = new Matrix();
-            matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
-            flipSprites(matrix);
+            flipSprites();
             forward.x *= -1.0f;
         }
         forward.normalize();
@@ -52,6 +51,7 @@ public class Duck extends GameObject {
         paint = new Paint();
         isAlive = true;
         timeSinceShot = 0.0f;
+        timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
     }
 
 
@@ -98,10 +98,14 @@ public class Duck extends GameObject {
             deltaPosition.scalarMultiply(speed *
                     GameView.DELTA_TIME);
             this.position.add(deltaPosition);
-            if (this.position.y < GameConstants.HORIZON) {
+            /*if (this.position.y < GameConstants.HORIZON) {
                 duckOrientation = GameConstants.BACK;
             } else {
                 duckOrientation = GameConstants.DIAGONAL;
+            }*/
+            if(frame > 0 && frame%timeToSwitchOrientation == 0)
+            {
+                duckOrientation = new Random().nextInt(3);
             }
             checkBorder();
         }
@@ -129,7 +133,6 @@ public class Duck extends GameObject {
 
     public void checkBorder()
     {
-        Matrix matrix = new Matrix();
         if (this.position.x > (GameView.SCREEN_WIDTH -
                 bitmap.getWidth())) {
             this.position.x =
@@ -138,8 +141,7 @@ public class Duck extends GameObject {
                     new Random().nextFloat() - 1.0f,
                     this.forward.y);
             this.forward.normalize();
-            matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
-            flipSprites(matrix);
+            flipSprites();
         }
         if (this.position.x < 0) {
             this.position.x = 0;
@@ -147,8 +149,7 @@ public class Duck extends GameObject {
                     new Random().nextFloat() + 1.0f,
                     this.forward.y);
             this.forward.normalize();
-            matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
-            flipSprites(matrix);
+            flipSprites();
         }
         if (this.position.y < 0 || this.position.y > (GameView.SCREEN_HEIGHT -
                 bitmap.getHeight())) {
@@ -156,11 +157,16 @@ public class Duck extends GameObject {
         }
     }
 
-    public void flipSprites(Matrix matrix)
+    public void flipSprites()
     {
+        Matrix matrix = new Matrix();
+        matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
         for(int i = 0; i<3; ++i)
         {
-            sprites[duckOrientation][i] = Bitmap.createBitmap(sprites[duckOrientation][i], 0, 0, sprites[duckOrientation][i].getWidth(), sprites[duckOrientation][i].getHeight(), matrix, true);
+            sprites[GameConstants.DIAGONAL][i] = Bitmap.createBitmap(sprites[GameConstants.DIAGONAL][i], 0, 0, sprites[GameConstants.DIAGONAL][i].getWidth(), sprites[GameConstants.DIAGONAL][i].getHeight(), matrix, true);
+            sprites[GameConstants.HORIZONTAL][i] = Bitmap.createBitmap(sprites[GameConstants.HORIZONTAL][i], 0, 0, sprites[GameConstants.HORIZONTAL][i].getWidth(), sprites[GameConstants.HORIZONTAL][i].getHeight(), matrix, true);
+            sprites[GameConstants.BACK][i] = Bitmap.createBitmap(sprites[GameConstants.BACK][i], 0, 0, sprites[GameConstants.BACK][i].getWidth(), sprites[GameConstants.BACK][i].getHeight(), matrix, true);
+
         }
     }
 
