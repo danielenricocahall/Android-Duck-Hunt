@@ -17,6 +17,10 @@ public class GameConstants {
     public static final int DIAGONAL = 0;
     public static final int HORIZONTAL = 1;
     public static final int BACK = 2;
+    public static final int DEFEAT = 3;
+
+    public static final float HORIZON = 100.0f;
+
 
 
 

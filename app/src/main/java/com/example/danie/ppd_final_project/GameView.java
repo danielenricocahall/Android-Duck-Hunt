@@ -12,6 +12,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by danie on 11/24/2017.
@@ -43,11 +44,11 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
 
-        gameObjects.add(new Duck(getContext(),SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-        gameObjects.add(new Duck(getContext(),SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
-        gameObjects.add(new Duck(getContext(),SCREEN_WIDTH/2, SCREEN_HEIGHT/2));
+        gameObjects.add(new Duck(getContext(),new Random().nextInt(SCREEN_WIDTH), 1100.0f));
+        gameObjects.add(new Duck(getContext(),new Random().nextInt(SCREEN_WIDTH), 1100.0f));
+        gameObjects.add(new Duck(getContext(),new Random().nextInt(SCREEN_WIDTH), 1100.0f));
 
-        //this.setOnTouchListener(this);
+        this.setOnTouchListener(this);
     }
 
     @Override
@@ -134,6 +135,19 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
+                for(GameObject o: gameObjects)
+                {
+                    if(o instanceof Duck)
+                    {
+                        float delta_x = event.getRawX() - ((Duck) o).position.x;
+                        float delta_y = event.getRawY() - ((Duck) o).position.y;
+                        float distance = (float) Math.sqrt(delta_x*delta_x + delta_y*delta_y);
+                        if(distance < 200.0f)
+                        {
+                            ((Duck) o).isAlive = false;
+                        }
+                    }
+                }
                 //gameObjects.add(new Polygon(new Vector2D(event.getX(), event.getY()), numSides, 60.0f));
                 break;
             case MotionEvent.ACTION_UP:
