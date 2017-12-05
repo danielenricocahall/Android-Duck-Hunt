@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
@@ -15,6 +14,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -31,7 +31,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     private static final int TIME_BETWEEN_FRAMES = 1000/DESIRED_FPS;
     private long previousTimeMillis;
     private long currentTimeMillis;
-    private ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private List<GameObject> gameObjects;
     public static int SCREEN_HEIGHT;
     public static int SCREEN_WIDTH;
     public static float DELTA_TIME;
@@ -46,6 +46,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
         paint = new Paint();
+        gameObjects = new ArrayList<>();
         dog = new Dog(getContext());
         gameObjects.add(dog);
         this.setOnTouchListener(this);
