@@ -92,17 +92,12 @@ public class Duck extends GameObject {
 
     @Override
     public void onUpdate() {
-        float speed = 100.0f; //pixels per second
+        float speed = 75.0f; //pixels per second
         if(isAlive) {
             Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
             deltaPosition.scalarMultiply(speed *
                     GameView.DELTA_TIME);
             this.position.add(deltaPosition);
-            /*if (this.position.y < GameConstants.HORIZON) {
-                duckOrientation = GameConstants.BACK;
-            } else {
-                duckOrientation = GameConstants.DIAGONAL;
-            }*/
             if(frame > 0 && frame%timeToSwitchOrientation == 0)
             {
                 duckOrientation = new Random().nextInt(3);
@@ -151,8 +146,7 @@ public class Duck extends GameObject {
             this.forward.normalize();
             flipSprites();
         }
-        if (this.position.y < 0 || this.position.y > (GameView.SCREEN_HEIGHT -
-                bitmap.getHeight())) {
+        if (this.position.y < 0 || this.position.y > GameView.SCREEN_HEIGHT - bitmap.getHeight()) {
             this.destroy = true;
         }
     }

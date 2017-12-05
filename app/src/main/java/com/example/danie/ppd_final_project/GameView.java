@@ -1,6 +1,8 @@
 package com.example.danie.ppd_final_project;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -33,17 +35,23 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     public static int SCREEN_HEIGHT;
     public static int SCREEN_WIDTH;
     public static float DELTA_TIME;
+    Paint paint;
+    Bitmap background;
 
     public GameView(Context context, Point point) {
-
         super(context);
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
-        for(int ii = 0; ii < 5; ++ii) {
+        paint = new Paint();
+        for(int ii = 0; ii < 3; ++ii) {
             gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
         }
+        gameObjects.add(new Dog(getContext()));
         this.setOnTouchListener(this);
+        background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
+                getResources(),
+                R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
     }
 
     @Override
@@ -79,14 +87,6 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
                 gameObject.onUpdate();
             }
         }
-        /*for(int ii = 0; ii < gameObjects.size(); ++ii)
-        {
-            gameObjects.get(ii).onUpdate();
-            if(gameObjects.get(ii).destroy)
-            {
-                gameObjects.remove(ii);
-            }
-        }*/
     }
 
     public void draw()
@@ -94,11 +94,10 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         if(surfaceHolder.getSurface().isValid())
         {
             Canvas canvas = surfaceHolder.lockCanvas();
-            canvas.drawColor(Color.WHITE);
-
-            for(int ii = 0; ii < gameObjects.size(); ++ii)
+            canvas.drawBitmap(background, 0.0f, 0.0f, paint);
+            for(GameObject gameObject: gameObjects)
             {
-                gameObjects.get(ii).onDraw(canvas);
+                gameObject.onDraw(canvas);
             }
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
