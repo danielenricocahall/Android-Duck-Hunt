@@ -22,7 +22,7 @@ public class Duck extends GameObject {
     protected Vector2D forward;
     protected Paint paint;
     protected Bitmap[][] sprites;
-    int frame = 0;
+    int frame;
     int duckOrientation;
     float timeSinceShot;
     int timeToSwitchOrientation;
@@ -40,7 +40,8 @@ public class Duck extends GameObject {
         duckOrientation = GameConstants.DIAGONAL;//they'll all start diagonally
         int duck_type = new Random().nextInt(3);
         populateDuckSprites(duck_type, context);
-        bitmap = sprites[0][new Random().nextInt(2)];//determines their initial flapping position
+        int frame = new Random().nextInt(3);
+        bitmap = sprites[0][frame];//determines their initial flapping position
         boolean isFlipped = new Random().nextInt(1000) % 2 == 0;
         if(isFlipped)
         {
@@ -53,7 +54,7 @@ public class Duck extends GameObject {
         isAlive = true;
         timeSinceShot = 0.0f;
         timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
-        timeToSwitchDirection = new Random().nextInt(30) + 70;//some degree of randomness to change direction
+        timeToSwitchDirection = new Random().nextInt(50) + 60;//some degree of randomness to change direction
     }
 
 
@@ -65,13 +66,7 @@ public class Duck extends GameObject {
     @Override
     public void onDraw(Canvas canvas) {
         if(isAlive) {
-            if (frame % 3 == 0) {
-                bitmap = sprites[duckOrientation][0];
-            } else if (frame % 3 == 2) {
-                bitmap = sprites[duckOrientation][1];
-            } else {
-                bitmap = sprites[duckOrientation][2];
-            }
+            bitmap = sprites[duckOrientation][frame%3];
         }
         else
         {
@@ -94,7 +89,7 @@ public class Duck extends GameObject {
 
     @Override
     public void onUpdate() {
-        float speed = 50.0f; //pixels per second
+        float speed = 100.0f; //pixels per second
         if(isAlive) {
             Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
             deltaPosition.scalarMultiply(speed *
