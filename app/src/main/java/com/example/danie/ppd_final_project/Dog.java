@@ -25,7 +25,7 @@ public class Dog extends GameObject {
     public Dog(Context context)
     {
         readyToJump = false;
-        sprites = new Bitmap[8];
+        sprites = new Bitmap[9];
         populateDogSprites(context);
         bitmap = sprites[0];
         forward = new Vector2D(
@@ -63,7 +63,7 @@ public class Dog extends GameObject {
             }
             else
             {
-                bitmap = sprites[6];
+                bitmap = sprites[7];
                 forward.y = 0.0f;
                 this.destroy = true;
             }
@@ -73,7 +73,7 @@ public class Dog extends GameObject {
 
     public void onUpdate()
     {
-        float speed = 10.0f; //pixels per second
+        float speed = 50.0f; //pixels per second
         Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
         deltaPosition.scalarMultiply(speed * GameView.DELTA_TIME);
         this.position.add(deltaPosition);
@@ -81,7 +81,7 @@ public class Dog extends GameObject {
     }
     public void populateDogSprites(Context context)
     {
-        for (int i=0; i<8; i++){
+        for (int i=0; i<9; i++){
             int j = i + 1;
             Bitmap bitmap = BitmapFactory.decodeResource(
                     context.getResources(),

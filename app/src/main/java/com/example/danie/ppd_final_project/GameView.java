@@ -27,7 +27,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     volatile boolean isPlaying = false;
     protected Thread gameThread;
     protected SurfaceHolder surfaceHolder;
-    private static final int DESIRED_FPS = 30;
+    private static final int DESIRED_FPS = 35;
     private static final int TIME_BETWEEN_FRAMES = 1000/DESIRED_FPS;
     private long previousTimeMillis;
     private long currentTimeMillis;
@@ -37,6 +37,8 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     public static float DELTA_TIME;
     Paint paint;
     Bitmap background;
+    Dog dog;
+    boolean completedStartingSequence;
 
     public GameView(Context context, Point point) {
         super(context);
@@ -44,10 +46,8 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
         paint = new Paint();
-        for(int ii = 0; ii < 10; ++ii) {
-            gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
-        }
-        gameObjects.add(new Dog(getContext()));
+        dog = new Dog(getContext());
+        gameObjects.add(dog);
         this.setOnTouchListener(this);
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
@@ -59,6 +59,13 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         previousTimeMillis = System.currentTimeMillis();
         while(isPlaying)
         {
+            if(dog.destroy && !completedStartingSequence)
+            {
+                for(int ii = 0; ii < 5; ++ii) {
+                    gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
+                }
+                completedStartingSequence = true;
+            }
             update();
             draw();
             currentTimeMillis = System.currentTimeMillis();

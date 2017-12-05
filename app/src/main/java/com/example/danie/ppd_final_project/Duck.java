@@ -26,6 +26,7 @@ public class Duck extends GameObject {
     int duckOrientation;
     float timeSinceShot;
     int timeToSwitchOrientation;
+    int timeToSwitchDirection;
 
     public Duck(Context context,
                 //String bitmapName,
@@ -52,6 +53,7 @@ public class Duck extends GameObject {
         isAlive = true;
         timeSinceShot = 0.0f;
         timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
+        timeToSwitchDirection = new Random().nextInt(30) + 70;//some degree of randomness to change direction
     }
 
 
@@ -92,7 +94,7 @@ public class Duck extends GameObject {
 
     @Override
     public void onUpdate() {
-        float speed = 75.0f; //pixels per second
+        float speed = 50.0f; //pixels per second
         if(isAlive) {
             Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
             deltaPosition.scalarMultiply(speed *
@@ -101,6 +103,11 @@ public class Duck extends GameObject {
             if(frame > 0 && frame%timeToSwitchOrientation == 0)
             {
                 duckOrientation = new Random().nextInt(3);
+            }
+            if(frame > 0 && frame%timeToSwitchOrientation == 0)
+            {
+                forward.x *= -1.0f;
+                flipSprites();
             }
             checkBorder();
         }
@@ -146,7 +153,7 @@ public class Duck extends GameObject {
             this.forward.normalize();
             flipSprites();
         }
-        if (this.position.y < 0 || this.position.y > GameView.SCREEN_HEIGHT - bitmap.getHeight()) {
+        if (this.position.y < 0 || (this.position.y > GameView.SCREEN_HEIGHT)) {
             this.destroy = true;
         }
     }
@@ -160,7 +167,6 @@ public class Duck extends GameObject {
             sprites[GameConstants.DIAGONAL][i] = Bitmap.createBitmap(sprites[GameConstants.DIAGONAL][i], 0, 0, sprites[GameConstants.DIAGONAL][i].getWidth(), sprites[GameConstants.DIAGONAL][i].getHeight(), matrix, true);
             sprites[GameConstants.HORIZONTAL][i] = Bitmap.createBitmap(sprites[GameConstants.HORIZONTAL][i], 0, 0, sprites[GameConstants.HORIZONTAL][i].getWidth(), sprites[GameConstants.HORIZONTAL][i].getHeight(), matrix, true);
             sprites[GameConstants.BACK][i] = Bitmap.createBitmap(sprites[GameConstants.BACK][i], 0, 0, sprites[GameConstants.BACK][i].getWidth(), sprites[GameConstants.BACK][i].getHeight(), matrix, true);
-
         }
     }
 
