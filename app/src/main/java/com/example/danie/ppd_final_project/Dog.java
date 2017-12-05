@@ -59,7 +59,7 @@ public class Dog extends GameObject {
         {
             if(bitmap == sprites[5]) {
                 bitmap = sprites[6];
-                forward.y = -5.0f;
+                forward.y = -30.0f;
             }
             else
             {
@@ -69,12 +69,11 @@ public class Dog extends GameObject {
             }
         }
         canvas.drawBitmap(bitmap, position.x, position.y, paint);
-
     }
 
     public void onUpdate()
     {
-        float speed = 100.0f; //pixels per second
+        float speed = 10.0f; //pixels per second
         Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
         deltaPosition.scalarMultiply(speed * GameView.DELTA_TIME);
         this.position.add(deltaPosition);

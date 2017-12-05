@@ -44,7 +44,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
         paint = new Paint();
-        for(int ii = 0; ii < 3; ++ii) {
+        for(int ii = 0; ii < 10; ++ii) {
             gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
         }
         gameObjects.add(new Dog(getContext()));
@@ -115,22 +115,6 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
 
     }
 
-    public static void setScreenHeight(int screenHeight) {
-        SCREEN_HEIGHT = screenHeight;
-    }
-
-    public static void setScreenWidth(int screenWidth) {
-        SCREEN_WIDTH = screenWidth;
-    }
-
-    public static int getScreenHeight() {
-        return SCREEN_HEIGHT;
-    }
-
-    public static int getScreenWidth() {
-        return SCREEN_WIDTH;
-    }
-
     public void resume()
     {
         isPlaying = true;
@@ -166,6 +150,4 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         }
         return false;
     }
-
-
 }
