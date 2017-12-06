@@ -10,6 +10,12 @@ public class GameConstants {
 
     private GameConstants(){};
 
+
+    public static final int NUMBER_OF_SPRITES = 3;
+    public static final int NUMBER_OF_DUCK_TYPES = 3;
+    public static final int NUMBER_OF_ORIENTATIONS = 4;
+
+
     public static final int GREENDUCK = 0;
     public static final int REDDUCK = 1;
     public static final int PINKDUCK = 2;
@@ -18,8 +24,6 @@ public class GameConstants {
     public static final int HORIZONTAL = 1;
     public static final int BACK = 2;
     public static final int DEFEAT = 3;
-
-    public static final float HORIZON = 100.0f;
 
 
 
