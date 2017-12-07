@@ -21,7 +21,7 @@ import java.util.Random;
  * Created by danie on 11/24/2017.
  */
 
-public class GameView extends SurfaceView implements Runnable, View.OnTouchListener {
+public class GameEngine extends SurfaceView implements Runnable, View.OnTouchListener {
 
 
     volatile boolean isPlaying = false;
@@ -31,7 +31,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     private static final int TIME_BETWEEN_FRAMES = 1000/DESIRED_FPS;
     private long previousTimeMillis;
     private long currentTimeMillis;
-    private List<GameObject> gameObjects;
+    private ArrayList<GameObject> gameObjects;
     public static int SCREEN_HEIGHT;
     public static int SCREEN_WIDTH;
     public static float DELTA_TIME;
@@ -40,7 +40,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
     Dog dog;
     boolean completedStartingSequence;
 
-    public GameView(Context context, Point point) {
+    public GameEngine(Context context, Point point) {
         super(context);
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
@@ -62,7 +62,7 @@ public class GameView extends SurfaceView implements Runnable, View.OnTouchListe
         {
             if(dog.destroy && !completedStartingSequence)
             {
-                for(int ii = 0; ii < 5; ++ii) {
+                for(int ii = 0; ii < 3; ++ii) {
                     gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
                 }
                 completedStartingSequence = true;

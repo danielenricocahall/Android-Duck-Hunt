@@ -7,7 +7,7 @@ import android.view.Display;
 
 public class MainActivity extends Activity {
 
-    GameView gameView;
+    GameEngine gameEngine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,8 +15,8 @@ public class MainActivity extends Activity {
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
-        gameView = new GameView(this, point);
-        setContentView(gameView);
+        gameEngine = new GameEngine(this, point);
+        setContentView(gameEngine);
     }
 
 
@@ -33,13 +33,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        gameView.resume();
+        gameEngine.resume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        gameView.resume();
+        gameEngine.resume();
     }
 
     @Override

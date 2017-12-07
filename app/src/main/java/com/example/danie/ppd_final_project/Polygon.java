@@ -84,7 +84,7 @@ public class Polygon extends GameObject {
     @Override
     public void onUpdate() {
 
-        accumulatedAngle += (float)(Math.PI/20.0f) * GameView.DELTA_TIME;
+        accumulatedAngle += (float)(Math.PI/20.0f) * GameEngine.DELTA_TIME;
         calculatePoints();
 
     }
