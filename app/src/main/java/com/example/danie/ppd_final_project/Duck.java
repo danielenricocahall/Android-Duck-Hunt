@@ -18,7 +18,7 @@ public class Duck extends GameObject {
 
     public Vector2D position;
     public boolean isAlive;
-    protected Bitmap bitmap;
+    protected Bitmap current_sprite;
     protected Vector2D forward;
     protected Paint paint;
     protected Bitmap[][] sprites;
@@ -40,7 +40,7 @@ public class Duck extends GameObject {
         int duck_type = new Random().nextInt(GameConstants.NUMBER_OF_DUCK_TYPES);
         populateDuckSprites(duck_type, context);
         int frame = new Random().nextInt(GameConstants.NUMBER_OF_SPRITES);
-        bitmap = sprites[0][frame];//determines their initial flapping position
+        current_sprite = sprites[0][frame];//determines their initial flapping position
         boolean isFlipped = new Random().nextInt(1000) % 2 == 0;
         if(isFlipped)
         {
@@ -65,25 +65,25 @@ public class Duck extends GameObject {
     @Override
     public void onDraw(Canvas canvas) {
         if(isAlive) {
-            bitmap = sprites[duckOrientation][frame % GameConstants.NUMBER_OF_SPRITES];
+            current_sprite = sprites[duckOrientation][frame % GameConstants.NUMBER_OF_SPRITES];
         }
         else
         {
-            if(timeSinceShot < 1.0f)
+            if(timeSinceShot < GameConstants.DELAY_AFTER_SHOT)
             {
-                bitmap = sprites[duckOrientation][0];
+                current_sprite = sprites[duckOrientation][0];
             }
             else
             {
-                bitmap = sprites[duckOrientation][1];
+                current_sprite = sprites[duckOrientation][1];
                 if (frame % 2 == 0) {
                     Matrix matrix = new Matrix();
-                    matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
-                    bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    matrix.postScale(-1, 1, current_sprite.getWidth()/2, current_sprite.getHeight()/2);
+                    current_sprite = Bitmap.createBitmap(current_sprite, 0, 0, current_sprite.getWidth(), current_sprite.getHeight(), matrix, true);
                 }
             }
         }
-        canvas.drawBitmap(bitmap, position.x, position.y, paint);
+        canvas.drawBitmap(current_sprite, position.x, position.y, paint);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class Duck extends GameObject {
         else
         {
             duckOrientation = GameConstants.DEFEAT;
-            if(timeSinceShot < 1.0f)
+            if(timeSinceShot < GameConstants.DELAY_AFTER_SHOT)
             {
                 timeSinceShot += GameView.DELTA_TIME;
                 forward.x = 0.0f;
@@ -130,9 +130,9 @@ public class Duck extends GameObject {
     public void checkBorder()
     {
         if (this.position.x > (GameView.SCREEN_WIDTH -
-                bitmap.getWidth())) {
+                current_sprite.getWidth())) {
             this.position.x =
-                    GameView.SCREEN_WIDTH - bitmap.getWidth();
+                    GameView.SCREEN_WIDTH - current_sprite.getWidth();
             this.forward = new Vector2D(
                     new Random().nextFloat() - 1.0f,
                     this.forward.y);
@@ -155,7 +155,7 @@ public class Duck extends GameObject {
     public void flipSprites()
     {
         Matrix matrix = new Matrix();
-        matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
+        matrix.postScale(-1, 1, current_sprite.getWidth()/2, current_sprite.getHeight()/2);
         for(int i = 0; i<GameConstants.NUMBER_OF_SPRITES; ++i)
         {
             sprites[GameConstants.DIAGONAL][i] = Bitmap.createBitmap(sprites[GameConstants.DIAGONAL][i], 0, 0, sprites[GameConstants.DIAGONAL][i].getWidth(), sprites[GameConstants.DIAGONAL][i].getHeight(), matrix, true);
@@ -184,31 +184,21 @@ public class Duck extends GameObject {
         }
         for (int i=0; i<GameConstants.NUMBER_OF_SPRITES; i++){
             int j = i + 1;
-                Bitmap bitmap = BitmapFactory.decodeResource(
+            sprites[GameConstants.DIAGONAL][i] =  BitmapFactory.decodeResource(
                     context.getResources(),
                     context.getResources().getIdentifier(duck_type+"duck_diagonal"+j,"drawable",context.getPackageName()));
-                sprites[GameConstants.DIAGONAL][i] = bitmap;
-        }
-        for (int i=0; i<GameConstants.NUMBER_OF_SPRITES; i++){
-            int j = i + 1;
-            Bitmap bitmap = BitmapFactory.decodeResource(
+            sprites[GameConstants.HORIZONTAL][i] = BitmapFactory.decodeResource(
                     context.getResources(),
                     context.getResources().getIdentifier(duck_type+"duck_horizontal"+j,"drawable",context.getPackageName()));
-            sprites[GameConstants.HORIZONTAL][i] = bitmap;
-        }
-        for (int i=0; i<GameConstants.NUMBER_OF_SPRITES; i++){
-            int j = i + 1;
-            Bitmap bitmap = BitmapFactory.decodeResource(
+            sprites[GameConstants.BACK][i] = BitmapFactory.decodeResource(
                     context.getResources(),
                     context.getResources().getIdentifier(duck_type+"duck_back"+j,"drawable",context.getPackageName()));
-            sprites[GameConstants.BACK][i] = bitmap;
         }
-        for (int i=0; i<GameConstants.NUMBER_OF_SPRITES-1; i++){
-            int j = i + 1;
-            Bitmap bitmap = BitmapFactory.decodeResource(
-                    context.getResources(),
-                    context.getResources().getIdentifier(duck_type+"duck_defeated"+j,"drawable",context.getPackageName()));
-            sprites[GameConstants.DEFEAT][i] = bitmap;
-        }
+        sprites[GameConstants.DEFEAT][0] = BitmapFactory.decodeResource(
+                context.getResources(),
+                context.getResources().getIdentifier(duck_type+"duck_defeated1","drawable",context.getPackageName()));
+        sprites[GameConstants.DEFEAT][1] = BitmapFactory.decodeResource(
+                context.getResources(),
+                context.getResources().getIdentifier(duck_type+"duck_defeated2","drawable",context.getPackageName()));
     }
 }

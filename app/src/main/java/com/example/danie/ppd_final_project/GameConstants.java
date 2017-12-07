@@ -25,6 +25,8 @@ public class GameConstants {
     public static final int BACK = 2;
     public static final int DEFEAT = 3;
 
+    public static final float DELAY_AFTER_SHOT = 1.0f;
+
 
 
 
