@@ -54,6 +54,10 @@ public class IndicatorScore extends GameObject {
         score = newScore;
     }
 
+    public int getScore() {
+        return score;
+    }
+
     public void addToScore(int points) {
         score += points;
     }
