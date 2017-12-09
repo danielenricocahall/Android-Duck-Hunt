@@ -42,7 +42,7 @@ public class IndicatorScore extends GameObject {
     @Override
     public void onDraw(Canvas canvas) {
         canvas.drawText(Integer.toString(score), scoreLocation.x, scoreLocation.y, paint);
-        canvas.drawText("SCORE", scoreLocation.x, scoreLocation.y + 50, paint);
+        canvas.drawText("SCORE", scoreLocation.x, scoreLocation.y + GameEngine.SCREEN_HEIGHT * 0.04f, paint);
     }
 
     @Override
