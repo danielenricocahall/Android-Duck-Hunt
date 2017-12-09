@@ -58,9 +58,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         dog = new Dog(getContext());
         gameObjects.add(dog);
-<<<<<<< HEAD
         duckFactory = new DuckFactory(context);
-=======
 
         indicatorShots = new IndicatorShots(getContext());
         gameObjects.add(indicatorShots);
