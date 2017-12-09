@@ -35,15 +35,15 @@ public class Duck extends GameObject {
     float timeSinceShot;
     int timeToSwitchOrientation;
     int timeToSwitchDirection;
-    String duck_color;
+    private String duckColor;
 
-    public Duck(Context context, float x, float y, String duck_color) {
+    public Duck(Context context, float x, float y, String duckColor) {
         forward = new Vector2D(
                 new Random().nextFloat(),
                 new Random().nextFloat()*-1.0f);
         sprites = new Bitmap[NUMBER_OF_DUCK_ORIENTATIONS][NUMBER_OF_DUCK_SPRITES];
         duckOrientation = DIAGONAL;//they'll all start diagonally
-        this.duck_color = duck_color;
+        this.duckColor = duckColor;
         populateDuckSprites(context);
         int frame = new Random().nextInt(NUMBER_OF_DUCK_SPRITES);
         current_sprite = sprites[0][frame];//determines their initial flapping position
@@ -158,6 +158,11 @@ public class Duck extends GameObject {
         }
     }
 
+    public String getDuckColor()
+    {
+        return duckColor;
+    }
+
     public void flipSprites()
     {
         Matrix matrix = new Matrix();
@@ -176,19 +181,19 @@ public class Duck extends GameObject {
             int j = i + 1;
             sprites[DIAGONAL][i] =  BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duck_color+"duck_diagonal"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor+"duck_diagonal"+j,"drawable",context.getPackageName()));
             sprites[HORIZONTAL][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duck_color+"duck_horizontal"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor+"duck_horizontal"+j,"drawable",context.getPackageName()));
             sprites[BACK][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duck_color+"duck_back"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor+"duck_back"+j,"drawable",context.getPackageName()));
         }
         sprites[DEFEAT][0] = BitmapFactory.decodeResource(
                 context.getResources(),
-                context.getResources().getIdentifier(duck_color+"duck_defeated1","drawable",context.getPackageName()));
+                context.getResources().getIdentifier(duckColor+"duck_defeated1","drawable",context.getPackageName()));
         sprites[DEFEAT][1] = BitmapFactory.decodeResource(
                 context.getResources(),
-                context.getResources().getIdentifier(duck_color+"duck_defeated2","drawable",context.getPackageName()));
+                context.getResources().getIdentifier(duckColor+"duck_defeated2","drawable",context.getPackageName()));
     }
 }

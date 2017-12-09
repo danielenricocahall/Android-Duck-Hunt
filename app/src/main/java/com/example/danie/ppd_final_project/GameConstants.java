@@ -1,5 +1,8 @@
 package com.example.danie.ppd_final_project;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by daniel on 12/3/17.
  */
@@ -28,6 +31,14 @@ public class GameConstants {
 
     public static final float DELAY_AFTER_SHOT = 1.0f;
     public static final float GRAVITY = 10.0f;
+
+    static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
+        put("green",    500);
+        put("red", 1000);
+        put("pink",   1500);
+    }};
+
+
 
 
 

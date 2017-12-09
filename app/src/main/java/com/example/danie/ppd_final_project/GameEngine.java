@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -176,7 +177,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             case MotionEvent.ACTION_DOWN:
 
-                indicatorScore.addToScore(50);
 
                 boolean outOFBullets = indicatorShots.shoot();
                 boolean duckWasHit = false;
@@ -192,6 +192,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         {
                             ((Duck) o).isAlive = false;
                             duckWasHit = true;
+                            indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                         }
                     }
                 }
