@@ -40,6 +40,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     Bitmap background;
     Dog dog;
     IndicatorShots indicatorShots;
+    IndicatorDucks indicatorDucks;
     boolean completedStartingSequence;
     public static final int numberOfDucks = 10;
     Stack<Duck> duckies = new Stack<>();
@@ -64,7 +65,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         indicatorShots = new IndicatorShots(getContext());
         gameObjects.add(indicatorShots);
 
->>>>>>> 07ab20cffdeb205b3cde81bd98d2cb7d151858d3
+        indicatorDucks = new IndicatorDucks(getContext());
+        gameObjects.add(indicatorDucks);
+
         this.setOnTouchListener(this);
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
@@ -160,6 +163,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             case MotionEvent.ACTION_DOWN:
 
                 boolean outOFBullets = indicatorShots.shoot();
+                boolean duckWasHit = false;
 
                 for(GameObject o: gameObjects)
                 {
@@ -171,9 +175,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         if(distance < 100.0f)
                         {
                             ((Duck) o).isAlive = false;
+                            duckWasHit = true;
                         }
                     }
                 }
+
+                indicatorDucks.hitDuck(duckWasHit);
+
                 break;
             case MotionEvent.ACTION_UP:
                 break;
