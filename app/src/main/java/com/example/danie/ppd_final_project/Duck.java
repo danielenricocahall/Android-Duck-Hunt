@@ -12,6 +12,7 @@ import java.util.Random;
 import static com.example.danie.ppd_final_project.GameConstants.BACK;
 import static com.example.danie.ppd_final_project.GameConstants.DEFEAT;
 import static com.example.danie.ppd_final_project.GameConstants.DELAY_AFTER_SHOT;
+import static com.example.danie.ppd_final_project.GameConstants.DELAY_TO_DISPLAY_SCORE;
 import static com.example.danie.ppd_final_project.GameConstants.DIAGONAL;
 import static com.example.danie.ppd_final_project.GameConstants.GRAVITY;
 import static com.example.danie.ppd_final_project.GameConstants.HORIZONTAL;
@@ -81,6 +82,10 @@ public class Duck extends GameObject {
             }
             else
             {
+                if(timeSinceShot < DELAY_TO_DISPLAY_SCORE)
+                {
+                    canvas.drawBitmap(sprites[duckOrientation][2],position.x, position.y, paint);
+                }
                 current_sprite = sprites[duckOrientation][1];
                 if (frame % 2 == 0) {
                     Matrix matrix = new Matrix();
@@ -188,12 +193,15 @@ public class Duck extends GameObject {
             sprites[BACK][i] = BitmapFactory.decodeResource(
                     context.getResources(),
                     context.getResources().getIdentifier(duckColor+"duck_back"+j,"drawable",context.getPackageName()));
+            sprites[DEFEAT][i] = BitmapFactory.decodeResource(
+                    context.getResources(),
+                    context.getResources().getIdentifier(duckColor+"duck_defeated"+j,"drawable",context.getPackageName()));
         }
-        sprites[DEFEAT][0] = BitmapFactory.decodeResource(
+        /*sprites[DEFEAT][0] = BitmapFactory.decodeResource(
                 context.getResources(),
                 context.getResources().getIdentifier(duckColor+"duck_defeated1","drawable",context.getPackageName()));
         sprites[DEFEAT][1] = BitmapFactory.decodeResource(
                 context.getResources(),
-                context.getResources().getIdentifier(duckColor+"duck_defeated2","drawable",context.getPackageName()));
+                context.getResources().getIdentifier(duckColor+"duck_defeated2","drawable",context.getPackageName()));*/
     }
 }

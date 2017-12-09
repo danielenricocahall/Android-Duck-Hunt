@@ -44,31 +44,25 @@ public class DuckFactory {
 
     public Duck makeRandomDuck()
     {
+        Duck duck;
         int duck_type = new Random().nextInt(GameConstants.NUMBER_OF_DUCK_TYPES);
-        Duck duck = new Duck(context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, getDuckColor(duck_type));
-        return duck;
-
-    }
-
-    private static String getDuckColor(int n)
-    {
-        String duck_type;
-        switch(n)
+        switch(duck_type)
         {
             case GameConstants.GREENDUCK:
-                duck_type = "green";
+                duck = makeGreenDuck();
                 break;
             case GameConstants.REDDUCK:
-                duck_type = "red";
+                duck = makeRedDuck();
                 break;
             case GameConstants.PINKDUCK:
-                duck_type = "pink";
+                duck = makePinkDuck();
                 break;
             default:
-                duck_type = "green";
+                duck = makeGreenDuck();
                 break;
         }
-        return duck_type;
+        return duck;
+
     }
 }
 

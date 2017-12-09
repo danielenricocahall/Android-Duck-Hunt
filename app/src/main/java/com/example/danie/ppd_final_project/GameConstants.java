@@ -30,6 +30,7 @@ public class GameConstants {
     public static final int DEFEAT = 3;
 
     public static final float DELAY_AFTER_SHOT = 1.0f;
+    public static final float DELAY_TO_DISPLAY_SCORE = 2.0f;
     public static final float GRAVITY = 10.0f;
 
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
