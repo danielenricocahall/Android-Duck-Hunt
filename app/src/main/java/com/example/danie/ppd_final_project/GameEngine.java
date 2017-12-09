@@ -42,7 +42,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorShots indicatorShots;
     IndicatorDucks indicatorDucks;
     boolean completedStartingSequence;
-    public static final int numberOfDucks = 10;
+    public static final int totalNumberOfDucks = 10;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
 
@@ -70,7 +70,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
-        for(int ii = 0; ii < numberOfDucks; ++ii)
+        for(int ii = 0; ii < totalNumberOfDucks; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
@@ -85,9 +85,21 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             {
                 completedStartingSequence = true;
             }
-            if(gameObjects.isEmpty() && !duckies.empty())
+            if(completedStartingSequence && !duckies.empty())
             {
-                gameObjects.add(duckies.pop());
+                //there's probably a better way to do this.....
+                boolean hackyAsFuck = false;
+                for(GameObject o: gameObjects) {
+                    if (o instanceof Duck)
+                    {
+                        hackyAsFuck = true;
+                    }
+                }
+
+                if(!hackyAsFuck)
+                {
+                    gameObjects.add(duckies.pop());
+                }
             }
 
             update();
@@ -184,7 +196,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             case MotionEvent.ACTION_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
-                    pause();
                 break;
 
         }
