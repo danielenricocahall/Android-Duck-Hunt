@@ -35,18 +35,16 @@ public class Duck extends GameObject {
     float timeSinceShot;
     int timeToSwitchOrientation;
     int timeToSwitchDirection;
+    String duck_color;
 
-    public Duck(Context context,
-                float x, float y) {
+    public Duck(Context context, float x, float y, String duck_color) {
         forward = new Vector2D(
-                0.0f,
-                0.0f);
-        forward.y = new Random().nextFloat() * -1.0f;
-        forward.x = new Random().nextFloat();
+                new Random().nextFloat(),
+                new Random().nextFloat()*-1.0f);
         sprites = new Bitmap[NUMBER_OF_DUCK_ORIENTATIONS][NUMBER_OF_DUCK_SPRITES];
         duckOrientation = DIAGONAL;//they'll all start diagonally
-        int duck_type = new Random().nextInt(GameConstants.NUMBER_OF_DUCK_TYPES);
-        populateDuckSprites(duck_type, context);
+        this.duck_color = duck_color;
+        populateDuckSprites(context);
         int frame = new Random().nextInt(NUMBER_OF_DUCK_SPRITES);
         current_sprite = sprites[0][frame];//determines their initial flapping position
         boolean isFlipped = new Random().nextInt(1000) % 2 == 0;
@@ -172,41 +170,25 @@ public class Duck extends GameObject {
         }
     }
 
-    public void populateDuckSprites(int n, Context context)
+    public void populateDuckSprites(Context context)
     {
-        String duck_type;
-        switch(n)
-        {
-            case GameConstants.GREENDUCK:
-                duck_type = "green";
-                break;
-            case GameConstants.REDDUCK:
-                duck_type = "red";
-                break;
-            case GameConstants.PINKDUCK:
-                duck_type = "pink";
-                break;
-            default:
-                duck_type = "green";
-                break;
-        }
         for (int i=0; i<NUMBER_OF_DUCK_SPRITES; i++){
             int j = i + 1;
             sprites[DIAGONAL][i] =  BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duck_type+"duck_diagonal"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duck_color+"duck_diagonal"+j,"drawable",context.getPackageName()));
             sprites[HORIZONTAL][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duck_type+"duck_horizontal"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duck_color+"duck_horizontal"+j,"drawable",context.getPackageName()));
             sprites[BACK][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duck_type+"duck_back"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duck_color+"duck_back"+j,"drawable",context.getPackageName()));
         }
         sprites[DEFEAT][0] = BitmapFactory.decodeResource(
                 context.getResources(),
-                context.getResources().getIdentifier(duck_type+"duck_defeated1","drawable",context.getPackageName()));
+                context.getResources().getIdentifier(duck_color+"duck_defeated1","drawable",context.getPackageName()));
         sprites[DEFEAT][1] = BitmapFactory.decodeResource(
                 context.getResources(),
-                context.getResources().getIdentifier(duck_type+"duck_defeated2","drawable",context.getPackageName()));
+                context.getResources().getIdentifier(duck_color+"duck_defeated2","drawable",context.getPackageName()));
     }
 }

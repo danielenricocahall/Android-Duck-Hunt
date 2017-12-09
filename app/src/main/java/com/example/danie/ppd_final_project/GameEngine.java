@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 /**
  * Created by danie on 11/24/2017.
@@ -27,7 +28,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     volatile boolean isPlaying = false;
     protected Thread gameThread;
     protected SurfaceHolder surfaceHolder;
-    private static final int DESIRED_FPS = 35;
+    private static final int DESIRED_FPS = 30;
     private static final int TIME_BETWEEN_FRAMES = 1000/DESIRED_FPS;
     private long previousTimeMillis;
     private long currentTimeMillis;
@@ -39,6 +40,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     Bitmap background;
     Dog dog;
     boolean completedStartingSequence;
+    public static final int numberOfDucks = 10;
+    Stack<Duck> duckies = new Stack<>();
+    DuckFactory duckFactory;
+
 
     public GameEngine(Context context, Point point) {
         super(context);
@@ -49,10 +54,15 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         gameObjects = new ArrayList<>();
         dog = new Dog(getContext());
         gameObjects.add(dog);
+        duckFactory = new DuckFactory(context);
         this.setOnTouchListener(this);
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
+        for(int ii = 0; ii < numberOfDucks; ++ii)
+        {
+            duckies.push(duckFactory.makeRandomDuck());
+        }
     }
 
     @Override
@@ -62,11 +72,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             if(dog.destroy && !completedStartingSequence)
             {
-                for(int ii = 0; ii < 3; ++ii) {
-                    gameObjects.add(new Duck(getContext(), new Random().nextInt(SCREEN_WIDTH), 1100.0f));
-                }
                 completedStartingSequence = true;
             }
+            if(gameObjects.isEmpty() && !duckies.empty())
+            {
+                gameObjects.add(duckies.pop());
+            }
+
             update();
             draw();
             currentTimeMillis = System.currentTimeMillis();
@@ -153,6 +165,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             case MotionEvent.ACTION_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
+                    pause();
                 break;
 
         }

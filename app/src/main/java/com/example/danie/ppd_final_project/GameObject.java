@@ -9,7 +9,7 @@ import android.graphics.Canvas;
 public abstract class GameObject {
 
 
-    public boolean destroy = false;
+    public boolean destroy;
 
     public abstract void init();
 

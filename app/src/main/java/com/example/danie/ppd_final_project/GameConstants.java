@@ -17,7 +17,6 @@ public class GameConstants {
     public static final int NUMBER_OF_DOG_SPRITES = 9;
 
 
-
     public static final int GREENDUCK = 0;
     public static final int REDDUCK = 1;
     public static final int PINKDUCK = 2;
