@@ -29,6 +29,7 @@ public class Duck extends GameObject {
     public boolean isAlive;
     protected Bitmap current_sprite;
     protected Vector2D forward;
+    protected float deathPoint;
     protected Paint paint;
     protected Bitmap[][] sprites;
     int frame;
@@ -78,19 +79,18 @@ public class Duck extends GameObject {
         {
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
+                deathPoint = position.y;
                 current_sprite = sprites[duckOrientation][0];
             }
             else
             {
                 if(timeSinceShot < DELAY_TO_DISPLAY_SCORE)
                 {
-                    canvas.drawBitmap(sprites[duckOrientation][2],position.x, position.y, paint);
+                    canvas.drawBitmap(sprites[duckOrientation][2],position.x, deathPoint, paint);
                 }
                 current_sprite = sprites[duckOrientation][1];
                 if (frame % 2 == 0) {
-                    Matrix matrix = new Matrix();
-                    matrix.postScale(-1, 1, current_sprite.getWidth()/2, current_sprite.getHeight()/2);
-                    current_sprite = Bitmap.createBitmap(current_sprite, 0, 0, current_sprite.getWidth(), current_sprite.getHeight(), matrix, true);
+                    current_sprite = flip(current_sprite);
                 }
             }
         }
@@ -172,12 +172,21 @@ public class Duck extends GameObject {
     {
         Matrix matrix = new Matrix();
         matrix.postScale(-1, 1, current_sprite.getWidth()/2, current_sprite.getHeight()/2);
-        for(int i = 0; i<NUMBER_OF_DUCK_SPRITES; ++i)
-        {
-            sprites[DIAGONAL][i] = Bitmap.createBitmap(sprites[DIAGONAL][i], 0, 0, sprites[DIAGONAL][i].getWidth(), sprites[DIAGONAL][i].getHeight(), matrix, true);
-            sprites[HORIZONTAL][i] = Bitmap.createBitmap(sprites[HORIZONTAL][i], 0, 0, sprites[HORIZONTAL][i].getWidth(), sprites[HORIZONTAL][i].getHeight(), matrix, true);
-            sprites[BACK][i] = Bitmap.createBitmap(sprites[BACK][i], 0, 0, sprites[BACK][i].getWidth(), sprites[BACK][i].getHeight(), matrix, true);
+        for(int i = 0;i < NUMBER_OF_DUCK_ORIENTATIONS-1; ++i) {
+            for (int j = 0; j < NUMBER_OF_DUCK_SPRITES; ++j) {
+                sprites[i][j] = flip(sprites[i][j]);
+            }
         }
+    }
+
+    public Bitmap flip(Bitmap bitmap)
+    {
+
+        Matrix matrix = new Matrix();
+        matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+
     }
 
     public void populateDuckSprites(Context context)
