@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Duck Hunt</string>
+    <string name="str_start">Start</string>
 </resources>
