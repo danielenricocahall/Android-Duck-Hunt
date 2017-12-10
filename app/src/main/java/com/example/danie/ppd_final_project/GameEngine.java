@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -13,10 +15,7 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
 import java.util.Stack;
 
 /**
@@ -48,7 +47,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
 
-
     public GameEngine(Context context, Point point) {
         super(context);
         surfaceHolder = getHolder();
@@ -79,6 +77,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
+        GameSoundHandler.createSoundPool();
+        GameSoundHandler.setContext(context);
+
+
     }
 
     @Override
@@ -176,11 +178,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
-
-
+                GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
                 boolean outOFBullets = indicatorShots.shoot();
                 boolean duckWasHit = false;
-
                 for(GameObject o: gameObjects)
                 {
                     if(o instanceof Duck)
@@ -196,7 +196,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         }
                     }
                 }
-
+                GameSoundHandler.stopSound(GameConstants.GUN_SHOT_SOUND);
                 indicatorDucks.hitDuck(duckWasHit);
 
                 break;

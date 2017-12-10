@@ -39,6 +39,7 @@ public class Duck extends GameObject {
     int timeToSwitchDirection;
     private String duckColor;
 
+
     public Duck(Context context, float x, float y, String duckColor) {
         forward = new Vector2D(
                 new Random().nextFloat(),
@@ -101,6 +102,8 @@ public class Duck extends GameObject {
     public void onUpdate() {
         float speed = 100.0f; //pixels per second
         if(isAlive) {
+            GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
+
             Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
             deltaPosition.scalarMultiply(speed *
                     GameEngine.DELTA_TIME);
@@ -114,9 +117,11 @@ public class Duck extends GameObject {
                 forward.x *= -1.0f;
                 flipSprites();
             }
+            GameSoundHandler.stopSound(GameConstants.DUCK_FLAP_SOUND);
         }
         else
         {
+            //GameSoundHandler.stopSound(GameConstants.DUCK_FLAP_SOUND);
             duckOrientation = DEFEAT;
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
@@ -126,8 +131,12 @@ public class Duck extends GameObject {
             }
             else
             {
-                forward.x = 0.0f;
-                forward.y = GRAVITY;
+                //the duck hasn't started falling yet, so play the falling sound
+                if(forward.y <= 0.0f) {
+                    GameSoundHandler.playSound(GameConstants.DEAD_DUCK_FALL_SOUND);
+                }
+                    forward.x = 0.0f;
+                    forward.y = GRAVITY;
             }
             Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
             deltaPosition.scalarMultiply(speed *
@@ -158,7 +167,13 @@ public class Duck extends GameObject {
             this.forward.normalize();
             flipSprites();
         }
-        if (this.position.y < 0 || (this.position.y > GameEngine.SCREEN_HEIGHT - 600.0f)) {
+        if (this.position.y > GameEngine.SCREEN_HEIGHT - GameEngine.SCREEN_HEIGHT*0.3f) {
+            this.destroy = true;
+            GameSoundHandler.stopSound((GameConstants.DEAD_DUCK_FALL_SOUND));
+            GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
+        }
+        if(this.position.y < 0)
+        {
             this.destroy = true;
         }
     }
@@ -181,12 +196,9 @@ public class Duck extends GameObject {
 
     public Bitmap flip(Bitmap bitmap)
     {
-
         Matrix matrix = new Matrix();
         matrix.postScale(-1, 1, bitmap.getWidth()/2, bitmap.getHeight()/2);
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
-
     }
 
     public void populateDuckSprites(Context context)
@@ -206,11 +218,5 @@ public class Duck extends GameObject {
                     context.getResources(),
                     context.getResources().getIdentifier(duckColor+"duck_defeated"+j,"drawable",context.getPackageName()));
         }
-        /*sprites[DEFEAT][0] = BitmapFactory.decodeResource(
-                context.getResources(),
-                context.getResources().getIdentifier(duckColor+"duck_defeated1","drawable",context.getPackageName()));
-        sprites[DEFEAT][1] = BitmapFactory.decodeResource(
-                context.getResources(),
-                context.getResources().getIdentifier(duckColor+"duck_defeated2","drawable",context.getPackageName()));*/
     }
 }

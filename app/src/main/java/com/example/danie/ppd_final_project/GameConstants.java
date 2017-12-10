@@ -24,6 +24,11 @@ public class GameConstants {
     public static final int REDDUCK = 1;
     public static final int PINKDUCK = 2;
 
+    public static final int DUCK_FLAP_SOUND = R.raw.duck_flap;
+    public static final int GUN_SHOT_SOUND = R.raw.gun_shot;
+    public static final int DEAD_DUCK_LAND_SOUND = R.raw.dead_duck_land;
+    public static final int DEAD_DUCK_FALL_SOUND = R.raw.dead_duck_falls;
+
     public static final int DIAGONAL = 0;
     public static final int HORIZONTAL = 1;
     public static final int BACK = 2;
