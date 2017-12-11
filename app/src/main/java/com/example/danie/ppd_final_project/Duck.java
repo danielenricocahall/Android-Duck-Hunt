@@ -37,7 +37,9 @@ public class Duck extends GameObject {
     float timeSinceShot;
     int timeToSwitchOrientation;
     int timeToSwitchDirection;
+    float timeSinceSpawned;
     private String duckColor;
+    float speed = 100.0f;
 
 
     public Duck(Context context, float x, float y, String duckColor) {
@@ -60,6 +62,7 @@ public class Duck extends GameObject {
         position = new Vector2D(x, y);
         paint = new Paint();
         isAlive = true;
+        timeSinceSpawned = 0.0f;
         timeSinceShot = 0.0f;
         timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
         timeToSwitchDirection = new Random().nextInt(50) + 60;//some degree of randomness to change direction
@@ -101,28 +104,14 @@ public class Duck extends GameObject {
 
     @Override
     public void onUpdate() {
-        float speed = 100.0f; //pixels per second
+        timeSinceSpawned += GameEngine.DELTA_TIME;
         if(isAlive) {
             GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
-
-            Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
-            deltaPosition.scalarMultiply(speed *
-                    GameEngine.DELTA_TIME);
-            this.position.add(deltaPosition);
-            if(frame > 0 && frame % timeToSwitchOrientation == 0)
-            {
-                duckOrientation = new Random().nextInt(NUMBER_OF_DUCK_SPRITES);
-            }
-            if(frame > 0 && frame % timeToSwitchOrientation == 0)
-            {
-                forward.x *= -1.0f;
-                flipSprites();
-            }
+            performTimeChecks();
             GameSoundHandler.stopSound(GameConstants.DUCK_FLAP_SOUND);
         }
         else
         {
-            //GameSoundHandler.stopSound(GameConstants.DUCK_FLAP_SOUND);
             duckOrientation = DEFEAT;
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
@@ -148,6 +137,38 @@ public class Duck extends GameObject {
         frame++;
     }
 
+    private void performTimeChecks()
+    {
+        checkOrientationTime();
+        checkSpawnTime();
+        checkDirectionTime();
+    }
+
+    private void checkDirectionTime()
+    {
+        if(frame > 0 && frame % timeToSwitchDirection == 0)
+        {
+            forward.x *= -1.0f;
+            flipSprites();
+        }
+    }
+
+    private void checkOrientationTime()
+    {
+        if(frame > 0 && frame % timeToSwitchOrientation == 0) {
+            duckOrientation = new Random().nextInt(NUMBER_OF_DUCK_SPRITES);
+        }
+    }
+
+    private void checkSpawnTime()
+    {
+        if(timeSinceSpawned >= GameConstants.TIME_ON_SCREEN){
+            duckOrientation = GameConstants.BACK;
+            forward.y = GameConstants.ESCAPE_VELOCITY;
+            forward.x = 0.0f;
+        }
+    }
+
     public void checkBorder()
     {
         if (this.position.x > (GameEngine.SCREEN_WIDTH -
@@ -155,7 +176,7 @@ public class Duck extends GameObject {
             this.position.x =
                     GameEngine.SCREEN_WIDTH - current_sprite.getWidth();
             this.forward = new Vector2D(
-                    new Random().nextFloat() - 1.0f,
+                    this.forward.x * - 1.0f,
                     this.forward.y);
             this.forward.normalize();
             flipSprites();
@@ -163,7 +184,7 @@ public class Duck extends GameObject {
         if (this.position.x < 0) {
             this.position.x = 0;
             this.forward = new Vector2D(
-                    new Random().nextFloat() + 1.0f,
+                    this.forward.x * -1.0f,
                     this.forward.y);
             this.forward.normalize();
             flipSprites();

@@ -40,7 +40,7 @@ public abstract class GameSoundHandler {
 
     @SuppressWarnings("deprecation")
     public static void createOldSoundPool(){
-        soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC,0);
+        soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
     }
 
     public static void setContext(Context app_context)
@@ -55,6 +55,8 @@ public abstract class GameSoundHandler {
         soundMap.put(GameConstants.DUCK_FLAP_SOUND, soundPool.load(context, GameConstants.DUCK_FLAP_SOUND, 1));
         soundMap.put(GameConstants.DEAD_DUCK_FALL_SOUND, soundPool.load(context, GameConstants.DEAD_DUCK_FALL_SOUND, 1));
         soundMap.put(GameConstants.DEAD_DUCK_LAND_SOUND, soundPool.load(context, GameConstants.DEAD_DUCK_LAND_SOUND, 1));
+        soundMap.put(GameConstants.STARTING_SEQUENCE_SOUND, soundPool.load(context, GameConstants.STARTING_SEQUENCE_SOUND, 1));
+        soundMap.put(GameConstants.TITLE_SEQUENCE_SOUND, soundPool.load(context, GameConstants.TITLE_SEQUENCE_SOUND, 1));
     }
 
 

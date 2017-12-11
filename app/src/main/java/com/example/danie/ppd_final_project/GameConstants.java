@@ -31,6 +31,11 @@ public class GameConstants {
     public static final int GUN_SHOT_SOUND = R.raw.gun_shot;
     public static final int DEAD_DUCK_LAND_SOUND = R.raw.dead_duck_land;
     public static final int DEAD_DUCK_FALL_SOUND = R.raw.dead_duck_falls;
+    public static final int TITLE_SEQUENCE_SOUND = R.raw.title_screen;
+    public static final int STARTING_SEQUENCE_SOUND = R.raw.intro;
+    public static final int DOG_BARKING_SOUND = R.raw.dog_bark;
+
+
 
     public static final int DIAGONAL = 0;
     public static final int HORIZONTAL = 1;
@@ -39,7 +44,12 @@ public class GameConstants {
 
     public static final float DELAY_AFTER_SHOT = 1.0f;
     public static final float DELAY_TO_DISPLAY_SCORE = 2.0f;
+    public static final float TIME_ON_SCREEN = 5.0f;
+
+
     public static final float GRAVITY = 10.0f;
+    public static final float ESCAPE_VELOCITY = -30.0f;
+
 
     public static final int BACKGROUND = 1;
     public static final int MIDGROUND = 2;

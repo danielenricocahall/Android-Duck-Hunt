@@ -87,6 +87,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
         GameSoundHandler.createSoundPool();
         GameSoundHandler.setContext(context);
+        GameSoundHandler.playSound(GameConstants.STARTING_SEQUENCE_SOUND);
     }
 
     @Override
@@ -96,6 +97,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             if(dog.destroy && !completedStartingSequence)
             {
+                GameSoundHandler.stopSound(GameConstants.STARTING_SEQUENCE_SOUND);
+                GameSoundHandler.playSound(GameConstants.DOG_BARKING_SOUND);
                 completedStartingSequence = true;
             }
             if(completedStartingSequence && !duckies.empty())
