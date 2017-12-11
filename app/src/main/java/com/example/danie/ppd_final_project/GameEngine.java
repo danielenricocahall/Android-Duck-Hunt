@@ -1,5 +1,6 @@
 package com.example.danie.ppd_final_project;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -15,6 +17,8 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -44,11 +48,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorScore indicatorScore;
     boolean completedStartingSequence;
     public static final int totalNumberOfDucks = 10;
+    public static int numberOfDucksOnScreen;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
 
-    public GameEngine(Context context, Point point) {
+    public GameEngine(Context context, int numberOfDucksOnScreen, Point point) {
         super(context);
+
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
@@ -58,6 +64,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         dog = new Dog(getContext());
         gameObjects.add(dog);
+
         duckFactory = new DuckFactory(context);
 
         indicatorShots = new IndicatorShots(getContext());
@@ -70,6 +77,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         gameObjects.add(indicatorScore);
 
         this.setOnTouchListener(this);
+        this.numberOfDucksOnScreen = numberOfDucksOnScreen;
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
@@ -79,8 +87,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
         GameSoundHandler.createSoundPool();
         GameSoundHandler.setContext(context);
-
-
     }
 
     @Override
@@ -105,7 +111,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
                 if(!hackyAsFuck)
                 {
-                    gameObjects.add(duckies.pop());
+                    for(int ii = 0; ii<numberOfDucksOnScreen;++ii) {
+                        gameObjects.add(duckies.pop());
+                    }
                 }
             }
 
@@ -128,13 +136,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     {
         for (Iterator<GameObject> iterator = gameObjects.iterator(); iterator.hasNext();) {
             GameObject gameObject = iterator.next();
-            if(gameObject.destroy)
+            if(!gameObject.destroy)
             {
-                iterator.remove();
+                gameObject.onUpdate();
             }
             else
             {
-                gameObject.onUpdate();
+                iterator.remove();
             }
         }
     }
@@ -145,9 +153,12 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             Canvas canvas = surfaceHolder.lockCanvas();
             canvas.drawBitmap(background, 0.0f, 0.0f, paint);
-            for(GameObject gameObject: gameObjects)
-            {
-                gameObject.onDraw(canvas);
+            for(int ii = GameConstants.BACKGROUND; ii <= GameConstants.FOREGROUND; ++ii) {
+                for (GameObject gameObject : gameObjects) {
+                    if(gameObject.layer == ii) {
+                        gameObject.onDraw(canvas);
+                    }
+                }
             }
             surfaceHolder.unlockCanvasAndPost(canvas);
         }

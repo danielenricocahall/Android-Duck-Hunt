@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 
 public abstract class GameObject {
 
+    public static int layer;
+
 
     public boolean destroy;
 

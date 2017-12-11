@@ -24,6 +24,7 @@ public class Dog extends GameObject {
     Bitmap[] sprites;
     int frame = 0;
 
+
     public Dog(Context context)
     {
         readyToJump = false;
@@ -38,6 +39,7 @@ public class Dog extends GameObject {
         forward.normalize();
         position = new Vector2D(0.0f, GameEngine.SCREEN_HEIGHT*0.73f);
         paint = new Paint();
+        layer = GameConstants.FOREGROUND;
     }
 
     public void init()

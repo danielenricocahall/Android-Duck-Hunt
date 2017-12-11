@@ -62,7 +62,7 @@ public abstract class GameSoundHandler {
     {
         soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
         try{
-            Thread.sleep(30);
+            Thread.sleep(10);
         }
         catch (InterruptedException e)
         {

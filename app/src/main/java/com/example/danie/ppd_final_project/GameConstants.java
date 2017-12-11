@@ -14,6 +14,9 @@ public class GameConstants {
     private GameConstants(){};
 
 
+    public static final String NUMBER_OF_DUCKS = "Number Of Ducks";
+
+
     public static final int NUMBER_OF_DUCK_SPRITES = 3;
     public static final int NUMBER_OF_DUCK_TYPES = 3;
     public static final int NUMBER_OF_DUCK_ORIENTATIONS = 4;
@@ -37,6 +40,11 @@ public class GameConstants {
     public static final float DELAY_AFTER_SHOT = 1.0f;
     public static final float DELAY_TO_DISPLAY_SCORE = 2.0f;
     public static final float GRAVITY = 10.0f;
+
+    public static final int BACKGROUND = 1;
+    public static final int MIDGROUND = 2;
+    public static final int FOREGROUND = 3;
+
 
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
         put("green",    500);

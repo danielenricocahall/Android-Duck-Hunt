@@ -15,7 +15,9 @@ public class MainActivity extends Activity {
         Display display = getWindowManager().getDefaultDisplay();
         Point point = new Point();
         display.getSize(point);
-        gameEngine = new GameEngine(this, point);
+        Bundle b = getIntent().getExtras();
+        final int numberOfDucks = b.getInt(GameConstants.NUMBER_OF_DUCKS);
+        gameEngine = new GameEngine(this, numberOfDucks, point);
         setContentView(gameEngine);
     }
 

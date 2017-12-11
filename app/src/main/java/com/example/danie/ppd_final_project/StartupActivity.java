@@ -9,23 +9,40 @@ import android.widget.TextView;
 
 public class StartupActivity extends Activity {
 
-    protected Button btnStart;
-    protected Intent i_start;
+    protected Button gameA_start;
+    protected Button gameB_start;
+    public static final String NUMBER_OF_DUCKS = "Number Of Ducks";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
 
-        btnStart = (Button) findViewById(R.id.btn_start);
-        btnStart.setOnClickListener(new View.OnClickListener() {
+        gameA_start = (Button) findViewById(R.id.gameA_button);
+        gameB_start = (Button) findViewById(R.id.gameB_button);
+
+        gameA_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent i_start = new Intent(StartupActivity.this, MainActivity.class);
+                Bundle b = new Bundle();
+                b.putInt(NUMBER_OF_DUCKS, 1); //Your id
+                i_start.putExtras(b);
                 startActivity(i_start);
             }
         });
 
-        i_start = new Intent(StartupActivity.this, MainActivity.class);
+        gameB_start.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i_start = new Intent(StartupActivity.this, MainActivity.class);
+                Bundle b = new Bundle();
+                b.putInt(NUMBER_OF_DUCKS, 2); //Your id
+                i_start.putExtras(b);
+                startActivity(i_start);            }
+        });
+
+        //i_start = new Intent(StartupActivity.this, MainActivity.class);
 
     }
 
