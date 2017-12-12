@@ -25,7 +25,6 @@ import static com.example.danie.ppd_final_project.GameConstants.NUMBER_OF_DUCK_S
 
 public class Duck extends GameObject {
 
-    public Vector2D position;
     public boolean isAlive;
     protected Bitmap current_sprite;
     protected Vector2D forward;

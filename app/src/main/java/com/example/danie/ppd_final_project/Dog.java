@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import java.util.Random;
 
 import static com.example.danie.ppd_final_project.GameConstants.NUMBER_OF_DOG_SPRITES;
 
@@ -16,7 +15,6 @@ import static com.example.danie.ppd_final_project.GameConstants.NUMBER_OF_DOG_SP
  */
 
 public class Dog extends GameObject {
-    public Vector2D position;
     public boolean readyToJump;
     protected Bitmap current_sprite;
     protected Vector2D forward;
