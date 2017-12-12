@@ -82,6 +82,8 @@ public class Duck extends GameObject {
         }
         else
         {
+            duckOrientation = DEFEAT;
+
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
                 deathPoint = position.y;
@@ -112,7 +114,6 @@ public class Duck extends GameObject {
         }
         else
         {
-            duckOrientation = DEFEAT;
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
                 timeSinceShot += GameEngine.DELTA_TIME;
@@ -128,11 +129,12 @@ public class Duck extends GameObject {
                     forward.x = 0.0f;
                     forward.y = GRAVITY;
             }
-            Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
-            deltaPosition.scalarMultiply(speed *
-                    GameEngine.DELTA_TIME);
-            this.position.add(deltaPosition);
         }
+
+        Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
+        deltaPosition.scalarMultiply(speed *
+                GameEngine.DELTA_TIME);
+        this.position.add(deltaPosition);
         checkBorder();
         frame++;
     }
