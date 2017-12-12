@@ -53,6 +53,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public static int numberOfDucksOnScreen;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
+    boolean outOFBullets = false;
 
 
     public GameEngine(Context context, int numberOfDucksOnScreen, Point point) {
@@ -92,7 +93,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         GameSoundHandler.setContext(context);
         GameSoundHandler.loadSounds();
         completedStartingSequence = false;
-        //playingStartupTune = false;
         GameSoundHandler.playLongSound(GameConstants.STARTING_SEQUENCE_SOUND);
     }
 
@@ -101,31 +101,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         previousTimeMillis = System.currentTimeMillis();
         while(isPlaying)
         {
-
-            if(dog.destroy && !completedStartingSequence)
-            {
-                completedStartingSequence = true;
-            }
-            if(completedStartingSequence && !duckies.empty())
-            {
-                //GameSoundHandler.stopLongSound();
-                //there's probably a better way to do this.....
-                boolean hackyAsFuck = false;
-                for(GameObject o: gameObjects) {
-                    if (o instanceof Duck)
-                    {
-                        hackyAsFuck = true;
-                    }
-                }
-
-                if(!hackyAsFuck)
-                {
-                    for(int ii = 0; ii<numberOfDucksOnScreen;++ii) {
-                        gameObjects.add(duckies.pop());
-                    }
-                }
-            }
-
+            handleGameLogic();
             update();
             draw();
             currentTimeMillis = System.currentTimeMillis();
@@ -138,6 +114,35 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
             }
             previousTimeMillis = currentTimeMillis;
+        }
+    }
+
+    public void handleGameLogic()
+    {
+        if(dog.destroy && !completedStartingSequence)
+        {
+            completedStartingSequence = true;
+        }
+        if(completedStartingSequence && !duckies.empty())
+        {
+            boolean hackyAsFuck = false;
+            for(GameObject o: gameObjects) {
+                if (o instanceof Duck)
+                {
+                    hackyAsFuck = true;
+                    ((Duck) o).timeToFlyAway = outOFBullets;
+                }
+            }
+
+            if(!hackyAsFuck)
+            {
+                for(int ii = 0; ii<numberOfDucksOnScreen;++ii) {
+                    gameObjects.add(duckies.pop());
+                    indicatorShots.setNumShots(3);
+                    outOFBullets = false;
+                }
+
+            }
         }
     }
 
@@ -199,7 +204,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             case MotionEvent.ACTION_DOWN:
                 GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
-                boolean outOFBullets = indicatorShots.shoot();
+                outOFBullets = indicatorShots.shoot();
                 boolean duckWasHit = false;
                 for(GameObject o: gameObjects)
                 {

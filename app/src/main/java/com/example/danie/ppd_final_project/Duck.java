@@ -38,6 +38,7 @@ public class Duck extends GameObject {
     int timeToSwitchOrientation;
     int timeToSwitchDirection;
     float timeSinceSpawned;
+    public boolean timeToFlyAway = false;
     private String duckColor;
     float speed = 100.0f;
 
@@ -107,6 +108,13 @@ public class Duck extends GameObject {
     @Override
     public void onUpdate() {
         timeSinceSpawned += GameEngine.DELTA_TIME;
+        timeToFlyAway |= timeSinceSpawned > 5.0f;
+        if(timeToFlyAway)
+        {
+            flyAway();
+            timeToFlyAway = false;
+            return;
+        }
         if(isAlive) {
             GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
             performTimeChecks();
@@ -142,7 +150,6 @@ public class Duck extends GameObject {
     private void performTimeChecks()
     {
         checkOrientationTime();
-        checkSpawnTime();
         checkDirectionTime();
     }
 
@@ -162,13 +169,11 @@ public class Duck extends GameObject {
         }
     }
 
-    private void checkSpawnTime()
+    private void flyAway()
     {
-        if(timeSinceSpawned >= GameConstants.TIME_ON_SCREEN){
-            duckOrientation = GameConstants.BACK;
-            forward.y = GameConstants.ESCAPE_VELOCITY;
-            forward.x = 0.0f;
-        }
+        duckOrientation = GameConstants.BACK;
+        forward.y = GameConstants.ESCAPE_VELOCITY;
+        forward.x = 0.0f;
     }
 
     public void checkBorder()

@@ -40,8 +40,6 @@ public class StartupActivity extends Activity {
         gameB_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GameSoundHandler.stopLongSound();
-                GameSoundHandler.playLongSound(GameConstants.GUN_SHOT_SOUND);
                 mediaPlayer.stop();
                 mediaPlayer = MediaPlayer.create(StartupActivity.this,R.raw.gun_shot);
                 mediaPlayer.start();

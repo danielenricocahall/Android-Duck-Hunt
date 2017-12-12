@@ -35,7 +35,7 @@ public class Dog extends GameObject {
                 0.0f,
                 0.0f);
         forward.y = 0.0f;
-        forward.x = new Random().nextFloat();
+        forward.x = 0.75f;
         forward.normalize();
         position = new Vector2D(0.0f, GameEngine.SCREEN_HEIGHT*0.73f);
         paint = new Paint();

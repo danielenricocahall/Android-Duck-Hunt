@@ -97,5 +97,13 @@ public class IndicatorShots extends GameObject {
         }
         return false;
     }
+    public void setNumShots(int numShots)
+    {
+        if(numShots > 0 && numShots < 4)
+        {
+            this.numShots = numShots;
+        }
+    }
+
 
 }
