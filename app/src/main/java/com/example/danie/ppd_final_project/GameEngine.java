@@ -136,7 +136,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
             if(!hackyAsFuck)
             {
-                if(duckies.size() < totalNumberOfDucks) {
+                if(duckies.size() < GameConstants.NUMBER_OF_DUCKS_DEPLOYED) {
                     indicatorDucks.hitDuck(duckWasHit);
                 }
 
