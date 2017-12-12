@@ -112,8 +112,6 @@ public class Duck extends GameObject {
         if(timeToFlyAway && isAlive)
         {
             flyAway();
-            timeToFlyAway = false;
-            return;
         }
         if(isAlive) {
             GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
