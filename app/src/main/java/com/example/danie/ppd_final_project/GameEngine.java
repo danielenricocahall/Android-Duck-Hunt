@@ -49,7 +49,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorScore indicatorScore;
     boolean completedStartingSequence;
     boolean playingStartupTune;
-    public static final int totalNumberOfDucks = 10;
     public static int numberOfDucksOnScreen;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
@@ -86,7 +85,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
-        for(int ii = 0; ii < totalNumberOfDucks; ++ii)
+        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
