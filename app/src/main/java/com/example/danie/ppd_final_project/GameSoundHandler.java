@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Build;
 import android.util.SparseIntArray;
@@ -15,6 +16,7 @@ import android.util.SparseIntArray;
 public abstract class GameSoundHandler {
 
     public static SoundPool soundPool;
+    public static MediaPlayer mediaPlayer;
     public static Context context;
     public static SparseIntArray soundMap = new SparseIntArray();
 
@@ -46,7 +48,20 @@ public abstract class GameSoundHandler {
     public static void setContext(Context app_context)
     {
         context = app_context;
-        loadSounds();
+    }
+
+    public static void playLongSound(int long_sound)
+    {
+        mediaPlayer = MediaPlayer.create(context,long_sound);
+        mediaPlayer.start();
+    }
+
+    public static void stopLongSound()
+    {
+        if(mediaPlayer.isPlaying()) {
+            //mediaPlayer.stop();
+            mediaPlayer.reset();
+        }
     }
 
     public static void loadSounds()
