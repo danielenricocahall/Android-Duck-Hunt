@@ -23,7 +23,6 @@ public class StartupActivity extends Activity {
 
         gameA_start = (Button) findViewById(R.id.gameA_button);
         gameB_start = (Button) findViewById(R.id.gameB_button);
-
         gameA_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,6 +40,8 @@ public class StartupActivity extends Activity {
         gameB_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                GameSoundHandler.stopLongSound();
+                GameSoundHandler.playLongSound(GameConstants.GUN_SHOT_SOUND);
                 mediaPlayer.stop();
                 mediaPlayer = MediaPlayer.create(StartupActivity.this,R.raw.gun_shot);
                 mediaPlayer.start();
@@ -51,7 +52,6 @@ public class StartupActivity extends Activity {
                 startActivity(i_start);            }
         });
 
-        //i_start = new Intent(StartupActivity.this, MainActivity.class);
 
     }
 

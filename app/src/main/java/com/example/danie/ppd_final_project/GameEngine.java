@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,10 +48,12 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorDucks indicatorDucks;
     IndicatorScore indicatorScore;
     boolean completedStartingSequence;
+    boolean playingStartupTune;
     public static final int totalNumberOfDucks = 10;
     public static int numberOfDucksOnScreen;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
+
 
     public GameEngine(Context context, int numberOfDucksOnScreen, Point point) {
         super(context);
@@ -87,7 +90,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
         GameSoundHandler.createSoundPool();
         GameSoundHandler.setContext(context);
-        GameSoundHandler.playSound(GameConstants.STARTING_SEQUENCE_SOUND);
+        GameSoundHandler.loadSounds();
+        completedStartingSequence = false;
+        //playingStartupTune = false;
+        GameSoundHandler.playLongSound(GameConstants.STARTING_SEQUENCE_SOUND);
     }
 
     @Override
@@ -95,14 +101,14 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         previousTimeMillis = System.currentTimeMillis();
         while(isPlaying)
         {
+
             if(dog.destroy && !completedStartingSequence)
             {
-                GameSoundHandler.stopSound(GameConstants.STARTING_SEQUENCE_SOUND);
-                GameSoundHandler.playSound(GameConstants.DOG_BARKING_SOUND);
                 completedStartingSequence = true;
             }
             if(completedStartingSequence && !duckies.empty())
             {
+                //GameSoundHandler.stopLongSound();
                 //there's probably a better way to do this.....
                 boolean hackyAsFuck = false;
                 for(GameObject o: gameObjects) {

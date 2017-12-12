@@ -61,6 +61,9 @@ public class Dog extends GameObject {
         }
         else
         {
+
+            GameSoundHandler.stopLongSound();
+            GameSoundHandler.playLongSound(GameConstants.DOG_BARKING_SOUND);
             if(current_sprite == sprites[5]) {
                 current_sprite = sprites[6];
                 forward.y = -30.0f;
@@ -70,6 +73,7 @@ public class Dog extends GameObject {
                 current_sprite = sprites[7];
                 forward.y = 0.0f;
                 this.destroy = true;
+
             }
         }
         canvas.drawBitmap(current_sprite, position.x, position.y, paint);
