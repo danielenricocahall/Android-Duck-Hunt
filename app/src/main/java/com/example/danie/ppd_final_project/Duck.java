@@ -108,9 +108,8 @@ public class Duck extends GameObject {
     @Override
     public void onUpdate() {
         timeSinceSpawned += GameEngine.DELTA_TIME;
-        timeToFlyAway |= (timeSinceSpawned > 5.0f);
-        if(timeToFlyAway)
         timeToFlyAway |= (timeSinceSpawned > GameConstants.TIME_ON_SCREEN);
+        if(timeToFlyAway)
         if(timeToFlyAway && isAlive)
         {
             flyAway();
