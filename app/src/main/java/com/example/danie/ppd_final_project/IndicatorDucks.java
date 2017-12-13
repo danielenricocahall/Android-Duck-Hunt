@@ -45,13 +45,13 @@ public class IndicatorDucks extends GameObject {
     @Override
     public void onDraw(Canvas canvas) {
 
-        canvas.drawBitmap(bmpHit, hitPosition.x, hitPosition.y, paint);
-        canvas.drawBitmap(bmpBlueLines, blueLinesPosition.x, blueLinesPosition.y, paint);
+        canvas.drawBitmap(bmpHit, Camera.worldXToScreenX(hitPosition.x), Camera.worldYToScreenY(hitPosition.y), paint);
+        canvas.drawBitmap(bmpBlueLines, Camera.worldXToScreenX(blueLinesPosition.x), Camera.worldYToScreenY(blueLinesPosition.y), paint);
 
         for(int i = 0; i < NUM_DUCKS; i++){
             canvas.drawBitmap(
                     hits[i] ? bmpDuckRed : bmpDuckWhite,
-                    duckPositions[i].x, duckPositions[i].y, paint
+                    Camera.worldXToScreenX(duckPositions[i].x), Camera.worldYToScreenY(duckPositions[i].y), paint
             );
         }
 
@@ -96,20 +96,20 @@ public class IndicatorDucks extends GameObject {
     private void populatePositions() {
 
         hitPosition = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.27f,
-                GameEngine.SCREEN_HEIGHT * 0.93f
+                0.27f,
+                -0.55f
         );
 
         blueLinesPosition = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.36f,
-                GameEngine.SCREEN_HEIGHT * 0.96f
+                0.36f,
+                -0.6f
         );
 
         Vector2D duckStartPos = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.36f,
-                GameEngine.SCREEN_HEIGHT * 0.93f
+                0.36f,
+                -0.55f
         );
-        float duckSpacing = GameEngine.SCREEN_WIDTH * 0.03f;
+        float duckSpacing = 0.03f;
 
         duckPositions = new Vector2D[NUM_DUCKS];
 
@@ -119,8 +119,5 @@ public class IndicatorDucks extends GameObject {
                     duckStartPos.y
             );
         }
-
-
     }
-
 }

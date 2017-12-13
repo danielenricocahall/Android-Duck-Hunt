@@ -23,8 +23,8 @@ public class IndicatorScore extends GameObject {
         score = 0;
 
         scoreLocation = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.91f,
-                GameEngine.SCREEN_HEIGHT * 0.94f
+                0.91f,
+                -0.5667f
         );
 
         paint = new Paint();
@@ -41,8 +41,8 @@ public class IndicatorScore extends GameObject {
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.drawText(Integer.toString(score), scoreLocation.x, scoreLocation.y, paint);
-        canvas.drawText("SCORE", scoreLocation.x, scoreLocation.y + GameEngine.SCREEN_HEIGHT * 0.04f, paint);
+        canvas.drawText(Integer.toString(score), Camera.worldXToScreenX(scoreLocation.x),Camera.worldYToScreenY(scoreLocation.y), paint);
+        canvas.drawText("SCORE", Camera.worldXToScreenX(scoreLocation.x), Camera.worldYToScreenY(scoreLocation.y - 0.066667f), paint);
     }
 
     @Override

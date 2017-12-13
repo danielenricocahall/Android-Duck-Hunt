@@ -25,20 +25,20 @@ public class DuckFactory {
 
     public Duck makeGreenDuck()
     {
-        Duck duck = new Duck(this.context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "green");
+        Duck duck = new Duck(this.context, new Random().nextFloat(), 0, "green");
         return duck;
     }
 
     public Duck makeRedDuck()
     {
 
-        Duck duck = new Duck(this.context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "red");
+        Duck duck = new Duck(this.context, new Random().nextFloat(),0 , "red");
         return duck;
     }
 
     public Duck makePinkDuck()
     {
-        Duck duck = new Duck(this.context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "pink");
+        Duck duck = new Duck(this.context, new Random().nextFloat(), 0,  "pink");
         return duck;
     }
 

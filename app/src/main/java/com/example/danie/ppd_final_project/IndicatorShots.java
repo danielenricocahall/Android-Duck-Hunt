@@ -24,21 +24,21 @@ public class IndicatorShots extends GameObject {
         paint = new Paint();
 
         shotPosition = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.11f,
-                GameEngine.SCREEN_HEIGHT * 0.96f
+                0.11f,
+                -0.6f
         );
         bulletPositions = new Vector2D[3];
         bulletPositions[0] = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.10f,
-                GameEngine.SCREEN_HEIGHT * 0.92f
+                0.10f,
+                -0.53333f
         );
         bulletPositions[1] = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.13f,
-                GameEngine.SCREEN_HEIGHT * 0.92f
+                0.13f,
+                -0.53333f
         );
         bulletPositions[2] = new Vector2D(
-                GameEngine.SCREEN_WIDTH * 0.16f,
-                GameEngine.SCREEN_HEIGHT * 0.92f
+                0.16f,
+                -0.53333f
         );
 
     }
@@ -56,17 +56,17 @@ public class IndicatorShots extends GameObject {
         if (numShots <= 0) return;
 
         // Draw first bullet
-        canvas.drawBitmap(bmpBullet, bulletPositions[0].x, bulletPositions[0].y, paint);
+        canvas.drawBitmap(bmpBullet, Camera.worldXToScreenX(bulletPositions[0].x), Camera.worldYToScreenY(bulletPositions[0].y), paint);
 
         if (numShots <= 1) return;
 
         // Draw second bullet
-        canvas.drawBitmap(bmpBullet, bulletPositions[1].x, bulletPositions[1].y, paint);
+        canvas.drawBitmap(bmpBullet, Camera.worldXToScreenX(bulletPositions[1].x), Camera.worldYToScreenY(bulletPositions[1].y), paint);
 
         if (numShots <= 2) return;
 
         // Draw third bullet
-        canvas.drawBitmap(bmpBullet, bulletPositions[2].x, bulletPositions[2].y, paint);
+        canvas.drawBitmap(bmpBullet, Camera.worldXToScreenX(bulletPositions[2].x), Camera.worldYToScreenY(bulletPositions[2].y), paint);
 
     }
 
