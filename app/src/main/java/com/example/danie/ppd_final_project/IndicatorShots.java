@@ -51,7 +51,7 @@ public class IndicatorShots extends GameObject {
     @Override
     public void onDraw(Canvas canvas) {
 
-        canvas.drawBitmap(bmpShot, shotPosition.x, shotPosition.y, paint);
+        canvas.drawBitmap(bmpShot, Camera.worldXToScreenX(shotPosition.x), Camera.worldYToScreenY(shotPosition.y), paint);
 
         if (numShots <= 0) return;
 
