@@ -175,7 +175,6 @@ public class Duck extends GameObject {
             this.physicsComponent.forward = new Vector2D(
                     this.physicsComponent.forward.x * - 1.0f,
                     this.physicsComponent.forward.y);
-            this.physicsComponent.forward.normalize();
             flipSprites();
         }
         if (this.position.x < 0) {
@@ -183,7 +182,6 @@ public class Duck extends GameObject {
             this.physicsComponent.setForward(new Vector2D(
                     this.physicsComponent.forward.x * -1.0f,
                     this.physicsComponent.forward.y));
-            this.physicsComponent.forward.normalize();
             flipSprites();
         }
         if (this.position.y < -0.16667 ) {
