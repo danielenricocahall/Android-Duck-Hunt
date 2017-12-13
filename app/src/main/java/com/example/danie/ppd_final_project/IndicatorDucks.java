@@ -25,9 +25,9 @@ public class IndicatorDucks extends GameObject {
     protected boolean[] hits;
     private int numDucksHit = 0;
 
-    public IndicatorDucks(Context context) {
+    public IndicatorDucks() {
 
-        populateBitmaps(context);
+        populateSprites(GameEngine.context);
         populatePositions();
 
         paint = new Paint();
@@ -74,7 +74,7 @@ public class IndicatorDucks extends GameObject {
         numDucksHit++;
     }
 
-    private void populateBitmaps(Context context) {
+    private void populateSprites(Context context) {
         bmpHit = BitmapFactory.decodeResource(
                 context.getResources(),
                 context.getResources().getIdentifier("hit", "drawable", context.getPackageName())

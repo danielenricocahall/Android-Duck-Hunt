@@ -18,7 +18,7 @@ public class IndicatorScore extends GameObject {
 
     protected Paint paint;
 
-    public IndicatorScore(Context context) {
+    public IndicatorScore() {
 
         score = 0;
 

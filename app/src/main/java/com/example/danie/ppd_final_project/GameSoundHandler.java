@@ -37,6 +37,7 @@ public abstract class GameSoundHandler {
                 .build();
         soundPool = new SoundPool.Builder()
                 .setAudioAttributes(attributes)
+                .setMaxStreams(10)
                 .build();
     }
 
@@ -59,7 +60,6 @@ public abstract class GameSoundHandler {
     public static void stopLongSound()
     {
         if(mediaPlayer.isPlaying()) {
-            //mediaPlayer.stop();
             mediaPlayer.reset();
         }
     }
@@ -75,24 +75,26 @@ public abstract class GameSoundHandler {
     }
 
 
-    public static void playSound(int sound)
+    public static int playSound(int sound)
     {
-        soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
-        try{
+        return soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
+        /*try{
             Thread.sleep(10);
         }
         catch (InterruptedException e)
         {
 
-        }
+        }*/
     }
 
     public static void stopAllSounds()
     {
-        for(int ii = 0; ii<soundMap.size();++ii)
-        {
-            stopSound(soundMap.valueAt(ii));
-        }
+        soundPool.autoPause();
+    }
+
+    public static void resumeAllSounds()
+    {
+        soundPool.autoResume();
     }
 
     public static void stopSound(int sound)

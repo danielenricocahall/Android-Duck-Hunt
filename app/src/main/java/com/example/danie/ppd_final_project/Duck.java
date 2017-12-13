@@ -27,7 +27,6 @@ public class Duck extends GameObject {
 
     public boolean isAlive;
     protected Bitmap current_sprite;
-    protected Vector2D forward;
     protected float deathPoint;
     protected Paint paint;
     protected Bitmap[][] sprites;
@@ -39,26 +38,28 @@ public class Duck extends GameObject {
     float timeSinceSpawned;
     public boolean timeToFlyAway = false;
     private String duckColor;
-    float speed = 100.0f;
+    DynamicPhysicsComponent physicsComponent;
 
 
-    public Duck(Context context, float x, float y, String duckColor) {
-        forward = new Vector2D(
+    public Duck(float x, float y, String duckColor, final DynamicPhysicsComponent physicsComponent) {
+        this.physicsComponent = physicsComponent;
+        this.physicsComponent.speed = 100.0f;
+        physicsComponent.forward = new Vector2D(
                 new Random().nextFloat(),
                 new Random().nextFloat()*-1.0f);
         sprites = new Bitmap[NUMBER_OF_DUCK_ORIENTATIONS][NUMBER_OF_DUCK_SPRITES];
         duckOrientation = DIAGONAL;//they'll all start diagonally
         this.duckColor = duckColor;
-        populateDuckSprites(context);
+        populateSprites(GameEngine.context);
         int frame = new Random().nextInt(NUMBER_OF_DUCK_SPRITES);
         current_sprite = sprites[0][frame];//determines their initial flapping position
         boolean isFlipped = new Random().nextInt(1000) % 2 == 0;
         if(isFlipped)
         {
             flipSprites();
-            forward.x *= -1.0f;
+            this.physicsComponent.forward.x *= -1.0f;
         }
-        forward.normalize();
+        this.physicsComponent.forward.normalize();
         position = new Vector2D(x, y);
         paint = new Paint();
         isAlive = true;
@@ -67,6 +68,7 @@ public class Duck extends GameObject {
         timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
         timeToSwitchDirection = new Random().nextInt(50) + 60;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
+
     }
 
 
@@ -83,7 +85,6 @@ public class Duck extends GameObject {
         else
         {
             duckOrientation = DEFEAT;
-
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
                 deathPoint = position.y;
@@ -115,31 +116,26 @@ public class Duck extends GameObject {
         if(isAlive) {
             GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
             performTimeChecks();
-            GameSoundHandler.stopSound(GameConstants.DUCK_FLAP_SOUND);
         }
         else
         {
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
                 timeSinceShot += GameEngine.DELTA_TIME;
-                forward.x = 0.0f;
-                forward.y = 0.0f;
+                this.physicsComponent.forward.x = 0.0f;
+                this.physicsComponent.forward.y = 0.0f;
             }
             else
             {
                 //the duck hasn't started falling yet, so play the falling sound
-                if(forward.y <= 0.0f) {
+                if(this.physicsComponent.forward.y <= 0.0f) {
                     GameSoundHandler.playSound(GameConstants.DEAD_DUCK_FALL_SOUND);
                 }
-                    forward.x = 0.0f;
-                    forward.y = GRAVITY;
+                    this.physicsComponent.forward.x = 0.0f;
+                    this.physicsComponent.forward.y = GRAVITY;
             }
         }
-
-        Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
-        deltaPosition.scalarMultiply(speed *
-                GameEngine.DELTA_TIME);
-        this.position.add(deltaPosition);
+        physicsComponent.update(this);
         checkBorder();
         frame++;
     }
@@ -154,7 +150,7 @@ public class Duck extends GameObject {
     {
         if(frame > 0 && frame % timeToSwitchDirection == 0)
         {
-            forward.x *= -1.0f;
+            this.physicsComponent.forward.x *= -1.0f;
             flipSprites();
         }
     }
@@ -169,8 +165,8 @@ public class Duck extends GameObject {
     private void flyAway()
     {
         duckOrientation = GameConstants.BACK;
-        forward.y = GameConstants.ESCAPE_VELOCITY;
-        forward.x = 0.0f;
+        this.physicsComponent.forward.y = GameConstants.ESCAPE_VELOCITY;
+        this.physicsComponent.forward.x = 0.0f;
     }
 
     public void checkBorder()
@@ -179,23 +175,23 @@ public class Duck extends GameObject {
                 current_sprite.getWidth())) {
             this.position.x =
                     GameEngine.SCREEN_WIDTH - current_sprite.getWidth();
-            this.forward = new Vector2D(
-                    this.forward.x * - 1.0f,
-                    this.forward.y);
-            this.forward.normalize();
+            this.physicsComponent.setForward(new Vector2D(
+                    this.physicsComponent.forward.x * - 1.0f,
+                    this.physicsComponent.forward.y));
+            this.physicsComponent.forward.normalize();
             flipSprites();
         }
         if (this.position.x < 0) {
             this.position.x = 0;
-            this.forward = new Vector2D(
-                    this.forward.x * -1.0f,
-                    this.forward.y);
-            this.forward.normalize();
+            this.physicsComponent.setForward(new Vector2D(
+                    this.physicsComponent.forward.x * -1.0f,
+                    this.physicsComponent.forward.y));
+            this.physicsComponent.forward.normalize();
             flipSprites();
         }
         if (this.position.y > GameEngine.SCREEN_HEIGHT - GameEngine.SCREEN_HEIGHT*0.3f) {
             this.destroy = true;
-            GameSoundHandler.stopSound((GameConstants.DEAD_DUCK_FALL_SOUND));
+            GameSoundHandler.stopAllSounds();
             GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
         }
         if(this.position.y < 0)
@@ -227,7 +223,7 @@ public class Duck extends GameObject {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    public void populateDuckSprites(Context context)
+    public void populateSprites(Context context)
     {
         for (int i=0; i<NUMBER_OF_DUCK_SPRITES; i++){
             int j = i + 1;

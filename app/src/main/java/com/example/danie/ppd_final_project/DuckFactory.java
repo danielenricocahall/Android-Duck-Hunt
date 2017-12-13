@@ -11,34 +11,22 @@ import java.util.Random;
 public class DuckFactory {
 
 
-    private static Context context;
-
-    public DuckFactory(Context context)
-    {
-        setContext(context);
-    }
-
-    public void setContext(Context context)
-    {
-        this.context = context;
-    }
-
     public Duck makeGreenDuck()
     {
-        Duck duck = new Duck(this.context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "green");
+        Duck duck = new Duck(new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "green", new BasicPhysicsComponent());
         return duck;
     }
 
     public Duck makeRedDuck()
     {
 
-        Duck duck = new Duck(this.context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "red");
+        Duck duck = new Duck(new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "red", new BasicPhysicsComponent());
         return duck;
     }
 
     public Duck makePinkDuck()
     {
-        Duck duck = new Duck(this.context, new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "pink");
+        Duck duck = new Duck(new Random().nextInt(GameEngine.SCREEN_WIDTH), GameEngine.SCREEN_HEIGHT * 0.6f, "pink", new BasicPhysicsComponent());
         return duck;
     }
 

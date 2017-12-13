@@ -17,24 +17,26 @@ import static com.example.danie.ppd_final_project.GameConstants.NUMBER_OF_DOG_SP
 public class Dog extends GameObject {
     public boolean readyToJump;
     protected Bitmap current_sprite;
-    protected Vector2D forward;
     protected Paint paint;
     Bitmap[] sprites;
     int frame = 0;
+    DynamicPhysicsComponent physicsComponent;
 
 
-    public Dog(Context context)
+    public Dog(DynamicPhysicsComponent physicsComponent)
     {
+        this.physicsComponent = physicsComponent;
         readyToJump = false;
         sprites = new Bitmap[9];
-        populateDogSprites(context);
+        populateDogSprites(GameEngine.context);
         current_sprite = sprites[0];
-        forward = new Vector2D(
+        this.physicsComponent.forward = new Vector2D(
                 0.0f,
                 0.0f);
-        forward.y = 0.0f;
-        forward.x = 0.75f;
-        forward.normalize();
+        this.physicsComponent.forward.y = 0.0f;
+        this.physicsComponent.forward.x = 0.75f;
+        this.physicsComponent.forward.normalize();
+        this.physicsComponent.speed = 50.0f;
         position = new Vector2D(0.0f, GameEngine.SCREEN_HEIGHT*0.73f);
         paint = new Paint();
         layer = GameConstants.FOREGROUND;
@@ -48,12 +50,12 @@ public class Dog extends GameObject {
     public void onDraw(Canvas canvas)
     {
         if(!readyToJump) {
-            this.forward.y = 0.0f;
+            this.physicsComponent.forward.y = 0.0f;
             if (this.position.x < GameEngine.SCREEN_WIDTH / 2 - current_sprite.getWidth()) {
                 current_sprite = sprites[frame % 5];
             } else {
                 current_sprite = sprites[5];
-                this.forward.x = 0.0f;
+                this.physicsComponent.forward.x = 0.0f;
                 readyToJump = true;
             }
         }
@@ -64,12 +66,12 @@ public class Dog extends GameObject {
             GameSoundHandler.playLongSound(GameConstants.DOG_BARKING_SOUND);
             if(current_sprite == sprites[5]) {
                 current_sprite = sprites[6];
-                forward.y = -30.0f;
+                this.physicsComponent.forward.y = -30.0f;
             }
             else
             {
                 current_sprite = sprites[7];
-                forward.y = 0.0f;
+                this.physicsComponent.forward.y = 0.0f;
                 this.destroy = true;
 
             }
@@ -79,10 +81,7 @@ public class Dog extends GameObject {
 
     public void onUpdate()
     {
-        float speed = 50.0f; //pixels per second
-        Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
-        deltaPosition.scalarMultiply(speed * GameEngine.DELTA_TIME);
-        this.position.add(deltaPosition);
+        this.physicsComponent.update(this);
         frame++;
     }
     public void populateDogSprites(Context context)

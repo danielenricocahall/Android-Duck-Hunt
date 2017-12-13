@@ -18,9 +18,9 @@ public class IndicatorShots extends GameObject {
     protected Vector2D shotPosition;
     protected Vector2D[] bulletPositions;
 
-    public IndicatorShots(Context context) {
+    public IndicatorShots() {
         numShots = 3;
-        populateSprites(context);
+        populateSprites(GameEngine.context);
         paint = new Paint();
 
         shotPosition = new Vector2D(
