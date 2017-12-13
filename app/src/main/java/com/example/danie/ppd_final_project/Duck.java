@@ -191,7 +191,7 @@ public class Duck extends GameObject {
             this.forward.normalize();
             flipSprites();
         }
-        if (this.position.y < -0.1 ) {
+        if (this.position.y < -0.16667 ) {
             this.destroy = true;
             GameSoundHandler.stopSound((GameConstants.DEAD_DUCK_FALL_SOUND));
             GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
