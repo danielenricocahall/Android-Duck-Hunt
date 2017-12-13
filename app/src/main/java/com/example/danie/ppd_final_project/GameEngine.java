@@ -202,6 +202,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
+                GameSoundHandler.stopAllSounds();
                 GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
                 outOFBullets = indicatorShots.shoot();
                 boolean duckWasHit = false;

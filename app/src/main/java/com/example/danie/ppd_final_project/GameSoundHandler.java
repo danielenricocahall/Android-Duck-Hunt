@@ -87,6 +87,14 @@ public abstract class GameSoundHandler {
         }
     }
 
+    public static void stopAllSounds()
+    {
+        for(int ii = 0; ii<soundMap.size();++ii)
+        {
+            stopSound(soundMap.valueAt(ii));
+        }
+    }
+
     public static void stopSound(int sound)
     {
         soundPool.stop(soundMap.get(sound));
