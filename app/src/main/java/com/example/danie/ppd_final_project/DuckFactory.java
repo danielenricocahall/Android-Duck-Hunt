@@ -32,7 +32,7 @@ public class DuckFactory {
     public Duck makeRedDuck()
     {
 
-        Duck duck = new Duck(this.context, new Random().nextFloat(),0 , "red");
+        Duck duck = new Duck(this.context, new Random().nextFloat(), 0 , "red");
         return duck;
     }
 

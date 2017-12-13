@@ -22,7 +22,6 @@ public class Dog extends GameObject {
     Bitmap[] sprites;
     int frame = 0;
 
-
     public Dog(Context context)
     {
         readyToJump = false;
@@ -64,7 +63,7 @@ public class Dog extends GameObject {
             GameSoundHandler.playLongSound(GameConstants.DOG_BARKING_SOUND);
             if(current_sprite == sprites[5]) {
                 current_sprite = sprites[6];
-                forward.y = -30.0f;
+                forward.y = 30.0f;
             }
             else
             {
