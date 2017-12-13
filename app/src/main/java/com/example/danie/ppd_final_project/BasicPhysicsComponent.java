@@ -25,7 +25,7 @@ public class BasicPhysicsComponent extends DynamicPhysicsComponent {
 
     public void updatePosition(GameObject gameObject)
     {
-        Vector2D deltaPosition = new Vector2D(forward.x, forward.y);
+        Vector2D deltaPosition = new Vector2D(forward.x, -forward.y);
         deltaPosition.scalarMultiply(speed *
                 GameEngine.DELTA_TIME);
         gameObject.position.add(deltaPosition);

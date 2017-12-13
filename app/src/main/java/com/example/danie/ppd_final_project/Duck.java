@@ -65,8 +65,8 @@ public class Duck extends GameObject {
         isAlive = true;
         timeSinceSpawned = 0.0f;
         timeSinceShot = 0.0f;
-        timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
-        timeToSwitchDirection = new Random().nextInt(50) + 60;//some degree of randomness to change direction
+        timeToSwitchOrientation = new Random().nextInt(20) + 20;//some degree of randomness to change the sprite
+        timeToSwitchDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
     }
 

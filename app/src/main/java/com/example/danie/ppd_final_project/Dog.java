@@ -36,8 +36,8 @@ public class Dog extends GameObject {
         this.physicsComponent.forward.y = 0.0f;
         this.physicsComponent.forward.x = 0.75f;
         this.physicsComponent.forward.normalize();
-        this.physicsComponent.speed = 50.0f;
-        position = new Vector2D(0.0f, GameEngine.SCREEN_HEIGHT*0.73f);
+        this.physicsComponent.speed = 0.07f;
+        position = new Vector2D(0.0f, -0.216667f);
         paint = new Paint();
         layer = GameConstants.FOREGROUND;
     }
@@ -51,7 +51,7 @@ public class Dog extends GameObject {
     {
         if(!readyToJump) {
             this.physicsComponent.forward.y = 0.0f;
-            if (this.position.x < GameEngine.SCREEN_WIDTH / 2 - current_sprite.getWidth()) {
+            if (this.position.x < 0.5 - Camera.screenXToWorldX(current_sprite.getWidth())) {
                 current_sprite = sprites[frame % 5];
             } else {
                 current_sprite = sprites[5];
