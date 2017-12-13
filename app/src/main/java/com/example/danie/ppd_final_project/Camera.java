@@ -1,8 +1,6 @@
 package com.example.danie.ppd_final_project;
 
 
-import java.util.Vector;
-
 /**
  * Created by Aaron on 12/12/2017.
  */
