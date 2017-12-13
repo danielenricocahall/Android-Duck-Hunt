@@ -67,6 +67,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         gameObjects = new ArrayList<>();
 
+        Camera.init(new Vector2D(point.x, point.y));
+
         dog = new Dog(getContext());
         gameObjects.add(dog);
 
@@ -228,8 +230,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 {
                     if(o instanceof Duck)
                     {
-                        float delta_x = event.getRawX() - ((Duck) o).position.x;
-                        float delta_y = event.getRawY() - ((Duck) o).position.y;
+                        Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
+                        float delta_x = event.getRawX() - screenPos.x;
+                        float delta_y = event.getRawY() - screenPos.y;
                         float distance = (float) Math.sqrt(delta_x*delta_x + delta_y*delta_y);
                         if(distance < 100.0f)
                         {
