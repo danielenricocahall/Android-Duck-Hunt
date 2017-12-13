@@ -25,7 +25,6 @@ import static com.example.danie.ppd_final_project.GameConstants.NUMBER_OF_DUCK_S
 
 public class Duck extends GameObject {
 
-    public Vector2D position;
     public boolean isAlive;
     protected Bitmap current_sprite;
     protected Vector2D forward;
@@ -109,12 +108,9 @@ public class Duck extends GameObject {
     public void onUpdate() {
         timeSinceSpawned += GameEngine.DELTA_TIME;
         timeToFlyAway |= (timeSinceSpawned > GameConstants.TIME_ON_SCREEN);
-        if(timeToFlyAway)
         if(timeToFlyAway && isAlive)
         {
             flyAway();
-            timeToFlyAway = false;
-            return;
         }
         if(isAlive) {
             GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);

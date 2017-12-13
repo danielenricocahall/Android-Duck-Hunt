@@ -49,11 +49,11 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorScore indicatorScore;
     boolean completedStartingSequence;
     boolean playingStartupTune;
-    public static final int totalNumberOfDucks = 10;
     public static int numberOfDucksOnScreen;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
     boolean outOFBullets = false;
+    boolean duckWasHit = false;
 
 
     public GameEngine(Context context, int numberOfDucksOnScreen, Point point) {
@@ -87,7 +87,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
-        for(int ii = 0; ii < totalNumberOfDucks; ++ii)
+        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
@@ -138,10 +138,15 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
             if(!hackyAsFuck)
             {
+                if(duckies.size() < GameConstants.NUMBER_OF_DUCKS_DEPLOYED) {
+                    indicatorDucks.hitDuck(duckWasHit);
+                }
+
                 for(int ii = 0; ii<numberOfDucksOnScreen;++ii) {
                     gameObjects.add(duckies.pop());
                     indicatorShots.setNumShots(3);
                     outOFBullets = false;
+                    duckWasHit = false;
                 }
 
             }
@@ -205,9 +210,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
+                GameSoundHandler.stopAllSounds();
                 GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
                 outOFBullets = indicatorShots.shoot();
-                boolean duckWasHit = false;
                 for(GameObject o: gameObjects)
                 {
                     if(o instanceof Duck)
@@ -225,7 +230,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     }
                 }
                 GameSoundHandler.stopSound(GameConstants.GUN_SHOT_SOUND);
-                indicatorDucks.hitDuck(duckWasHit);
 
                 break;
             case MotionEvent.ACTION_UP:
