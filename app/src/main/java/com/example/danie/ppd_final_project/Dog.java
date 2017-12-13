@@ -76,7 +76,7 @@ public class Dog extends GameObject {
 
             }
         }
-        canvas.drawBitmap(current_sprite, position.x, position.y, paint);
+        canvas.drawBitmap(current_sprite, Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
     }
 
     public void onUpdate()

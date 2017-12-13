@@ -43,7 +43,7 @@ public class Duck extends GameObject {
 
     public Duck(float x, float y, String duckColor, final DynamicPhysicsComponent physicsComponent) {
         this.physicsComponent = physicsComponent;
-        this.physicsComponent.speed = 100.0f;
+        this.physicsComponent.speed = 0.12f;
         physicsComponent.forward = new Vector2D(
                 new Random().nextFloat(),
                 new Random().nextFloat()*-1.0f);
@@ -68,7 +68,6 @@ public class Duck extends GameObject {
         timeToSwitchOrientation = new Random().nextInt(40) + 40;//some degree of randomness to change the sprite
         timeToSwitchDirection = new Random().nextInt(50) + 60;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
-
     }
 
 
@@ -94,7 +93,7 @@ public class Duck extends GameObject {
             {
                 if(timeSinceShot < DELAY_TO_DISPLAY_SCORE)
                 {
-                    canvas.drawBitmap(sprites[duckOrientation][2],position.x, deathPoint, paint);
+                    canvas.drawBitmap(sprites[duckOrientation][2], Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(deathPoint), paint);
                 }
                 current_sprite = sprites[duckOrientation][1];
                 if (frame % 2 == 0) {
@@ -102,7 +101,7 @@ public class Duck extends GameObject {
                 }
             }
         }
-        canvas.drawBitmap(current_sprite, position.x, position.y, paint);
+        canvas.drawBitmap(current_sprite, Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
     }
 
     @Override
@@ -171,13 +170,11 @@ public class Duck extends GameObject {
 
     public void checkBorder()
     {
-        if (this.position.x > (GameEngine.SCREEN_WIDTH -
-                current_sprite.getWidth())) {
-            this.position.x =
-                    GameEngine.SCREEN_WIDTH - current_sprite.getWidth();
-            this.physicsComponent.setForward(new Vector2D(
+        if (this.position.x > (1 - Camera.screenXToWorldX(current_sprite.getWidth()))) {
+            this.position.x = 1 - Camera.screenXToWorldX(current_sprite.getWidth());
+            this.physicsComponent.forward = new Vector2D(
                     this.physicsComponent.forward.x * - 1.0f,
-                    this.physicsComponent.forward.y));
+                    this.physicsComponent.forward.y);
             this.physicsComponent.forward.normalize();
             flipSprites();
         }
@@ -189,12 +186,12 @@ public class Duck extends GameObject {
             this.physicsComponent.forward.normalize();
             flipSprites();
         }
-        if (this.position.y > GameEngine.SCREEN_HEIGHT - GameEngine.SCREEN_HEIGHT*0.3f) {
+        if (this.position.y < -0.16667 ) {
             this.destroy = true;
             GameSoundHandler.stopAllSounds();
             GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
         }
-        if(this.position.y < 0)
+        if(this.position.y > 1)
         {
             this.destroy = true;
         }

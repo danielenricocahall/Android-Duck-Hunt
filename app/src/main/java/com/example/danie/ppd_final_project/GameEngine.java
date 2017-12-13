@@ -52,8 +52,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
     boolean outOFBullets = false;
-    boolean duckWasHit = false;
-    public static Context context;
+    boolean[] prevFlyingAwayFlags;
+    static Context context;
+
 
 
     public GameEngine(Context context, int numberOfDucksOnScreen, Point point) {
@@ -65,6 +66,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         paint = new Paint();
 
         gameObjects = new ArrayList<>();
+
+        Camera.init(new Vector2D(point.x, point.y));
 
         dog = new Dog(new BasicPhysicsComponent());
         gameObjects.add(dog);
@@ -79,6 +82,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         indicatorScore = new IndicatorScore();
         gameObjects.add(indicatorScore);
+
+        prevFlyingAwayFlags = new boolean[numberOfDucksOnScreen];
 
         this.setOnTouchListener(this);
         this.numberOfDucksOnScreen = numberOfDucksOnScreen;
@@ -126,25 +131,35 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         if(completedStartingSequence && !duckies.empty())
         {
             boolean hackyAsFuck = false;
+            int duckIdx = 0;
+
             for(GameObject o: gameObjects) {
                 if (o instanceof Duck)
                 {
                     hackyAsFuck = true;
-                    ((Duck) o).timeToFlyAway = outOFBullets;
+
+                    if (
+                            (!((Duck) o).timeToFlyAway && outOFBullets) // Just ran out of bullets
+                            || (((Duck) o).timeToFlyAway && !prevFlyingAwayFlags[duckIdx]) // The duck just started flying away
+                        )
+                    {
+                        indicatorDucks.hitDuck(false);
+                    }
+
+                    ((Duck) o).timeToFlyAway |= outOFBullets;
+                    outOFBullets |= ((Duck) o).timeToFlyAway;
+
+                    prevFlyingAwayFlags[duckIdx] = ((Duck) o).timeToFlyAway;
+                    duckIdx++;
                 }
             }
 
             if(!hackyAsFuck)
             {
-                if(duckies.size() < GameConstants.NUMBER_OF_DUCKS_DEPLOYED) {
-                    indicatorDucks.hitDuck(duckWasHit);
-                }
-
                 for(int ii = 0; ii<numberOfDucksOnScreen;++ii) {
                     gameObjects.add(duckies.pop());
                     indicatorShots.setNumShots(3);
                     outOFBullets = false;
-                    duckWasHit = false;
                 }
 
             }
@@ -214,13 +229,14 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 {
                     if(o instanceof Duck)
                     {
-                        float delta_x = event.getRawX() - ((Duck) o).position.x;
-                        float delta_y = event.getRawY() - ((Duck) o).position.y;
+                        Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
+                        float delta_x = event.getRawX() - screenPos.x;
+                        float delta_y = event.getRawY() - screenPos.y;
                         float distance = (float) Math.sqrt(delta_x*delta_x + delta_y*delta_y);
                         if(distance < 100.0f)
                         {
                             ((Duck) o).isAlive = false;
-                            duckWasHit = true;
+                            indicatorDucks.hitDuck(true);
                             indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                         }
                     }
