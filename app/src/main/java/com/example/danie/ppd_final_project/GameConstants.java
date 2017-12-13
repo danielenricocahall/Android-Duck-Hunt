@@ -57,6 +57,8 @@ public class GameConstants {
     public static final int MIDGROUND = 2;
     public static final int FOREGROUND = 3;
 
+    public static final float GROUND = -0.16667f;
+
 
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
         put("green",    500);

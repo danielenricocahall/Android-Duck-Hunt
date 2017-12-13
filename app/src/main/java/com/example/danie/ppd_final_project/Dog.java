@@ -28,7 +28,7 @@ public class Dog extends GameObject {
         this.physicsComponent = physicsComponent;
         readyToJump = false;
         sprites = new Bitmap[9];
-        populateDogSprites(GameEngine.context);
+        populateSprites(GameEngine.context);
         current_sprite = sprites[0];
         this.physicsComponent.forward = new Vector2D(
                 0.0f,
@@ -84,7 +84,7 @@ public class Dog extends GameObject {
         this.physicsComponent.update(this);
         frame++;
     }
-    public void populateDogSprites(Context context)
+    public void populateSprites(Context context)
     {
         for (int i=0; i < NUMBER_OF_DOG_SPRITES; i++){
             int j = i + 1;

@@ -34,7 +34,8 @@ public class Duck extends GameObject {
     int duckOrientation;
     float timeSinceShot;
     int timeToSwitchOrientation;
-    int timeToSwitchDirection;
+    int timeToSwitchHorizontalDirection;
+    int timeToSwitchVerticalDirection;
     float timeSinceSpawned;
     public boolean timeToFlyAway = false;
     private String duckColor;
@@ -66,7 +67,8 @@ public class Duck extends GameObject {
         timeSinceSpawned = 0.0f;
         timeSinceShot = 0.0f;
         timeToSwitchOrientation = new Random().nextInt(20) + 20;//some degree of randomness to change the sprite
-        timeToSwitchDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
+        timeToSwitchHorizontalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
+        timeToSwitchVerticalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
     }
 
@@ -142,15 +144,24 @@ public class Duck extends GameObject {
     private void performTimeChecks()
     {
         checkOrientationTime();
-        checkDirectionTime();
+        checkHorizontalDirectionTime();
+        checkVerticalDirectionTime();
     }
 
-    private void checkDirectionTime()
+    private void checkHorizontalDirectionTime()
     {
-        if(frame > 0 && frame % timeToSwitchDirection == 0)
+        if(frame > 0 && frame % timeToSwitchHorizontalDirection == 0)
         {
             this.physicsComponent.forward.x *= -1.0f;
             flipSprites();
+        }
+    }
+
+    private void checkVerticalDirectionTime()
+    {
+        if(frame > 0 && frame % timeToSwitchVerticalDirection == 0)
+        {
+            this.physicsComponent.forward.y *= -1.0f;
         }
     }
 
@@ -172,19 +183,15 @@ public class Duck extends GameObject {
     {
         if (this.position.x > (1 - Camera.screenXToWorldX(current_sprite.getWidth()))) {
             this.position.x = 1 - Camera.screenXToWorldX(current_sprite.getWidth());
-            this.physicsComponent.forward = new Vector2D(
-                    this.physicsComponent.forward.x * - 1.0f,
-                    this.physicsComponent.forward.y);
+            this.physicsComponent.forward.x *= -1.0f;
             flipSprites();
         }
         if (this.position.x < 0) {
             this.position.x = 0;
-            this.physicsComponent.setForward(new Vector2D(
-                    this.physicsComponent.forward.x * -1.0f,
-                    this.physicsComponent.forward.y));
+            this.physicsComponent.forward.x *= -1.0f;
             flipSprites();
         }
-        if (this.position.y < -0.16667 ) {
+        if (this.position.y < GameConstants.GROUND && !isAlive) {
             this.destroy = true;
             GameSoundHandler.stopAllSounds();
             GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
