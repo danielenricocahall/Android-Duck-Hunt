@@ -30,7 +30,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     protected Thread gameThread;
     protected SurfaceHolder surfaceHolder;
     private static final int DESIRED_FPS = 30;
-    private static final int TIME_BETWEEN_FRAMES = 1000/DESIRED_FPS;
+    private static final int TIME_BETWEEN_FRAMES = 1000 / DESIRED_FPS;
     private long previousTimeMillis;
     private long currentTimeMillis;
     private ArrayList<GameObject> gameObjects;
@@ -53,7 +53,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     static Context context;
     static int level;
     static boolean levelComplete;
-
 
 
     public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level, int score) {
@@ -96,8 +95,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
-        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
-        {
+        for (int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii) {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -110,48 +108,42 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     @Override
     public void run() {
         previousTimeMillis = System.currentTimeMillis();
-        while(isPlaying)
-        {
+        while (isPlaying) {
             handleGameLogic();
-            if(levelComplete)
+            if (!levelComplete) {
+                update();
+                draw();
+                currentTimeMillis = System.currentTimeMillis();
+                DELTA_TIME = (currentTimeMillis - previousTimeMillis) / 1000.0f;
+                try {
+                    gameThread.sleep(TIME_BETWEEN_FRAMES);
+                } catch (InterruptedException e) {
+
+                }
+                previousTimeMillis = currentTimeMillis;
+            }
+            else
             {
                 goToNextLevel();
             }
-            update();
-            draw();
-            currentTimeMillis = System.currentTimeMillis();
-            DELTA_TIME = (currentTimeMillis - previousTimeMillis)/1000.0f;
-            try{
-                gameThread.sleep(TIME_BETWEEN_FRAMES);
-            }
-            catch (InterruptedException e)
-            {
-
-            }
-            previousTimeMillis = currentTimeMillis;
         }
     }
 
-    public void handleGameLogic()
-    {
-        if(dog.destroy && !completedStartingSequence)
-        {
+    public void handleGameLogic() {
+        if (dog.destroy && !completedStartingSequence) {
             completedStartingSequence = true;
         }
-        if(completedStartingSequence)
-        {
+        if (completedStartingSequence) {
             boolean hackyAsFuck = false;
             int duckIdx = 0;
 
-            for(GameObject o: gameObjects) {
-                if (o instanceof Duck)
-                {
+            for (GameObject o : gameObjects) {
+                if (o instanceof Duck) {
                     hackyAsFuck = true;
                     if (
                             (!((Duck) o).timeToFlyAway && outOFBullets) // Just ran out of bullets
-                            || (((Duck) o).timeToFlyAway && !prevFlyingAwayFlags[duckIdx]) // The duck just started flying away
-                        )
-                    {
+                                    || (((Duck) o).timeToFlyAway && !prevFlyingAwayFlags[duckIdx]) // The duck just started flying away
+                            ) {
                         indicatorDucks.hitDuck(false);
                     }
 
@@ -163,16 +155,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 }
             }
 
-            if(!hackyAsFuck)
-            {
-                if(duckies.empty())
-                {
+            if (!hackyAsFuck) {
+                if (duckies.empty()) {
                     levelComplete = true;
-                }
-                else {
+                } else {
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
-                        duck.physicsComponent.setSpeed(level*GameConstants.DUCK_SPEED);
+                        duck.physicsComponent.setSpeed(level * GameConstants.DUCK_SPEED);
                         gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
@@ -183,30 +172,24 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
     }
 
-    public void update()
-    {
-        for (Iterator<GameObject> iterator = gameObjects.iterator(); iterator.hasNext();) {
+    public void update() {
+        for (Iterator<GameObject> iterator = gameObjects.iterator(); iterator.hasNext(); ) {
             GameObject gameObject = iterator.next();
-            if(!gameObject.destroy)
-            {
+            if (!gameObject.destroy) {
                 gameObject.onUpdate();
-            }
-            else
-            {
+            } else {
                 iterator.remove();
             }
         }
     }
 
-    public void draw()
-    {
-        if(surfaceHolder.getSurface().isValid())
-        {
+    public void draw() {
+        if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
             canvas.drawBitmap(background, 0.0f, 0.0f, paint);
-            for(int ii = GameConstants.BACKGROUND; ii <= GameConstants.FOREGROUND; ++ii) {
+            for (int ii = GameConstants.BACKGROUND; ii <= GameConstants.FOREGROUND; ++ii) {
                 for (GameObject gameObject : gameObjects) {
-                    if(gameObject.layer == ii) {
+                    if (gameObject.layer == ii) {
                         gameObject.onDraw(canvas);
                     }
                 }
@@ -215,66 +198,58 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
     }
 
-    public void pause()
-    {
+    public void pause() {
         pauseButton.paused = true;
         isPlaying = !isPlaying;
-        GameSoundHandler.stopAllSounds();
+        GameSoundHandler.pauseAllSounds();
+        GameSoundHandler.playSound(GameConstants.PAUSE_SOUND);
         draw();
         try {
             gameThread.join();
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             Log.d("GameThread", "Your threading sucks!");
         }
 
     }
 
 
-    public void resume()
-    {
+    public void resume() {
         pauseButton.paused = false;
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
+        GameSoundHandler.resumeAllSounds();
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
 
-        switch (event.getAction())
-        {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 if (Camera.worldRectToScreenRect(pauseButton.box).contains(event.getRawX(), event.getRawY())) {
-                    if (isPlaying = true) {
+                    if (isPlaying == true) {
                         pause();
-                    }
-                    else {
+                    } else {
                         resume();
                     }
                     break;
                 }
-                if(!pauseButton.paused)
-                {
-                GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
-                outOFBullets = indicatorShots.shoot();
-                for(GameObject o: gameObjects)
-                {
-                    if(o instanceof Duck)
-                    {
-                        Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
-                        float delta_x = event.getRawX() - screenPos.x;
-                        float delta_y = event.getRawY() - screenPos.y;
-                        float distance = (float) Math.sqrt(delta_x*delta_x + delta_y*delta_y);
-                        if(distance < 100.0f)
-                        {
-                            ((Duck) o).isAlive = false;
-                            indicatorDucks.hitDuck(true);
-                            indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
+                if (!pauseButton.paused) {
+                    GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
+                    outOFBullets = indicatorShots.shoot();
+                    for (GameObject o : gameObjects) {
+                        if (o instanceof Duck) {
+                            Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
+                            float delta_x = event.getRawX() - screenPos.x;
+                            float delta_y = event.getRawY() - screenPos.y;
+                            float distance = (float) Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+                            if (distance < 100.0f) {
+                                ((Duck) o).isAlive = false;
+                                indicatorDucks.hitDuck(true);
+                                indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
+                            }
                         }
                     }
-                }
                 }
 
                 break;
@@ -287,9 +262,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         return false;
     }
 
-    public void goToNextLevel()
-    {
-        GameSoundHandler.release();
+    public void goToNextLevel() {
+        GameSoundHandler.playLongSound(GameConstants.ROUND_CLEAR);
+        try {
+            Thread.sleep(4000);
+        }
+            catch(InterruptedException e) {
+            }
         Intent i_start = new Intent(context, MainActivity.class);
         Bundle b = new Bundle();
         level++;

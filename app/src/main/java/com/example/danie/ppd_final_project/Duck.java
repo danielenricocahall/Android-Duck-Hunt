@@ -42,7 +42,6 @@ public class Duck extends GameObject {
     DynamicPhysicsComponent physicsComponent;
     Bitmap fly_away;
 
-
     public Duck(float x, float y, String duckColor, final DynamicPhysicsComponent physicsComponent) {
         this.physicsComponent = physicsComponent;
         physicsComponent.speed = GameConstants.DUCK_SPEED;
@@ -71,6 +70,7 @@ public class Duck extends GameObject {
         timeToSwitchHorizontalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
         timeToSwitchVerticalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
+        //flapSoundID = GameSoundHandler.playSoundIndefinitely(GameConstants.DUCK_FLAP_SOUND);
     }
 
 
@@ -199,7 +199,7 @@ public class Duck extends GameObject {
         if (this.position.y < GameConstants.GROUND) {
             if(!isAlive) {
                 this.destroy = true;
-                GameSoundHandler.stopAllSounds();
+                GameSoundHandler.pauseAllSounds();
                 GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
             }
             else

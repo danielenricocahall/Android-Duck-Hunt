@@ -38,6 +38,8 @@ public class GameConstants {
     public static final int TITLE_SEQUENCE_SOUND = R.raw.title_screen;
     public static final int STARTING_SEQUENCE_SOUND = R.raw.intro;
     public static final int DOG_BARKING_SOUND = R.raw.dog_bark;
+    public static final int PAUSE_SOUND = R.raw.pause;
+    public static final int ROUND_CLEAR = R.raw.round_clear;
 
 
 

@@ -72,26 +72,35 @@ public abstract class GameSoundHandler {
         soundMap.put(GameConstants.DEAD_DUCK_LAND_SOUND, soundPool.load(context, GameConstants.DEAD_DUCK_LAND_SOUND, 1));
         soundMap.put(GameConstants.STARTING_SEQUENCE_SOUND, soundPool.load(context, GameConstants.STARTING_SEQUENCE_SOUND, 1));
         soundMap.put(GameConstants.TITLE_SEQUENCE_SOUND, soundPool.load(context, GameConstants.TITLE_SEQUENCE_SOUND, 1));
+        soundMap.put(GameConstants.PAUSE_SOUND, soundPool.load(context, GameConstants.PAUSE_SOUND, 1));
+        soundMap.put(GameConstants.ROUND_CLEAR, soundPool.load(context, GameConstants.ROUND_CLEAR, 1));
+
+
     }
 
 
     public static int playSound(int sound)
     {
         return soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
-        /*try{
-            Thread.sleep(10);
-        }
-        catch (InterruptedException e)
-        {
+    }
 
-        }*/
+
+    public static void pauseAllSounds()
+    {
+        soundPool.autoPause();
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
     }
 
     public static void stopAllSounds()
     {
-        soundPool.autoPause();
-        mediaPlayer.stop();
+        if(mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
     }
+
+
 
     public static void release()
     {
@@ -102,6 +111,7 @@ public abstract class GameSoundHandler {
     public static void resumeAllSounds()
     {
         soundPool.autoResume();
+        mediaPlayer.start();
     }
 
     public static void stopSound(int sound)
