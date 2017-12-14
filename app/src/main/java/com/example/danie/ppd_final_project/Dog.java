@@ -36,7 +36,7 @@ public class Dog extends GameObject {
         this.physicsComponent.forward.y = 0.0f;
         this.physicsComponent.forward.x = 0.75f;
         this.physicsComponent.forward.normalize();
-        this.physicsComponent.speed = 0.07f;
+        this.physicsComponent.speed = 0.047f;
         position = new Vector2D(0.0f, -0.216667f);
         paint = new Paint();
         layer = GameConstants.FOREGROUND;

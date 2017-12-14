@@ -66,7 +66,7 @@ public class IndicatorDucks extends GameObject {
 
         // This should never happen, but it's handled
         // to avoid a null reference exception
-        if (numDucksHit >= NUM_DUCKS - 1) return;
+        if (numDucksHit > NUM_DUCKS - 1) return;
 
         if(gotDuck){
             hits[numDucksHit] = true;
