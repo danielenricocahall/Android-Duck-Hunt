@@ -90,6 +90,7 @@ public abstract class GameSoundHandler {
     public static void stopAllSounds()
     {
         soundPool.autoPause();
+        mediaPlayer.stop();
     }
 
     public static void release()

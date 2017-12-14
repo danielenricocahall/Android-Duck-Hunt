@@ -218,6 +218,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     {
         pauseButton.paused = true;
         isPlaying = !isPlaying;
+        GameSoundHandler.stopAllSounds();
         try {
             gameThread.join();
         }
@@ -284,6 +285,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     public void goToNextLevel()
     {
+        GameSoundHandler.release();
         Intent i_start = new Intent(context, MainActivity.class);
         Bundle b = new Bundle();
         level++;
