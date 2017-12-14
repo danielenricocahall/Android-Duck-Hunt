@@ -16,6 +16,7 @@ public class GameConstants {
 
     public static final String NUMBER_OF_DUCKS = "Number Of Ducks";
     public static final String LEVEL = "Level";
+    public static final String SCORE = "Score";
 
 
     public static final int NUMBER_OF_DUCK_SPRITES = 3;
@@ -59,6 +60,8 @@ public class GameConstants {
     public static final int FOREGROUND = 3;
 
     public static final float GROUND = -0.16667f;
+
+    public static final float DUCK_SPEED = 0.12f;
 
 
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{

@@ -18,7 +18,9 @@ public class MainActivity extends Activity {
         Bundle b = getIntent().getExtras();
         final int numberOfDucks = b.getInt(GameConstants.NUMBER_OF_DUCKS);
         final int level = b.getInt(GameConstants.LEVEL);
-        gameEngine = new GameEngine(this, numberOfDucks, point, level);
+        final int score = b.getInt(GameConstants.SCORE);
+
+        gameEngine = new GameEngine(this, numberOfDucks, point, level,score);
         setContentView(gameEngine);
     }
 

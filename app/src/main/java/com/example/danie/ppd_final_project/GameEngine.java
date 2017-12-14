@@ -1,6 +1,6 @@
 package com.example.danie.ppd_final_project;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,9 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -19,8 +16,6 @@ import android.view.SurfaceView;
 import android.view.View;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Stack;
 
@@ -61,7 +56,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
 
 
-    public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level) {
+    public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level, int score) {
         super(context);
         this.context = context;
         this.level = level;
@@ -87,6 +82,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         gameObjects.add(indicatorDucks);
 
         indicatorScore = new IndicatorScore();
+        indicatorScore.setScore(score);
         gameObjects.add(indicatorScore);
 
         pauseButton = new PauseButton();
@@ -174,7 +170,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 }
                 else {
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
-                        gameObjects.add(duckies.pop());
+                        Duck duck = duckies.pop();
+                        duck.physicsComponent.setSpeed(level*GameConstants.DUCK_SPEED);
+                        gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
                     }
@@ -273,7 +271,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         }
                     }
                 }
-                GameSoundHandler.stopSound(GameConstants.GUN_SHOT_SOUND);
 
                 break;
             case MotionEvent.ACTION_UP:
@@ -289,8 +286,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     {
         Intent i_start = new Intent(context, MainActivity.class);
         Bundle b = new Bundle();
-        b.putInt(GameConstants.LEVEL, level++);
+        level++;
+        b.putInt(GameConstants.LEVEL, level);
         b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage);
+        b.putInt(GameConstants.SCORE, indicatorScore.getScore());
         i_start.putExtras(b);
         context.startActivity(i_start);
     }
