@@ -48,6 +48,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorShots indicatorShots;
     IndicatorDucks indicatorDucks;
     IndicatorScore indicatorScore;
+    PauseButton pauseButton;
     boolean completedStartingSequence;
     public static int numberOfDucksPerStage;
     Stack<Duck> duckies = new Stack<>();
@@ -88,6 +89,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         indicatorScore = new IndicatorScore();
         gameObjects.add(indicatorScore);
 
+        pauseButton = new PauseButton();
+        gameObjects.add(pauseButton);
+
         prevFlyingAwayFlags = new boolean[numberOfDucksPerStage];
 
         this.setOnTouchListener(this);
@@ -95,7 +99,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
-        for(int ii = 0; ii < 1; ++ii)
+        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
@@ -214,6 +218,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     public void pause()
     {
+        pauseButton.paused = true;
         isPlaying = !isPlaying;
         try {
             gameThread.join();
@@ -227,6 +232,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     public void resume()
     {
+        pauseButton.paused = false;
         isPlaying = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -238,6 +244,17 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         switch (event.getAction())
         {
             case MotionEvent.ACTION_DOWN:
+
+                if (Camera.worldRectToScreenRect(pauseButton.box).contains(event.getRawX(), event.getRawY())) {
+                    if (isPlaying = true) {
+                        pause();
+                    }
+                    else {
+                        resume();
+                    }
+                    break;
+                }
+
                 GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
                 outOFBullets = indicatorShots.shoot();
                 for(GameObject o: gameObjects)
