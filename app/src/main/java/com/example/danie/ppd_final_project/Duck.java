@@ -44,7 +44,7 @@ public class Duck extends GameObject {
 
     public Duck(float x, float y, String duckColor, final DynamicPhysicsComponent physicsComponent) {
         this.physicsComponent = physicsComponent;
-        this.physicsComponent.speed = 0.12f;
+        physicsComponent.speed = GameConstants.DUCK_SPEED;
         physicsComponent.forward = new Vector2D(
                 new Random().nextFloat(),
                 new Random().nextFloat()*-1.0f);
@@ -191,10 +191,16 @@ public class Duck extends GameObject {
             this.physicsComponent.forward.x *= -1.0f;
             flipSprites();
         }
-        if (this.position.y < GameConstants.GROUND && !isAlive) {
-            this.destroy = true;
-            GameSoundHandler.stopAllSounds();
-            GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
+        if (this.position.y < GameConstants.GROUND) {
+            if(!isAlive) {
+                this.destroy = true;
+                GameSoundHandler.stopAllSounds();
+                GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
+            }
+            else
+            {
+                this.physicsComponent.forward.y *= -1.0f;
+            }
         }
         if(this.position.y > 1)
         {

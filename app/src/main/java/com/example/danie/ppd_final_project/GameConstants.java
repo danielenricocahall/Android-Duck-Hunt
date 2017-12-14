@@ -60,6 +60,8 @@ public class GameConstants {
 
     public static final float GROUND = -0.16667f;
 
+    public static final float DUCK_SPEED = 0.12f;
+
 
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
         put("green",    500);
