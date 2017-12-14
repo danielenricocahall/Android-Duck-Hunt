@@ -17,7 +17,8 @@ public class MainActivity extends Activity {
         display.getSize(point);
         Bundle b = getIntent().getExtras();
         final int numberOfDucks = b.getInt(GameConstants.NUMBER_OF_DUCKS);
-        gameEngine = new GameEngine(this, numberOfDucks, point);
+        final int level = b.getInt(GameConstants.LEVEL);
+        gameEngine = new GameEngine(this, numberOfDucks, point, level);
         setContentView(gameEngine);
     }
 
@@ -41,7 +42,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        gameEngine.resume();
+        gameEngine.pause();
     }
 
     @Override

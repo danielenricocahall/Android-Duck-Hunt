@@ -2,6 +2,7 @@ package com.example.danie.ppd_final_project;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -48,18 +49,22 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorDucks indicatorDucks;
     IndicatorScore indicatorScore;
     boolean completedStartingSequence;
-    public static int numberOfDucksOnScreen;
+    public static int numberOfDucksPerStage;
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
     boolean outOFBullets = false;
     boolean[] prevFlyingAwayFlags;
     static Context context;
+    static int level;
+    static boolean levelComplete;
 
 
 
-    public GameEngine(Context context, int numberOfDucksOnScreen, Point point) {
+    public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level) {
         super(context);
         this.context = context;
+        this.level = level;
+        levelComplete = false;
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
         SCREEN_HEIGHT = point.y;
@@ -83,14 +88,14 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         indicatorScore = new IndicatorScore();
         gameObjects.add(indicatorScore);
 
-        prevFlyingAwayFlags = new boolean[numberOfDucksOnScreen];
+        prevFlyingAwayFlags = new boolean[numberOfDucksPerStage];
 
         this.setOnTouchListener(this);
-        this.numberOfDucksOnScreen = numberOfDucksOnScreen;
+        this.numberOfDucksPerStage = numberOfDucksPerStage;
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
-        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
+        for(int ii = 0; ii < 1; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
@@ -107,6 +112,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         while(isPlaying)
         {
             handleGameLogic();
+            if(levelComplete)
+            {
+                goToNextLevel();
+            }
             update();
             draw();
             currentTimeMillis = System.currentTimeMillis();
@@ -128,7 +137,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         {
             completedStartingSequence = true;
         }
-        if(completedStartingSequence && !duckies.empty())
+        if(completedStartingSequence)
         {
             boolean hackyAsFuck = false;
             int duckIdx = 0;
@@ -137,7 +146,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 if (o instanceof Duck)
                 {
                     hackyAsFuck = true;
-
                     if (
                             (!((Duck) o).timeToFlyAway && outOFBullets) // Just ran out of bullets
                             || (((Duck) o).timeToFlyAway && !prevFlyingAwayFlags[duckIdx]) // The duck just started flying away
@@ -156,10 +164,16 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
             if(!hackyAsFuck)
             {
-                for(int ii = 0; ii<numberOfDucksOnScreen;++ii) {
-                    gameObjects.add(duckies.pop());
-                    indicatorShots.setNumShots(3);
-                    outOFBullets = false;
+                if(duckies.empty())
+                {
+                    levelComplete = true;
+                }
+                else {
+                    for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
+                        gameObjects.add(duckies.pop());
+                        indicatorShots.setNumShots(3);
+                        outOFBullets = false;
+                    }
                 }
 
             }
@@ -210,6 +224,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     }
 
+
     public void resume()
     {
         isPlaying = true;
@@ -251,5 +266,15 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         }
         return false;
+    }
+
+    public void goToNextLevel()
+    {
+        Intent i_start = new Intent(context, MainActivity.class);
+        Bundle b = new Bundle();
+        b.putInt(GameConstants.LEVEL, level++);
+        b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage);
+        i_start.putExtras(b);
+        context.startActivity(i_start);
     }
 }

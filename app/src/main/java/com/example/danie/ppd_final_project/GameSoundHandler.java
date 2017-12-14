@@ -92,6 +92,12 @@ public abstract class GameSoundHandler {
         soundPool.autoPause();
     }
 
+    public static void release()
+    {
+        mediaPlayer.release();
+        soundPool.release();
+    }
+
     public static void resumeAllSounds()
     {
         soundPool.autoResume();
