@@ -95,6 +95,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
+
         for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
@@ -218,7 +219,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     {
         pauseButton.paused = true;
         isPlaying = !isPlaying;
+        this.setOnTouchListener(null);
         GameSoundHandler.stopAllSounds();
+        draw();
         try {
             gameThread.join();
         }

@@ -40,6 +40,7 @@ public class Duck extends GameObject {
     public boolean timeToFlyAway = false;
     private String duckColor;
     DynamicPhysicsComponent physicsComponent;
+    Bitmap fly_away;
 
 
     public Duck(float x, float y, String duckColor, final DynamicPhysicsComponent physicsComponent) {
@@ -82,6 +83,10 @@ public class Duck extends GameObject {
     public void onDraw(Canvas canvas) {
         if(isAlive) {
             current_sprite = sprites[duckOrientation][frame % NUMBER_OF_DUCK_SPRITES];
+            if(timeToFlyAway)
+            {
+                canvas.drawBitmap(fly_away, GameEngine.SCREEN_WIDTH/2, GameEngine.SCREEN_HEIGHT/2, paint);
+            }
         }
         else
         {
@@ -248,5 +253,8 @@ public class Duck extends GameObject {
                     context.getResources(),
                     context.getResources().getIdentifier(duckColor+"duck_defeated"+j,"drawable",context.getPackageName()));
         }
+        fly_away = BitmapFactory.decodeResource(
+                context.getResources(),
+                context.getResources().getIdentifier("fly_away","drawable",context.getPackageName()));
     }
 }

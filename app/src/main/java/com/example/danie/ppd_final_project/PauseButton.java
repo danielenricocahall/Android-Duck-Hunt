@@ -1,5 +1,7 @@
 package com.example.danie.ppd_final_project;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,12 +16,14 @@ public class PauseButton extends GameObject {
     protected Vector2D location;
     protected RectF box;
 
-    protected Paint boxPaint, textPaint;
+    protected Paint boxPaint, textPaint,paint;
 
     public boolean paused = false;
 
     private static final float WIDTH = 0.205f;
     private static final float HEIGHT = 0.07f;
+    Bitmap pause;
+
 
     public PauseButton() {
         location = new Vector2D(
@@ -29,6 +33,7 @@ public class PauseButton extends GameObject {
 
         boxPaint = new Paint();
         boxPaint.setColor(Color.BLACK);
+        paint = new Paint();
 
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
@@ -36,6 +41,10 @@ public class PauseButton extends GameObject {
         textPaint.setTextAlign(Paint.Align.RIGHT);
 
         box = new RectF(location.x, location.y, location.x + WIDTH, location.y - HEIGHT);
+        pause = BitmapFactory.decodeResource(
+                GameEngine.context.getResources(),
+                GameEngine.context.getResources().getIdentifier("pause", "drawable", GameEngine.context.getPackageName())
+        );
     }
 
     @Override
@@ -47,9 +56,12 @@ public class PauseButton extends GameObject {
     public void onDraw(Canvas canvas) {
         canvas.drawRect(Camera.worldRectToScreenRect(box), boxPaint);
         if (paused) {
+            canvas.drawBitmap(pause, GameEngine.SCREEN_WIDTH/2, GameEngine.SCREEN_HEIGHT/2, new Paint());
             canvas.drawText("Start", Camera.worldXToScreenX(location.x + WIDTH / 1.3f), Camera.worldYToScreenY(location.y - HEIGHT / 1.5f), textPaint);
+
         }
         else {
+
             canvas.drawText("Pause", Camera.worldXToScreenX(location.x + WIDTH / 1.3f), Camera.worldYToScreenY(location.y - HEIGHT / 1.5f), textPaint);
         }
     }
