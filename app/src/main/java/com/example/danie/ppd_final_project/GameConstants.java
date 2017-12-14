@@ -16,6 +16,7 @@ public class GameConstants {
 
     public static final String NUMBER_OF_DUCKS = "Number Of Ducks";
     public static final String LEVEL = "Level";
+    public static final String SCORE = "Score";
 
 
     public static final int NUMBER_OF_DUCK_SPRITES = 3;

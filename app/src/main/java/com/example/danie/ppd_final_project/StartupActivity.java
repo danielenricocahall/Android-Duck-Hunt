@@ -33,6 +33,7 @@ public class StartupActivity extends Activity {
                 Bundle b = new Bundle();
                 b.putInt(GameConstants.NUMBER_OF_DUCKS, 1); //Your id
                 b.putInt(GameConstants.LEVEL, 1); //Your id
+                b.putInt(GameConstants.SCORE, 0);
                 i_start.putExtras(b);
                 startActivity(i_start);
             }
@@ -48,6 +49,7 @@ public class StartupActivity extends Activity {
                 Bundle b = new Bundle();
                 b.putInt(GameConstants.NUMBER_OF_DUCKS, 2); //Your id
                 b.putInt(GameConstants.LEVEL, 1); //Your id
+                b.putInt(GameConstants.SCORE, 0);
                 i_start.putExtras(b);
                 startActivity(i_start);            }
         });
