@@ -219,7 +219,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     {
         pauseButton.paused = true;
         isPlaying = !isPlaying;
-        this.setOnTouchListener(null);
         GameSoundHandler.stopAllSounds();
         draw();
         try {
@@ -256,7 +255,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     }
                     break;
                 }
-
+                if(!pauseButton.paused)
+                {
                 GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
                 outOFBullets = indicatorShots.shoot();
                 for(GameObject o: gameObjects)
@@ -274,6 +274,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                             indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                         }
                     }
+                }
                 }
 
                 break;
