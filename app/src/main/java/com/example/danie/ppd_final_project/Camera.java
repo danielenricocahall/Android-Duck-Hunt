@@ -1,6 +1,8 @@
 package com.example.danie.ppd_final_project;
 
 
+import android.graphics.RectF;
+
 /**
  * Created by Aaron on 12/12/2017.
  */
@@ -55,6 +57,16 @@ public class Camera {
         float worldX = screenXToWorldX(position.x);
         float worldY = screenYToWorldY(position.y);
         return new Vector2D(worldX, worldY);
+    }
+
+    public static RectF screenRectToWorldRect(RectF rect) {
+        return new RectF(screenXToWorldX(rect.left), screenYToWorldY(rect.top),
+                screenXToWorldX(rect.right), screenYToWorldY(rect.bottom));
+    }
+
+    public static RectF worldRectToScreenRect(RectF rect) {
+        return new RectF(worldXToScreenX(rect.left), worldYToScreenY(rect.top),
+                worldXToScreenX(rect.right), worldYToScreenY(rect.bottom));
     }
 
     /**
