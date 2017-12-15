@@ -105,7 +105,7 @@ public class Dog extends GameObject {
                 break;
             case 2: current_sprite = sprites[9];
                 break;
-            case 0: current_sprite = sprites[11];
+            case 0: current_sprite = sprites[10];
                 break;
         }
     }

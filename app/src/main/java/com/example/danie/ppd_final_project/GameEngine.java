@@ -161,10 +161,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             }
 
             if (!hackyAsFuck) {
-                if(!levelComplete) {
-                    dogPopUp();
-                }
-
+                dogPopUp();
                 if (duckies.empty()) {
                     levelComplete = true;
 
@@ -280,12 +277,12 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     public void dogPopUp()
     {
-        if(levelScore != 0) {
+        if(maxPotentialLevelScore != 0) {
             int numDucks = 0;
             if (roundScore == maxPotentialRoundScore) {
                 numDucks = numberOfDucksPerStage;
             }
-            else if(numberOfDucksPerStage == 2 && roundScore != 0) {
+            else if(numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore) {
                 numDucks = 1;
             }
             else
