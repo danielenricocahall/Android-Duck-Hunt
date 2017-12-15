@@ -218,6 +218,7 @@ public class Duck extends GameObject {
         return duckColor;
     }
 
+
     public void flipSprites()
     {
         Matrix matrix = new Matrix();

@@ -9,6 +9,8 @@ import android.media.SoundPool;
 import android.os.Build;
 import android.util.SparseIntArray;
 
+import java.util.Stack;
+
 /**
  * Created by daniel on 12/10/17.
  */
@@ -74,14 +76,14 @@ public abstract class GameSoundHandler {
         soundMap.put(GameConstants.TITLE_SEQUENCE_SOUND, soundPool.load(context, GameConstants.TITLE_SEQUENCE_SOUND, 1));
         soundMap.put(GameConstants.PAUSE_SOUND, soundPool.load(context, GameConstants.PAUSE_SOUND, 1));
         soundMap.put(GameConstants.ROUND_CLEAR, soundPool.load(context, GameConstants.ROUND_CLEAR, 1));
-
+        soundMap.put(GameConstants.PERFECT_SCORE, soundPool.load(context, GameConstants.PERFECT_SCORE, 1));
 
     }
 
 
-    public static int playSound(int sound)
+    public static void playSound(int sound)
     {
-        return soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
+         soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
     }
 
 
@@ -93,18 +95,10 @@ public abstract class GameSoundHandler {
         }
     }
 
-    public static void stopAllSounds()
+
+
+    public static void releaseResources()
     {
-        if(mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
-    }
-
-
-
-    public static void release()
-    {
-        mediaPlayer.release();
         soundPool.release();
     }
 
@@ -112,11 +106,6 @@ public abstract class GameSoundHandler {
     {
         soundPool.autoResume();
         mediaPlayer.start();
-    }
-
-    public static void stopSound(int sound)
-    {
-        soundPool.stop(soundMap.get(sound));
     }
 
 
