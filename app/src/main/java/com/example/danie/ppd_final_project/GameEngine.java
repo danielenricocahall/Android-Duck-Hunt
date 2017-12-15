@@ -97,7 +97,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
-        for (int ii = 0; ii < 3; ++ii) {
+        for (int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii) {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -189,7 +189,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     }*/
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
-                        duck.physicsComponent.setSpeed(level * GameConstants.DUCK_SPEED);
+                        duck.physicsComponent.setSpeed(level * 0.5f * GameConstants.DUCK_SPEED);
                         gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
