@@ -161,30 +161,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             }
 
             if (!hackyAsFuck) {
-                if(levelScore != 0) {
-                    int numDucks = 0;
-                    if (roundScore == maxPotentialRoundScore) {
-                        numDucks = numberOfDucksPerStage;
-                    } else {
-                        numDucks = 0;
-                    }
-                    dog.comeUpToFinishRound(numDucks);
-                    draw();
-                    if(numDucks > 0) {
-                        GameSoundHandler.playSound(GameConstants.GOT_DUCK);
-                    }
-                    else
-                    {
-                        GameSoundHandler.playSound(GameConstants.DOG_LAUGH);
-                    }
-                    try {
-                        Thread.sleep(800);
-                    } catch (InterruptedException e) {
-                    }
-                    dog.returnToGrass();
+                if(!levelComplete) {
+                    dogPopUp();
                 }
+
                 if (duckies.empty()) {
                     levelComplete = true;
+
                 } else
                     maxPotentialRoundScore = 0;
                     roundScore = 0;
@@ -254,7 +237,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (Camera.worldRectToScreenRect(pauseButton.box).contains(event.getRawX(), event.getRawY())) {
@@ -294,6 +276,38 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         }
         return false;
+    }
+
+    public void dogPopUp()
+    {
+        if(levelScore != 0) {
+            int numDucks = 0;
+            if (roundScore == maxPotentialRoundScore) {
+                numDucks = numberOfDucksPerStage;
+            }
+            else if(numberOfDucksPerStage == 2 && roundScore != 0) {
+                numDucks = 1;
+            }
+            else
+            {
+                numDucks = 0;
+            }
+            dog.comeUpToFinishRound(numDucks);
+            draw();
+            if(numDucks > 0) {
+                GameSoundHandler.playSound(GameConstants.GOT_DUCK);
+            }
+            else
+            {
+                GameSoundHandler.playSound(GameConstants.DOG_LAUGH);
+            }
+            try {
+                Thread.sleep(800);
+            } catch (InterruptedException e) {
+            }
+            dog.returnToGrass();
+        }
+
     }
 
     public void goToNextLevel() {
