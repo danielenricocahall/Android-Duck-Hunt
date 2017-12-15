@@ -97,7 +97,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
-        for (int ii = 0; ii < 1; ++ii) {
+        for (int ii = 0; ii < 3; ++ii) {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -159,9 +159,25 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             }
 
             if (!hackyAsFuck) {
+                if(levelScore != 0 && levelScore == maxPotentialScore)
+                {
+                    GameSoundHandler.playSound(GameConstants.GOT_DUCK);
+                    try {
+                        Thread.sleep(800);
+                    } catch(InterruptedException e) {
+                    }
+                }
                 if (duckies.empty()) {
                     levelComplete = true;
                 } else
+                    /*if(duckies.size() != 0 && levelScore != 0 && levelScore == maxPotentialScore)
+                    {
+                        GameSoundHandler.playSound(GameConstants.GOT_DUCK);
+                        try {
+                            Thread.sleep(500);
+                        } catch(InterruptedException e) {
+                        }
+                    }*/
                     //this where be will the post stage dog animation stuff happens
                     /*switch(numberOfDucksPerStage) {
                         case 1:
@@ -261,7 +277,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                                 indicatorDucks.hitDuck(true);
                                 indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                                 levelScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
-
                             }
                         }
                     }

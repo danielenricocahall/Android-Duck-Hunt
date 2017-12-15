@@ -41,6 +41,7 @@ public class GameConstants {
     public static final int PAUSE_SOUND = R.raw.pause;
     public static final int ROUND_CLEAR = R.raw.round_clear;
     public static final int PERFECT_SCORE = R.raw.perfect_score;
+    public static final int GOT_DUCK = R.raw.got_duck;
 
 
 
