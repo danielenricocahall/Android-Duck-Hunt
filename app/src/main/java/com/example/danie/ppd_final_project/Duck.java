@@ -37,6 +37,7 @@ public class Duck extends GameObject {
     int timeToSwitchHorizontalDirection;
     int timeToSwitchVerticalDirection;
     float timeSinceSpawned;
+    private float timeToDisplayFlyAway;
     public boolean timeToFlyAway = false;
     private String duckColor;
     DynamicPhysicsComponent physicsComponent;
@@ -70,7 +71,6 @@ public class Duck extends GameObject {
         timeToSwitchHorizontalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
         timeToSwitchVerticalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
-        //flapSoundID = GameSoundHandler.playSoundIndefinitely(GameConstants.DUCK_FLAP_SOUND);
     }
 
 
@@ -81,12 +81,13 @@ public class Duck extends GameObject {
 
     @Override
     public void onDraw(Canvas canvas) {
+        if(timeToDisplayFlyAway > 0.0f)
+        {
+            canvas.drawBitmap(fly_away, Camera.worldXToScreenX(0.5f), Camera.worldYToScreenY(0.5f), paint);
+            return;
+        }
         if(isAlive) {
             current_sprite = sprites[duckOrientation][frame % NUMBER_OF_DUCK_SPRITES];
-            if(timeToFlyAway)
-            {
-                canvas.drawBitmap(fly_away, GameEngine.SCREEN_WIDTH/2, GameEngine.SCREEN_HEIGHT/2, paint);
-            }
         }
         else
         {
@@ -115,6 +116,14 @@ public class Duck extends GameObject {
     public void onUpdate() {
         timeSinceSpawned += GameEngine.DELTA_TIME;
         timeToFlyAway |= (timeSinceSpawned > GameConstants.TIME_ON_SCREEN);
+        if(timeToDisplayFlyAway > 0.0f) {
+            if (timeToDisplayFlyAway < 1.0f) {
+                timeToDisplayFlyAway += GameEngine.DELTA_TIME;
+            } else {
+                this.destroy = true;
+            }
+            return;
+        }
         if(timeToFlyAway && isAlive)
         {
             flyAway();
@@ -207,9 +216,9 @@ public class Duck extends GameObject {
                 this.physicsComponent.forward.y *= -1.0f;
             }
         }
-        if(this.position.y > 1)
+        if(this.position.y > 1 && timeToFlyAway)
         {
-            this.destroy = true;
+            timeToDisplayFlyAway+=GameEngine.DELTA_TIME;
         }
     }
 
@@ -256,6 +265,6 @@ public class Duck extends GameObject {
         }
         fly_away = BitmapFactory.decodeResource(
                 context.getResources(),
-                context.getResources().getIdentifier("fly_away","drawable",context.getPackageName()));
+                R.drawable.fly_away);
     }
 }

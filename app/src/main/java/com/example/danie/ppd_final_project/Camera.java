@@ -39,7 +39,7 @@ public class Camera {
 
     /**
      * @brief Converts a point from world coordinates to pixel coordinates
-     * @param position The point in wold coordinates
+     * @param position The point in world coordinates
      * @return The point in pixel coordinates
      */
     public static Vector2D worldToScreen(Vector2D position) {
