@@ -34,7 +34,6 @@ public class PauseButton extends GameObject {
         boxPaint = new Paint();
         boxPaint.setColor(Color.BLACK);
         paint = new Paint();
-
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(50);
@@ -45,6 +44,7 @@ public class PauseButton extends GameObject {
                 GameEngine.context.getResources(),
                 GameEngine.context.getResources().getIdentifier("pause", "drawable", GameEngine.context.getPackageName())
         );
+        layer = GameConstants.FOREGROUND;
     }
 
     @Override
@@ -56,7 +56,7 @@ public class PauseButton extends GameObject {
     public void onDraw(Canvas canvas) {
         canvas.drawRect(Camera.worldRectToScreenRect(box), boxPaint);
         if (paused) {
-            canvas.drawBitmap(pause, GameEngine.SCREEN_WIDTH/2, GameEngine.SCREEN_HEIGHT/2, new Paint());
+            canvas.drawBitmap(pause, Camera.worldXToScreenX(0.5f - Camera.screenXToWorldX(pause.getWidth())), GameEngine.SCREEN_HEIGHT/2, new Paint());
             canvas.drawText("Start", Camera.worldXToScreenX(location.x + WIDTH / 1.3f), Camera.worldYToScreenY(location.y - HEIGHT / 1.5f), textPaint);
 
         }

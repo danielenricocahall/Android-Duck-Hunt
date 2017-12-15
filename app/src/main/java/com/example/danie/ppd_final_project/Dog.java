@@ -23,6 +23,7 @@ public class Dog extends GameObject {
     DynamicPhysicsComponent physicsComponent;
     float jumpingTime;
     boolean barked;
+    boolean finishingRound;
 
 
     public Dog(DynamicPhysicsComponent physicsComponent)
@@ -31,7 +32,7 @@ public class Dog extends GameObject {
         readyToJump = false;
         jumpingTime = 0.0f;
         barked = false;
-        sprites = new Bitmap[9];
+        sprites = new Bitmap[12];
         populateSprites(GameEngine.context);
         current_sprite = sprites[0];
         this.physicsComponent.forward = new Vector2D(
@@ -44,6 +45,7 @@ public class Dog extends GameObject {
         position = new Vector2D(0.0f, -0.216667f);
         paint = new Paint();
         layer = GameConstants.FOREGROUND;
+        finishingRound = false;
 
     }
 
@@ -66,35 +68,11 @@ public class Dog extends GameObject {
         }
         else
         {
-
-            if(!barked) {
-                GameSoundHandler.stopLongSound();
-                GameSoundHandler.playLongSound(GameConstants.DOG_BARKING_SOUND);
-                barked = true;
-                try
-                {
-                    Thread.sleep(300);
-                }
-                catch (InterruptedException e)
-                {
-
-                }
-                return;
+            if(!finishingRound)
+            {
+                bark();
+                jump();
             }
-            jumpingTime+=GameEngine.DELTA_TIME;
-            if(jumpingTime < 1.0f) {
-                current_sprite = sprites[6];
-                this.physicsComponent.forward.y = -GameEngine.SCREEN_HEIGHT*0.007f;
-            }
-            else if(jumpingTime > 1.0f && this.position.y > -0.216667f) {
-                current_sprite = sprites[7];
-                this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.007f;
-            }
-            else {
-                this.destroy = true;
-            }
-
-
         }
         canvas.drawBitmap(current_sprite, Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
     }
@@ -114,6 +92,69 @@ public class Dog extends GameObject {
             sprites[i] = bitmap;
         }
     }
+
+    public void comeUpToFinishRound(int numDucksShot)
+    {
+        layer = GameConstants.FOREGROUND;
+        finishingRound = true;
+        position.y = 0.1f;
+
+        switch(numDucksShot)
+        {
+            case 1: current_sprite = sprites[8];
+                break;
+            case 2: current_sprite = sprites[9];
+                break;
+            case 0: current_sprite = sprites[11];
+                break;
+        }
+    }
+
+    public void returnToGrass()
+    {
+        position.y = -0.216667f;
+        layer = GameConstants.BACKGROUND;
+    }
+
+    public void jump()
+    {
+        jumpingTime+=GameEngine.DELTA_TIME;
+        if(jumpingTime < 1.0f) {
+            current_sprite = sprites[6];
+            this.physicsComponent.forward.y = -GameEngine.SCREEN_HEIGHT*0.007f;
+        }
+        else if(jumpingTime > 1.0f && this.position.y > -0.216667f) {
+            current_sprite = sprites[7];
+            this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.007f;
+        }
+        else {
+            //this.destroy = true;//remove this when layers are added
+            this.physicsComponent.forward.y = 0.0f;
+            this.physicsComponent.forward.x = 0.0f;
+            this.physicsComponent.speed = 0.0f;
+            layer = GameConstants.BACKGROUND;
+        }
+    }
+
+    public void bark()
+    {
+        if(!barked) {
+            GameSoundHandler.stopLongSound();
+            GameSoundHandler.playLongSound(GameConstants.DOG_BARKING_SOUND);
+            barked = true;
+            try
+            {
+                Thread.sleep(300);
+            }
+            catch (InterruptedException e)
+            {
+
+            }
+            return;
+        }
+    }
+
+
 
 
 }

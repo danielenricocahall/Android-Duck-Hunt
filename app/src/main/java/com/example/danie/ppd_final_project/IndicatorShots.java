@@ -40,6 +40,8 @@ public class IndicatorShots extends GameObject {
                 0.16f,
                 -0.53333f
         );
+        layer = GameConstants.FOREGROUND;
+
 
     }
 

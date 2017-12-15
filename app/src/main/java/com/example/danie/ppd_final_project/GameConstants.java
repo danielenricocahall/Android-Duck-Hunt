@@ -22,7 +22,7 @@ public class GameConstants {
     public static final int NUMBER_OF_DUCK_SPRITES = 3;
     public static final int NUMBER_OF_DUCK_TYPES = 3;
     public static final int NUMBER_OF_DUCK_ORIENTATIONS = 4;
-    public static final int NUMBER_OF_DOG_SPRITES = 9;
+    public static final int NUMBER_OF_DOG_SPRITES = 12;
 
     public static final int NUMBER_OF_DUCKS_DEPLOYED = 10;
 

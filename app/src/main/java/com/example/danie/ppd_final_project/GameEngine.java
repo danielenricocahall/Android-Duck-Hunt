@@ -133,7 +133,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
     public void handleGameLogic() {
-        if (dog.destroy && !completedStartingSequence) {
+        if (dog.layer == GameConstants.BACKGROUND && !completedStartingSequence) {
             completedStartingSequence = true;
         }
         if (completedStartingSequence) {
@@ -161,32 +161,18 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             if (!hackyAsFuck) {
                 if(levelScore != 0 && levelScore == maxPotentialScore)
                 {
+                    dog.comeUpToFinishRound(numberOfDucksPerStage);
+                    draw();
                     GameSoundHandler.playSound(GameConstants.GOT_DUCK);
                     try {
                         Thread.sleep(800);
                     } catch(InterruptedException e) {
                     }
+                    dog.returnToGrass();
                 }
                 if (duckies.empty()) {
                     levelComplete = true;
                 } else
-                    /*if(duckies.size() != 0 && levelScore != 0 && levelScore == maxPotentialScore)
-                    {
-                        GameSoundHandler.playSound(GameConstants.GOT_DUCK);
-                        try {
-                            Thread.sleep(500);
-                        } catch(InterruptedException e) {
-                        }
-                    }*/
-                    //this where be will the post stage dog animation stuff happens
-                    /*switch(numberOfDucksPerStage) {
-                        case 1:
-                            break;
-                        case 2:
-                            break;
-                        default:
-                            break;
-                    }*/
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
                         duck.physicsComponent.setSpeed(level * 0.5f * GameConstants.DUCK_SPEED);

@@ -21,6 +21,7 @@ public class IndicatorScore extends GameObject {
     public IndicatorScore() {
 
         score = 0;
+        layer = GameConstants.FOREGROUND;
 
         scoreLocation = new Vector2D(
                 0.91f,

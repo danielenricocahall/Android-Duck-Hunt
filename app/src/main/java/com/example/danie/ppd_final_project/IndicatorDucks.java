@@ -31,6 +31,7 @@ public class IndicatorDucks extends GameObject {
         populatePositions();
 
         paint = new Paint();
+        layer = GameConstants.FOREGROUND;
 
         hits = new boolean[NUM_DUCKS];
         Arrays.fill(hits, false);
