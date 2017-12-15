@@ -121,11 +121,11 @@ public class Dog extends GameObject {
         jumpingTime+=GameEngine.DELTA_TIME;
         if(jumpingTime < 1.0f) {
             current_sprite = sprites[6];
-            this.physicsComponent.forward.y = -GameEngine.SCREEN_HEIGHT*0.007f;
+            this.physicsComponent.forward.y = -GameEngine.SCREEN_HEIGHT*0.006f;
         }
         else if(jumpingTime > 1.0f && this.position.y > -0.216667f) {
             current_sprite = sprites[7];
-            this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.007f;
+            this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.006f;
         }
         else {
             //this.destroy = true;//remove this when layers are added
@@ -150,8 +150,9 @@ public class Dog extends GameObject {
             {
 
             }
-            return;
         }
+        GameSoundHandler.stopLongSound();
+        return;
     }
 
 

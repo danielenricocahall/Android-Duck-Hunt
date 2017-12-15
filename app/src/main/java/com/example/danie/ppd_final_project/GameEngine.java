@@ -53,8 +53,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     static Context context;
     static int level;
     static boolean levelComplete;
-    int maxPotentialScore = 0;
+    int maxPotentialLevelScore = 0;
     int levelScore = 0;
+    int maxPotentialRoundScore = 0;
+    int roundScore = 0;
 
 
     public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level, int score) {
@@ -159,27 +161,41 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             }
 
             if (!hackyAsFuck) {
-                if(levelScore != 0 && levelScore == maxPotentialScore)
-                {
-                    dog.comeUpToFinishRound(numberOfDucksPerStage);
+                if(levelScore != 0) {
+                    int numDucks = 0;
+                    if (roundScore == maxPotentialRoundScore) {
+                        numDucks = numberOfDucksPerStage;
+                    } else {
+                        numDucks = 0;
+                    }
+                    dog.comeUpToFinishRound(numDucks);
                     draw();
-                    GameSoundHandler.playSound(GameConstants.GOT_DUCK);
+                    if(numDucks > 0) {
+                        GameSoundHandler.playSound(GameConstants.GOT_DUCK);
+                    }
+                    else
+                    {
+                        GameSoundHandler.playSound(GameConstants.DOG_LAUGH);
+                    }
                     try {
                         Thread.sleep(800);
-                    } catch(InterruptedException e) {
+                    } catch (InterruptedException e) {
                     }
                     dog.returnToGrass();
                 }
                 if (duckies.empty()) {
                     levelComplete = true;
                 } else
+                    maxPotentialRoundScore = 0;
+                    roundScore = 0;
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
                         duck.physicsComponent.setSpeed(level * 0.5f * GameConstants.DUCK_SPEED);
                         gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
-                        maxPotentialScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
+                        maxPotentialLevelScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
+                        maxPotentialRoundScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
                     }
                 }
 
@@ -263,6 +279,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                                 indicatorDucks.hitDuck(true);
                                 indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                                 levelScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
+                                roundScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
                             }
                         }
                     }
@@ -285,7 +302,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             Thread.sleep(4000);
         } catch(InterruptedException e) {
             }
-        if(levelScore == maxPotentialScore) {
+        if(levelScore == maxPotentialLevelScore) {
             GameSoundHandler.playSound(GameConstants.PERFECT_SCORE);
             try {
                 Thread.sleep(2000);
