@@ -126,13 +126,13 @@ public class Dog extends GameObject {
         else if(jumpingTime > 1.0f && this.position.y > -0.216667f) {
             current_sprite = sprites[7];
             this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.006f;
+            layer = GameConstants.BACKGROUND;
         }
         else {
             //this.destroy = true;//remove this when layers are added
             this.physicsComponent.forward.y = 0.0f;
             this.physicsComponent.forward.x = 0.0f;
             this.physicsComponent.speed = 0.0f;
-            layer = GameConstants.BACKGROUND;
         }
     }
 
