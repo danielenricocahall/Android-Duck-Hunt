@@ -42,6 +42,8 @@ public class IndicatorShots extends GameObject {
         layer = GameConstants.FOREGROUND;
 
 
+        layer = GameConstants.FOREGROUND;
+
     }
 
     @Override
