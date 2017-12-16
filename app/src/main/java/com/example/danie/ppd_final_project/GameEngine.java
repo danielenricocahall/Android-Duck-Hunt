@@ -242,7 +242,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     break;
                 }
                 if (!pauseButton.paused) {
-                    GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
+                    if(!outOFBullets) {
+                        GameSoundHandler.playSound(GameConstants.GUN_SHOT_SOUND);
+                    }
                     outOFBullets = indicatorShots.shoot();
                     for (GameObject o : gameObjects) {
                         if (o instanceof Duck) {
