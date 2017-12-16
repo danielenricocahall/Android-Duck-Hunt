@@ -3,8 +3,6 @@ package com.example.danie.ppd_final_project;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -43,7 +41,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorShots indicatorShots;
     IndicatorDucks indicatorDucks;
     IndicatorScore indicatorScore;
-    IndicatorLevel indicatorLevel;
+    IndicatorRound indicatorRound;
     PauseButton pauseButton;
     boolean completedStartingSequence;
     public static int numberOfDucksPerStage;
@@ -52,20 +50,20 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     boolean outOFBullets = false;
     boolean[] prevFlyingAwayFlags;
     static Context context;
-    static int level;
+    static int round;
     static boolean levelComplete;
-    int maxPotentialLevelScore = 0;
-    int levelScore = 0;
     int maxPotentialRoundScore = 0;
     int roundScore = 0;
+    int maxPotentialStageScore = 0;
+    int stageScore = 0;
     boolean pauseButtonPressed = false;
     Stack<Float> deadDuckLandingSpots = new Stack<>();
 
 
-    public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level, int score) {
+    public GameEngine(Context context, int numberOfDucksPerStage, Point point, int round, int score) {
         super(context);
         this.context = context;
-        this.level = level;
+        this.round = round;
         levelComplete = false;
         surfaceHolder = getHolder();
         SCREEN_WIDTH = point.x;
@@ -98,8 +96,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         duckFactory = new DuckFactory();
 
-        indicatorLevel = new IndicatorLevel(level);
-        gameObjects.add(indicatorLevel);
+        indicatorRound = new IndicatorRound(round);
+        gameObjects.add(indicatorRound);
 
         indicatorShots = new IndicatorShots();
         gameObjects.add(indicatorShots);
@@ -185,8 +183,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 if (duckies.empty()) {
                     levelComplete = true;
                 } else {
-                    maxPotentialRoundScore = 0;
-                    roundScore = 0;
+                    maxPotentialStageScore = 0;
+                    stageScore = 0;
                     //the check below covers the case if you are doing 2 duck mode
                     //and hit two ducks. The stack would still contain the position of the
                     //first duck you hit.
@@ -195,12 +193,12 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     }
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
-                        duck.physicsComponent.setSpeed((level+1) * 0.5f * GameConstants.DUCK_SPEED);
+                        duck.physicsComponent.setSpeed((round) * 0.5f * GameConstants.DUCK_SPEED);
                         gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
-                        maxPotentialRoundScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
-                        maxPotentialLevelScore += maxPotentialRoundScore;
+                        maxPotentialStageScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
+                        maxPotentialRoundScore += maxPotentialStageScore;
                     }
                 }
             }
@@ -289,8 +287,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                                     deadDuckLandingSpots.push(o.position.x);
                                     indicatorDucks.hitDuck(true);
                                     indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
-                                    roundScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
-                                    levelScore += roundScore;
+                                    stageScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
+                                    roundScore += stageScore;
                                 }
                             }
                         }
@@ -309,13 +307,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
     public void dogPopUp() {
-        if (maxPotentialLevelScore != 0) {
+        if (maxPotentialRoundScore != 0) {
             int numDucks;
             float popUpSpot;
-            if (roundScore == maxPotentialRoundScore) {
+            if (stageScore == maxPotentialStageScore) {
                 numDucks = numberOfDucksPerStage;
                 popUpSpot = deadDuckLandingSpots.pop();
-            } else if (numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore && roundScore > 0) {
+            } else if (numberOfDucksPerStage == 2 && stageScore < maxPotentialStageScore && stageScore > 0) {
                 numDucks = 1;
                 popUpSpot = deadDuckLandingSpots.pop();
             } else {
@@ -341,19 +339,19 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     private int ducksRequiredToProgress()
     {
-        if(level < 10)
+        if(round < 10)
         {
             return 6;
         }
-        else if(level < 13)
+        else if(round < 13)
         {
             return 7;
         }
-        else if(level < 16)
+        else if(round < 16)
         {
             return 8;
         }
-        else if(level < 20)
+        else if(round < 20)
         {
             return 9;
         }
@@ -371,7 +369,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 Thread.sleep(4000);
             } catch (InterruptedException e) {
             }
-            if (levelScore == maxPotentialLevelScore) {
+            if (roundScore == maxPotentialRoundScore) {
                 GameSoundHandler.playSound(GameConstants.PERFECT_SCORE);
                 try {
                     Thread.sleep(2000);
@@ -381,8 +379,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             GameSoundHandler.releaseResources();
             Intent i_start = new Intent(context, MainActivity.class);
             Bundle b = new Bundle();
-            level++;
-            b.putInt(GameConstants.LEVEL, level);
+            round++;
+            b.putInt(GameConstants.ROUND, round);
             b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage);
             b.putInt(GameConstants.SCORE, indicatorScore.getScore());
             i_start.putExtras(b);

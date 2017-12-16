@@ -14,7 +14,7 @@ import android.graphics.Typeface;
  * Created by Brian on 12/9/2017.
  */
 
-public class IndicatorLevel extends GameObject {
+public class IndicatorRound extends GameObject {
 
     private int level;
 
@@ -22,7 +22,7 @@ public class IndicatorLevel extends GameObject {
 
     private float timeToDisplayLevel = 0.0f;
 
-    public IndicatorLevel(int level) {
+    public IndicatorRound(int level) {
 
         setLevel(level);
         layer = GameConstants.FOREGROUND;
@@ -56,7 +56,7 @@ public class IndicatorLevel extends GameObject {
         {
             paint.setColor(Color.BLACK);
             timeToDisplayLevel += GameEngine.DELTA_TIME;
-            canvas.drawText("Level "+Integer.toString(level), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
+            canvas.drawText("Round "+Integer.toString(level), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
         }
     }
 
