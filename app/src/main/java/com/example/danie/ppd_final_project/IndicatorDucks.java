@@ -80,10 +80,6 @@ public class IndicatorDucks extends GameObject {
         numDucksServiced++;
     }
 
-    public int getNumDucksHit()
-    {
-        return numDucksHit;
-    }
 
     private void populateSprites(Context context) {
         bmpHit = BitmapFactory.decodeResource(

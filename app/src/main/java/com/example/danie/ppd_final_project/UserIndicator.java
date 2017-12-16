@@ -4,6 +4,8 @@ package com.example.danie.ppd_final_project;
  * Created by daniel on 12/16/17.
  */
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,15 +16,19 @@ import android.graphics.Typeface;
  * Created by Brian on 12/9/2017.
  */
 
-public class IndicatorRound extends GameObject {
+public class UserIndicator extends GameObject {
 
     private int level;
 
     protected Paint paint;
 
     private float timeToDisplayLevel = 0.0f;
+    private float timeToDisplayGameOver = 0.0f;
+    private boolean isGameOver = false;
 
-    public IndicatorRound(int level) {
+    Bitmap gameOver;
+
+    public UserIndicator(int level) {
 
         setLevel(level);
         layer = GameConstants.FOREGROUND;
@@ -33,19 +39,25 @@ public class IndicatorRound extends GameObject {
                 -0.43f
         );
 
+        gameOver = BitmapFactory.decodeResource(
+                GameEngine.context.getResources(),
+                GameEngine.context.getResources().getIdentifier("game_over","drawable",GameEngine.context.getPackageName()));
+
         paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.RIGHT);
-        /*Typeface currentTypeFace =   paint.getTypeface();
-        Typeface bold = Typeface.create(currentTypeFace, Typeface.);
-        paint.setTypeface(bold);*/
 
     }
 
     @Override
     public void init() {
 
+    }
+
+    public void gameOver()
+    {
+        isGameOver = true;
     }
 
     @Override
@@ -57,6 +69,11 @@ public class IndicatorRound extends GameObject {
             paint.setColor(Color.BLACK);
             timeToDisplayLevel += GameEngine.DELTA_TIME;
             canvas.drawText("Round "+Integer.toString(level), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
+        }
+        if(timeToDisplayGameOver < 1.0f && isGameOver)
+        {
+            timeToDisplayGameOver+=GameEngine.DELTA_TIME;
+            canvas.drawBitmap(gameOver, Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
         }
     }
 
