@@ -101,7 +101,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
-        for (int ii = 0; ii < 1; ++ii) {
+        for (int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii) {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -137,7 +137,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
     public void handleGameLogic() {
-        if (dog.layer == GameConstants.BACKGROUND && !completedStartingSequence) {
+        if (dog.position.y <= GameConstants.GROUND && dog.layer == GameConstants.BACKGROUND && !completedStartingSequence) {
             completedStartingSequence = true;
         }
         if (completedStartingSequence) {
@@ -169,6 +169,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 } else {
                     maxPotentialRoundScore = 0;
                     roundScore = 0;
+                    if(!deadDuckLandingSpots.empty())
+                    {
+                        deadDuckLandingSpots.pop();
+                    }
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
                         duck.physicsComponent.setSpeed(level * 0.5f * GameConstants.DUCK_SPEED);
@@ -263,8 +267,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                                 deadDuckLandingSpots.push(o.position.x);
                                 indicatorDucks.hitDuck(true);
                                 indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
-                                levelScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
                                 roundScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
+                                levelScore += roundScore;
+
                             }
                         }
                     }
@@ -290,7 +295,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 numDucks = numberOfDucksPerStage;
                 popUpSpot = deadDuckLandingSpots.pop();
             }
-            else if(numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore) {
+            else if(numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore && roundScore > 0) {
                 numDucks = 1;
                 popUpSpot = deadDuckLandingSpots.pop();
             }

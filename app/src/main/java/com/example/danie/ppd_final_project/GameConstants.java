@@ -58,14 +58,15 @@ public class GameConstants {
 
 
     public static final float GRAVITY = 10.0f;
-    public static final float ESCAPE_VELOCITY = -30.0f;
+    public static final float ESCAPE_VELOCITY = -10.0f;
 
 
     public static final int BACKGROUND = 1;
     public static final int MIDGROUND = 2;
     public static final int FOREGROUND = 3;
 
-    public static final float GROUND = -0.16667f;
+    //public static final float GROUND = -0.16667f;
+    public static final float GROUND = -0.216667f;
 
     public static final float DUCK_SPEED = 0.12f;
 
