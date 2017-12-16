@@ -115,7 +115,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         this.setOnTouchListener(this);
         this.numberOfDucksPerStage = numberOfDucksPerStage;
-        for(int ii = 0; ii < 1; ++ii)
+        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
         {
             duckies.push(duckFactory.makeRandomDuck());
         }
