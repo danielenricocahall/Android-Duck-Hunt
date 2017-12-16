@@ -77,6 +77,11 @@ public class IndicatorDucks extends GameObject {
         numDucksHit++;
     }
 
+    public int getNumDucksHit()
+    {
+        return numDucksHit;
+    }
+
     private void populateSprites(Context context) {
         bmpHit = BitmapFactory.decodeResource(
                 context.getResources(),

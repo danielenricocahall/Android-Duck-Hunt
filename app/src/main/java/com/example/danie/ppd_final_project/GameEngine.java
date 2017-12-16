@@ -246,7 +246,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         try {
             gameThread.join();
         } catch (InterruptedException e) {
-            Log.d("GameThread", "Your threading sucks!");
+            Log.d("GameThread", "Error pausing!");
         }
 
     }
@@ -279,18 +279,19 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     outOFBullets = indicatorShots.shoot();
                     for (GameObject o : gameObjects) {
                         if (o instanceof Duck) {
-                            Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
-                            float delta_x = event.getRawX() - screenPos.x;
-                            float delta_y = event.getRawY() - screenPos.y;
-                            float distance = (float) Math.sqrt(delta_x * delta_x + delta_y * delta_y);
-                            if (distance < 100.0f) {
-                                ((Duck) o).isAlive = false;
-                                deadDuckLandingSpots.push(o.position.x);
-                                indicatorDucks.hitDuck(true);
-                                indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
-                                roundScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
-                                levelScore += roundScore;
-
+                            if(!((Duck) o).timeToFlyAway) {
+                                Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
+                                float delta_x = event.getRawX() - screenPos.x;
+                                float delta_y = event.getRawY() - screenPos.y;
+                                float distance = (float) Math.sqrt(delta_x * delta_x + delta_y * delta_y);
+                                if (distance < 100.0f) {
+                                    ((Duck) o).isAlive = false;
+                                    deadDuckLandingSpots.push(o.position.x);
+                                    indicatorDucks.hitDuck(true);
+                                    indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
+                                    roundScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
+                                    levelScore += roundScore;
+                                }
                             }
                         }
                     }
@@ -338,8 +339,33 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     }
 
+    private int ducksRequiredToProgress()
+    {
+        if(level < 10)
+        {
+            return 6;
+        }
+        else if(level < 13)
+        {
+            return 7;
+        }
+        else if(level < 16)
+        {
+            return 8;
+        }
+        else if(level < 20)
+        {
+            return 9;
+        }
+        else
+        {
+            return 10;
+        }
+
+    }
+
     public void goToNextLevel() {
-        if (levelScore > 0) {
+        if (ducksRequiredToProgress() < indicatorDucks.getNumDucksHit()) {
             GameSoundHandler.playLongSound(GameConstants.ROUND_CLEAR);
             try {
                 Thread.sleep(4000);
