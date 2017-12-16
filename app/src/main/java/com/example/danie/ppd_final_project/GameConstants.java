@@ -60,6 +60,10 @@ public class GameConstants {
 
     public static final float GROUND = -0.16667f;
 
+    // Constants concerning background immage placement
+    public static final float BACKGROUND_TOP_PERCENTAGE = 0.70f;
+    public static final float BACKGROUND_BOTTOM_PERCENTAGE = 0.40f;
+
 
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
         put("green",    500);
