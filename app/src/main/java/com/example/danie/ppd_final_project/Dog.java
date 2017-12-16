@@ -93,12 +93,12 @@ public class Dog extends GameObject {
         }
     }
 
-    public void comeUpToFinishRound(int numDucksShot)
+    public void comeUpToFinishRound(int numDucksShot, float popUpSpot)
     {
         layer = GameConstants.FOREGROUND;
         finishingRound = true;
         position.y = 0.1f;
-
+        position.x = popUpSpot;
         switch(numDucksShot)
         {
             case 1: current_sprite = sprites[8];

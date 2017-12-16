@@ -57,6 +57,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     int levelScore = 0;
     int maxPotentialRoundScore = 0;
     int roundScore = 0;
+    boolean pauseButtonPressed = false;
+    Stack<Float> deadDuckLandingSpots = new Stack<>();
 
 
     public GameEngine(Context context, int numberOfDucksPerStage, Point point, int level, int score) {
@@ -99,7 +101,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
-        for (int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii) {
+        for (int ii = 0; ii < 1; ++ii) {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -164,8 +166,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 dogPopUp();
                 if (duckies.empty()) {
                     levelComplete = true;
-
-                } else
+                } else {
                     maxPotentialRoundScore = 0;
                     roundScore = 0;
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
@@ -174,13 +175,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
-                        maxPotentialLevelScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
                         maxPotentialRoundScore += GameConstants.COLOR_TO_SCORE.get(duck.getDuckColor());
+                        maxPotentialLevelScore += maxPotentialRoundScore;
                     }
                 }
-
             }
         }
+    }
 
 
     public void update() {
@@ -210,11 +211,13 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
     public void pause() {
-        pauseButton.paused = true;
-        isPlaying = !isPlaying;
-        GameSoundHandler.pauseAllSounds();
-        GameSoundHandler.playSound(GameConstants.PAUSE_SOUND);
-        draw();
+        if(pauseButtonPressed) {
+            pauseButton.paused = true;
+            isPlaying = !isPlaying;
+            GameSoundHandler.pauseAllSounds();
+            GameSoundHandler.playSound(GameConstants.PAUSE_SOUND);
+            draw();
+        }
         try {
             gameThread.join();
         } catch (InterruptedException e) {
@@ -238,8 +241,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             case MotionEvent.ACTION_DOWN:
                 if (Camera.worldRectToScreenRect(pauseButton.box).contains(event.getRawX(), event.getRawY())) {
                     if (isPlaying == true) {
+                        pauseButtonPressed = true;
                         pause();
                     } else {
+                        pauseButtonPressed = false;
                         resume();
                     }
                     break;
@@ -255,6 +260,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                             float distance = (float) Math.sqrt(delta_x * delta_x + delta_y * delta_y);
                             if (distance < 100.0f) {
                                 ((Duck) o).isAlive = false;
+                                deadDuckLandingSpots.push(o.position.x);
                                 indicatorDucks.hitDuck(true);
                                 indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                                 levelScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
@@ -278,18 +284,22 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public void dogPopUp()
     {
         if(maxPotentialLevelScore != 0) {
-            int numDucks = 0;
+            int numDucks;
+            float popUpSpot;
             if (roundScore == maxPotentialRoundScore) {
                 numDucks = numberOfDucksPerStage;
+                popUpSpot = deadDuckLandingSpots.pop();
             }
             else if(numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore) {
                 numDucks = 1;
+                popUpSpot = deadDuckLandingSpots.pop();
             }
             else
             {
                 numDucks = 0;
+                popUpSpot = 0.5f - Camera.screenXToWorldX(dog.current_sprite.getWidth());
             }
-            dog.comeUpToFinishRound(numDucks);
+            dog.comeUpToFinishRound(numDucks, popUpSpot);
             draw();
             if(numDucks > 0) {
                 GameSoundHandler.playSound(GameConstants.GOT_DUCK);
@@ -299,15 +309,17 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 GameSoundHandler.playSound(GameConstants.DOG_LAUGH);
             }
             try {
-                Thread.sleep(800);
+                Thread.sleep(1500);
             } catch (InterruptedException e) {
             }
             dog.returnToGrass();
+            draw();
         }
 
     }
 
     public void goToNextLevel() {
+        //draw();
         GameSoundHandler.playLongSound(GameConstants.ROUND_CLEAR);
         try {
             Thread.sleep(4000);
