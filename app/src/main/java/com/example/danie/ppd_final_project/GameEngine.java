@@ -38,7 +38,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public static int SCREEN_WIDTH;
     public static float DELTA_TIME;
     Paint paint;
-    Bitmap background;
+    StationaryObject background_top, background_bottom;
     Dog dog;
     IndicatorShots indicatorShots;
     IndicatorDucks indicatorDucks;
@@ -76,6 +76,23 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         Camera.init(new Vector2D(point.x, point.y));
 
+        background_top = new StationaryObject(
+                R.drawable.background_top,
+                SCREEN_WIDTH,
+                (int)(SCREEN_HEIGHT * GameConstants.BACKGROUND_TOP_PERCENTAGE)
+        );
+        background_top.layer = GameConstants.MIDGROUND;
+        gameObjects.add(background_top);
+
+        background_bottom = new StationaryObject(
+                R.drawable.background_bottom,
+                SCREEN_WIDTH,
+                (int)(SCREEN_HEIGHT * GameConstants.BACKGROUND_BOTTOM_PERCENTAGE)
+        );
+        background_bottom.layer = GameConstants.FOREGROUND;
+        background_bottom.yPos = (int)(SCREEN_HEIGHT * (1 - GameConstants.BACKGROUND_BOTTOM_PERCENTAGE));
+        gameObjects.add(background_bottom);
+
         dog = new Dog(new BasicPhysicsComponent());
         gameObjects.add(dog);
 
@@ -103,11 +120,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         this.setOnTouchListener(this);
         this.numberOfDucksPerStage = numberOfDucksPerStage;
-        background = Bitmap.createScaledBitmap(BitmapFactory.decodeResource(
-                getResources(),
-                R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
-
-        for (int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii) {
+        for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
+        {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -208,8 +222,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
-            canvas.drawBitmap(background, 0.0f, 0.0f, paint);
-            for (int ii = GameConstants.BACKGROUND; ii <= GameConstants.FOREGROUND; ++ii) {
+            //canvas.drawBitmap(background, 0.0f, 0.0f, paint);
+            canvas.drawARGB(255, 63, 191, 255);
+            for(int ii = GameConstants.BACKGROUND; ii <= GameConstants.FOREGROUND; ++ii) {
                 for (GameObject gameObject : gameObjects) {
                     if (gameObject.layer == ii) {
                         gameObject.onDraw(canvas);

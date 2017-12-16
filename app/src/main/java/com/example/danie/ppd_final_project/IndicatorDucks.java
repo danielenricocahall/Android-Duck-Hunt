@@ -36,6 +36,8 @@ public class IndicatorDucks extends GameObject {
         hits = new boolean[NUM_DUCKS];
         Arrays.fill(hits, false);
 
+        layer = GameConstants.FOREGROUND;
+
     }
 
     @Override

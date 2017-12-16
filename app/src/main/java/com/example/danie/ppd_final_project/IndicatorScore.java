@@ -32,6 +32,8 @@ public class IndicatorScore extends GameObject {
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.RIGHT);
 
+        layer = GameConstants.FOREGROUND;
+
     }
 
     @Override
