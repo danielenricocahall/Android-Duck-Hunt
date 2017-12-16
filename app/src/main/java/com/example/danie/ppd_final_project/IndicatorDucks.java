@@ -24,6 +24,7 @@ public class IndicatorDucks extends GameObject {
 
     protected boolean[] hits;
     private int numDucksHit = 0;
+    private int numDucksServiced = 0;
 
     public IndicatorDucks() {
 
@@ -69,12 +70,14 @@ public class IndicatorDucks extends GameObject {
 
         // This should never happen, but it's handled
         // to avoid a null reference exception
-        if (numDucksHit > NUM_DUCKS - 1) return;
+        if (numDucksServiced > NUM_DUCKS - 1) return;
 
         if(gotDuck){
             hits[numDucksHit] = true;
+            numDucksHit++;
         }
-        numDucksHit++;
+
+        numDucksServiced++;
     }
 
 
