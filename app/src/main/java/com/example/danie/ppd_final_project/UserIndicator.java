@@ -9,12 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
-
-
-/**
- * Created by Brian on 12/9/2017.
- */
 
 public class UserIndicator extends GameObject {
 
@@ -23,7 +17,6 @@ public class UserIndicator extends GameObject {
     protected Paint paint;
 
     private float timeToDisplayLevel = 0.0f;
-    private float timeToDisplayGameOver = 0.0f;
     private boolean isGameOver = false;
 
     Bitmap gameOver;
@@ -42,7 +35,8 @@ public class UserIndicator extends GameObject {
         gameOver = BitmapFactory.decodeResource(
                 GameEngine.context.getResources(),
                 GameEngine.context.getResources().getIdentifier("game_over","drawable",GameEngine.context.getPackageName()));
-
+        gameOver = Bitmap.createScaledBitmap(
+                gameOver, gameOver.getWidth()/2, gameOver.getHeight()/2, false);
         paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setTextSize(50);
@@ -70,10 +64,9 @@ public class UserIndicator extends GameObject {
             timeToDisplayLevel += GameEngine.DELTA_TIME;
             canvas.drawText("Round "+Integer.toString(level), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
         }
-        if(timeToDisplayGameOver < 1.0f && isGameOver)
+        if(isGameOver)
         {
-            timeToDisplayGameOver+=GameEngine.DELTA_TIME;
-            canvas.drawBitmap(gameOver, Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
+            canvas.drawBitmap(gameOver, Camera.worldXToScreenX(0.4f), Camera.worldYToScreenY(0.3f), paint);
         }
     }
 
