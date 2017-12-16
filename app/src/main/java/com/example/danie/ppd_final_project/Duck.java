@@ -37,7 +37,6 @@ public class Duck extends GameObject {
     int timeToSwitchHorizontalDirection;
     int timeToSwitchVerticalDirection;
     float timeSinceSpawned;
-    private float timeToDisplayFlyAway;
     public boolean timeToFlyAway = false;
     private String duckColor;
     DynamicPhysicsComponent physicsComponent;
@@ -110,13 +109,16 @@ public class Duck extends GameObject {
     public void onUpdate() {
         timeSinceSpawned += GameEngine.DELTA_TIME;
         timeToFlyAway |= (timeSinceSpawned > GameConstants.TIME_ON_SCREEN);
-        if(timeToFlyAway && isAlive)
+        if(isAlive)
         {
-            flyAway();
-        }
-        if(isAlive) {
             GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
-            performTimeChecks();
+            if(timeToFlyAway) {
+                flyAway();
+            }
+            else
+            {
+                performTimeChecks();
+            }
         }
         else
         {
