@@ -73,7 +73,7 @@ public class IndicatorDucks extends GameObject {
         if (numDucksServiced > NUM_DUCKS - 1) return;
 
         if(gotDuck){
-            hits[numDucksHit] = true;
+            hits[numDucksServiced] = true;
             numDucksHit++;
         }
 

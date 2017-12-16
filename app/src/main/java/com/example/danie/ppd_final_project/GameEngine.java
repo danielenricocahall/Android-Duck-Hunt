@@ -48,7 +48,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     Stack<Duck> duckies = new Stack<>();
     DuckFactory duckFactory;
     boolean outOFBullets = false;
-    boolean[] prevFlyingAwayFlags;
     static Context context;
     static int round;
     static boolean levelComplete;
@@ -112,10 +111,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         pauseButton = new PauseButton();
         gameObjects.add(pauseButton);
 
-
-
-        prevFlyingAwayFlags = new boolean[numberOfDucksPerStage];
-
         this.setOnTouchListener(this);
         this.numberOfDucksPerStage = numberOfDucksPerStage;
         for(int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii)
@@ -163,23 +158,11 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             for (GameObject o : gameObjects) {
                 if (o instanceof Duck) {
                     hackyAsFuck = true;
-                    if (
-                            (!((Duck) o).timeToFlyAway && outOFBullets) // Just ran out of bullets
-                                    || (((Duck) o).timeToFlyAway && !prevFlyingAwayFlags[duckIdx]) // The duck just started flying away
-                            ) {
-                        indicatorDucks.hitDuck(false);
-                    }
-
-                    ((Duck) o).timeToFlyAway |= outOFBullets;
-                    outOFBullets |= ((Duck) o).timeToFlyAway;
-
-                    prevFlyingAwayFlags[duckIdx] = ((Duck) o).timeToFlyAway;
-                    duckIdx++;
                 }
             }
 
             if (!hackyAsFuck) {
-                dogPopUp();
+                handleEndOfStage();
                 if (duckies.empty()) {
                     levelComplete = true;
                 } else {
@@ -220,7 +203,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
-            //canvas.drawBitmap(background, 0.0f, 0.0f, paint);
             canvas.drawARGB(255, 63, 191, 255);
             for(int ii = GameConstants.BACKGROUND; ii <= GameConstants.FOREGROUND; ++ii) {
                 for (GameObject gameObject : gameObjects) {
@@ -282,13 +264,16 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                                 float delta_x = event.getRawX() - screenPos.x;
                                 float delta_y = event.getRawY() - screenPos.y;
                                 float distance = (float) Math.sqrt(delta_x * delta_x + delta_y * delta_y);
-                                if (distance < 100.0f) {
+                                if (distance < 100.0f && ((Duck) o).isAlive) {
                                     ((Duck) o).isAlive = false;
                                     deadDuckLandingSpots.push(o.position.x);
                                     indicatorDucks.hitDuck(true);
                                     indicatorScore.addToScore(GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor()));
                                     stageScore += GameConstants.COLOR_TO_SCORE.get(((Duck) o).getDuckColor());
                                     roundScore += stageScore;
+                                }
+                                else if(outOFBullets && ((Duck) o).isAlive){
+                                    ((Duck) o).timeToFlyAway = true;
                                 }
                             }
                         }
@@ -306,7 +291,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         return false;
     }
 
-    public void dogPopUp() {
+    public void handleEndOfStage() {
         if (maxPotentialRoundScore != 0) {
             int numDucks;
             float popUpSpot;
@@ -320,6 +305,11 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 numDucks = 0;
                 popUpSpot = 0.5f - Camera.screenXToWorldX(dog.current_sprite.getWidth());
             }
+
+            for(int i = 0; i < (numberOfDucksPerStage - numDucks); i++){
+                indicatorDucks.hitDuck(false);
+            }
+
             dog.comeUpToFinishRound(numDucks, popUpSpot);
             draw();
             if (numDucks > 0) {
