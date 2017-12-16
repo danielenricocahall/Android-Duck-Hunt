@@ -15,7 +15,6 @@ public class IndicatorShots extends GameObject {
     private int numShots ;
     protected Bitmap bmpShot, bmpBullet;
     protected Paint paint;
-    protected Vector2D shotPosition;
     protected Vector2D[] bulletPositions;
 
     public IndicatorShots() {
@@ -23,7 +22,7 @@ public class IndicatorShots extends GameObject {
         populateSprites(GameEngine.context);
         paint = new Paint();
 
-        shotPosition = new Vector2D(
+        position = new Vector2D(
                 0.11f,
                 -0.6f
         );
@@ -53,7 +52,7 @@ public class IndicatorShots extends GameObject {
     @Override
     public void onDraw(Canvas canvas) {
 
-        canvas.drawBitmap(bmpShot, Camera.worldXToScreenX(shotPosition.x), Camera.worldYToScreenY(shotPosition.y), paint);
+        canvas.drawBitmap(bmpShot, Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
 
         if (numShots <= 0) return;
 
