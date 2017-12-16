@@ -79,6 +79,9 @@ public abstract class GameSoundHandler {
         soundMap.put(GameConstants.PERFECT_SCORE, soundPool.load(context, GameConstants.PERFECT_SCORE, 1));
         soundMap.put(GameConstants.GOT_DUCK, soundPool.load(context, GameConstants.GOT_DUCK, 1));
         soundMap.put(GameConstants.DOG_LAUGH, soundPool.load(context, GameConstants.DOG_LAUGH, 1));
+        soundMap.put(GameConstants.GAME_OVER, soundPool.load(context, GameConstants.GAME_OVER, 1));
+        soundMap.put(GameConstants.YOU_FAIL, soundPool.load(context, GameConstants.YOU_FAIL, 1));
+
 
     }
 

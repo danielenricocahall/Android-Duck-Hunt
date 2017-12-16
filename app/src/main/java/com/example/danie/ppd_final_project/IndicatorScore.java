@@ -14,7 +14,6 @@ import android.graphics.Paint;
 public class IndicatorScore extends GameObject {
 
     protected int score;
-    protected Vector2D scoreLocation;
 
     protected Paint paint;
 
@@ -23,7 +22,7 @@ public class IndicatorScore extends GameObject {
         score = 0;
         layer = GameConstants.FOREGROUND;
 
-        scoreLocation = new Vector2D(
+        position = new Vector2D(
                 0.91f,
                 -0.5667f
         );
@@ -42,8 +41,8 @@ public class IndicatorScore extends GameObject {
 
     @Override
     public void onDraw(Canvas canvas) {
-        canvas.drawText(Integer.toString(score), Camera.worldXToScreenX(scoreLocation.x),Camera.worldYToScreenY(scoreLocation.y), paint);
-        canvas.drawText("SCORE", Camera.worldXToScreenX(scoreLocation.x), Camera.worldYToScreenY(scoreLocation.y - 0.066667f), paint);
+        canvas.drawText(Integer.toString(score), Camera.worldXToScreenX(position.x),Camera.worldYToScreenY(position.y), paint);
+        canvas.drawText("SCORE", Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y - 0.066667f), paint);
     }
 
     @Override

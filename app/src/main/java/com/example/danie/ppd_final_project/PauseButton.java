@@ -13,7 +13,6 @@ import android.graphics.RectF;
 
 public class PauseButton extends GameObject {
 
-    protected Vector2D location;
     protected RectF box;
 
     protected Paint boxPaint, textPaint,paint;
@@ -26,7 +25,7 @@ public class PauseButton extends GameObject {
 
 
     public PauseButton() {
-        location = new Vector2D(
+        position = new Vector2D(
                 0.74f,
                 -0.377f
         );
@@ -39,7 +38,7 @@ public class PauseButton extends GameObject {
         textPaint.setTextSize(50);
         textPaint.setTextAlign(Paint.Align.RIGHT);
 
-        box = new RectF(location.x, location.y, location.x + WIDTH, location.y - HEIGHT);
+        box = new RectF(position.x, position.y, position.x + WIDTH, position.y - HEIGHT);
         pause = BitmapFactory.decodeResource(
                 GameEngine.context.getResources(),
                 GameEngine.context.getResources().getIdentifier("pause", "drawable", GameEngine.context.getPackageName())
@@ -57,12 +56,12 @@ public class PauseButton extends GameObject {
         canvas.drawRect(Camera.worldRectToScreenRect(box), boxPaint);
         if (paused) {
             canvas.drawBitmap(pause, Camera.worldXToScreenX(0.5f - Camera.screenXToWorldX(pause.getWidth())), GameEngine.SCREEN_HEIGHT/2, new Paint());
-            canvas.drawText("Start", Camera.worldXToScreenX(location.x + WIDTH / 1.3f), Camera.worldYToScreenY(location.y - HEIGHT / 1.5f), textPaint);
+            canvas.drawText("Start", Camera.worldXToScreenX(position.x + WIDTH / 1.3f), Camera.worldYToScreenY(position.y - HEIGHT / 1.5f), textPaint);
 
         }
         else {
 
-            canvas.drawText("Pause", Camera.worldXToScreenX(location.x + WIDTH / 1.3f), Camera.worldYToScreenY(location.y - HEIGHT / 1.5f), textPaint);
+            canvas.drawText("Pause", Camera.worldXToScreenX(position.x + WIDTH / 1.3f), Camera.worldYToScreenY(position.y - HEIGHT / 1.5f), textPaint);
         }
     }
 

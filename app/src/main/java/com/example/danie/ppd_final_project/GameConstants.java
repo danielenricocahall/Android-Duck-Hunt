@@ -43,6 +43,8 @@ public class GameConstants {
     public static final int PERFECT_SCORE = R.raw.perfect_score;
     public static final int GOT_DUCK = R.raw.got_duck;
     public static final int DOG_LAUGH = R.raw.dog_laugh;
+    public static final int GAME_OVER = R.raw.game_over;
+    public static final int YOU_FAIL = R.raw.fail;
 
 
 

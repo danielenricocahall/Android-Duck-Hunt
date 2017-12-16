@@ -43,6 +43,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     IndicatorShots indicatorShots;
     IndicatorDucks indicatorDucks;
     IndicatorScore indicatorScore;
+    IndicatorLevel indicatorLevel;
     PauseButton pauseButton;
     boolean completedStartingSequence;
     public static int numberOfDucksPerStage;
@@ -80,6 +81,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
         duckFactory = new DuckFactory();
 
+        indicatorLevel = new IndicatorLevel(level);
+        gameObjects.add(indicatorLevel);
+
         indicatorShots = new IndicatorShots();
         gameObjects.add(indicatorShots);
 
@@ -93,6 +97,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         pauseButton = new PauseButton();
         gameObjects.add(pauseButton);
 
+
+
         prevFlyingAwayFlags = new boolean[numberOfDucksPerStage];
 
         this.setOnTouchListener(this);
@@ -101,7 +107,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 getResources(),
                 R.drawable.background), SCREEN_WIDTH, SCREEN_HEIGHT, true);
 
-        for (int ii = 0; ii < GameConstants.NUMBER_OF_DUCKS_DEPLOYED; ++ii) {
+        for (int ii = 0; ii < 1; ++ii) {
             duckies.push(duckFactory.makeRandomDuck());
         }
         GameSoundHandler.createSoundPool();
@@ -127,9 +133,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
                 }
                 previousTimeMillis = currentTimeMillis;
-            }
-            else
-            {
+            } else {
                 goToNextLevel();
                 isPlaying = false;
             }
@@ -169,13 +173,15 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 } else {
                     maxPotentialRoundScore = 0;
                     roundScore = 0;
-                    if(!deadDuckLandingSpots.empty())
-                    {
+                    //the check below covers the case if you are doing 2 duck mode
+                    //and hit two ducks. The stack would still contain the position of the
+                    //first duck you hit.
+                    if (!deadDuckLandingSpots.empty()) {
                         deadDuckLandingSpots.pop();
                     }
                     for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
                         Duck duck = duckies.pop();
-                        duck.physicsComponent.setSpeed(level * 0.5f * GameConstants.DUCK_SPEED);
+                        duck.physicsComponent.setSpeed((level+1) * 0.5f * GameConstants.DUCK_SPEED);
                         gameObjects.add(duck);
                         indicatorShots.setNumShots(3);
                         outOFBullets = false;
@@ -215,7 +221,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
     public void pause() {
-        if(pauseButtonPressed) {
+        if (pauseButtonPressed) {
             pauseButton.paused = true;
             isPlaying = !isPlaying;
             GameSoundHandler.pauseAllSounds();
@@ -286,31 +292,25 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         return false;
     }
 
-    public void dogPopUp()
-    {
-        if(maxPotentialLevelScore != 0) {
+    public void dogPopUp() {
+        if (maxPotentialLevelScore != 0) {
             int numDucks;
             float popUpSpot;
             if (roundScore == maxPotentialRoundScore) {
                 numDucks = numberOfDucksPerStage;
                 popUpSpot = deadDuckLandingSpots.pop();
-            }
-            else if(numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore && roundScore > 0) {
+            } else if (numberOfDucksPerStage == 2 && roundScore < maxPotentialRoundScore && roundScore > 0) {
                 numDucks = 1;
                 popUpSpot = deadDuckLandingSpots.pop();
-            }
-            else
-            {
+            } else {
                 numDucks = 0;
                 popUpSpot = 0.5f - Camera.screenXToWorldX(dog.current_sprite.getWidth());
             }
             dog.comeUpToFinishRound(numDucks, popUpSpot);
             draw();
-            if(numDucks > 0) {
+            if (numDucks > 0) {
                 GameSoundHandler.playSound(GameConstants.GOT_DUCK);
-            }
-            else
-            {
+            } else {
                 GameSoundHandler.playSound(GameConstants.DOG_LAUGH);
             }
             try {
@@ -324,27 +324,37 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
     public void goToNextLevel() {
-        //draw();
-        GameSoundHandler.playLongSound(GameConstants.ROUND_CLEAR);
-        try {
-            Thread.sleep(4000);
-        } catch(InterruptedException e) {
-            }
-        if(levelScore == maxPotentialLevelScore) {
-            GameSoundHandler.playSound(GameConstants.PERFECT_SCORE);
+        if (levelScore > 0) {
+            GameSoundHandler.playLongSound(GameConstants.ROUND_CLEAR);
             try {
-                Thread.sleep(2000);
-            } catch(InterruptedException e) {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
             }
+            if (levelScore == maxPotentialLevelScore) {
+                GameSoundHandler.playSound(GameConstants.PERFECT_SCORE);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                }
+            }
+            GameSoundHandler.releaseResources();
+            Intent i_start = new Intent(context, MainActivity.class);
+            Bundle b = new Bundle();
+            level++;
+            b.putInt(GameConstants.LEVEL, level);
+            b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage);
+            b.putInt(GameConstants.SCORE, indicatorScore.getScore());
+            i_start.putExtras(b);
+            context.startActivity(i_start);
+        } else {
+            GameSoundHandler.playSound(GameConstants.GAME_OVER);
+            try {
+                Thread.sleep(4000);
+            } catch (InterruptedException e) {
+            }
+            GameSoundHandler.releaseResources();
+            Intent i_start = new Intent(context, StartupActivity.class);
+            context.startActivity(i_start);
         }
-        GameSoundHandler.releaseResources();
-        Intent i_start = new Intent(context, MainActivity.class);
-        Bundle b = new Bundle();
-        level++;
-        b.putInt(GameConstants.LEVEL, level);
-        b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage);
-        b.putInt(GameConstants.SCORE, indicatorScore.getScore());
-        i_start.putExtras(b);
-        context.startActivity(i_start);
     }
 }
