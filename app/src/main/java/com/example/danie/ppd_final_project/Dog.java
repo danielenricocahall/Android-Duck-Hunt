@@ -119,11 +119,11 @@ public class Dog extends GameObject {
     public void jump()
     {
         jumpingTime+=GameEngine.DELTA_TIME;
-        if(jumpingTime < 1.0f) {
+        if(jumpingTime < 0.8f) {
             current_sprite = sprites[6];
             this.physicsComponent.forward.y = -GameEngine.SCREEN_HEIGHT*0.006f;
         }
-        else if(jumpingTime > 1.0f && this.position.y > GameConstants.GROUND) {
+        else if(jumpingTime > 0.8f && this.position.y > GameConstants.GROUND) {
             current_sprite = sprites[7];
             this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.006f;
             layer = GameConstants.BACKGROUND;
@@ -139,12 +139,12 @@ public class Dog extends GameObject {
     public void bark()
     {
         if(!barked) {
-            GameSoundHandler.stopLongSound();
-            GameSoundHandler.playLongSound(GameConstants.DOG_BARKING_SOUND);
+            //GameSoundHandler.stopLongSound();
+            GameSoundHandler.playSound(GameConstants.DOG_BARKING_SOUND);
             barked = true;
             try
             {
-                Thread.sleep(300);
+                Thread.sleep(100);
             }
             catch (InterruptedException e)
             {
