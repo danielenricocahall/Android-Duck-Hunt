@@ -42,7 +42,7 @@ public class Dog extends GameObject {
         this.physicsComponent.forward.y = 0.0f;
         this.physicsComponent.forward.x = 0.75f;
         this.physicsComponent.forward.normalize();
-        this.physicsComponent.speed = 0.047f;
+        this.physicsComponent.speed = 0.088f;
         position = new Vector2D(0.0f, -0.216667f);
         paint = new Paint();
         layer = GameConstants.FOREGROUND;
@@ -126,11 +126,11 @@ public class Dog extends GameObject {
     public void jump()
     {
         jumpingTime+=GameEngine.DELTA_TIME;
-        if(jumpingTime < 0.8f) {
+        if(jumpingTime < 0.42f) {
             current_sprite = sprites[6];
             this.physicsComponent.forward.y = -GameEngine.SCREEN_HEIGHT*0.006f;
         }
-        else if(jumpingTime > 0.8f && this.position.y > GameConstants.GROUND) {
+        else if(jumpingTime > 0.42f && this.position.y > GameConstants.GROUND) {
             current_sprite = sprites[7];
             this.physicsComponent.forward.y = GameEngine.SCREEN_HEIGHT*0.006f;
             layer = GameConstants.BACKGROUND;

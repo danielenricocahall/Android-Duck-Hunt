@@ -128,9 +128,11 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     @Override
     public void run() {
-        previousTimeMillis = System.currentTimeMillis();
+        //previousTimeMillis = System.currentTimeMillis();
+        //currentTimeMillis = System.currentTimeMillis();
         while (isPlaying) {
             handleGameLogic();
+            previousTimeMillis = System.currentTimeMillis();
             if (!roundComplete) {
                 update();
                 draw();
@@ -142,7 +144,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 } catch (InterruptedException e) {
 
                 }
-                previousTimeMillis = currentTimeMillis;
+                //previousTimeMillis = currentTimeMillis;
             } else {
                 goToNextLevel();
                 isPlaying = false;
@@ -165,7 +167,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 handleEndOfStage();
                 if (duckies.empty()) {
                     roundComplete = true;
-
                 } else {
                     addMoreDucks();
                 }
@@ -211,7 +212,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
         try {
             gameThread.join();
-            //soundThread.join();
         } catch (InterruptedException e) {
             Log.d("GameThread", "Error pausing!");
         }
@@ -353,7 +353,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             } catch (InterruptedException e) {
             }
             dog.returnToGrass();
-
             draw();
         }
 

@@ -118,7 +118,6 @@ public class GameSoundHandler implements Runnable {
 
     public void playSound(int sound)
     {
-         //sounds.push(soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f));
         sounds.add(soundMap.get(sound));
     }
 

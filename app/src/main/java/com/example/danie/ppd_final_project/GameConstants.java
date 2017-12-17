@@ -48,14 +48,13 @@ public class GameConstants {
 
 
 
-
     public static final int DIAGONAL = 0;
     public static final int HORIZONTAL = 1;
     public static final int BACK = 2;
     public static final int DEFEAT = 3;
 
-    public static final float DELAY_AFTER_SHOT = 1.0f;
-    public static final float DELAY_TO_DISPLAY_SCORE = 2.0f;
+    public static final float DELAY_AFTER_SHOT = 0.5f;
+    public static final float DELAY_TO_DISPLAY_SCORE = 1.0f;
     public static final float TIME_ON_SCREEN = 5.0f;
 
 
@@ -70,9 +69,9 @@ public class GameConstants {
     //public static final float GROUND = -0.16667f;
     public static final float GROUND = -0.216667f;
 
-    public static final float DUCK_SPEED = 0.3f;
+    public static final float DUCK_SPEED = 0.6f;
 
-    // Constants concerning background immage placement
+    // Constants concerning background image placement
     public static final float BACKGROUND_TOP_PERCENTAGE = 0.70f;
     public static final float BACKGROUND_BOTTOM_PERCENTAGE = 0.40f;
 
