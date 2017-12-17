@@ -1,9 +1,12 @@
 package com.example.danie.ppd_final_project;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -49,6 +52,13 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onStop() {
+
+        SharedPreferences prefs = this.getSharedPreferences(StartupActivity.KEY_TOP_SCORE_PREFS, Context.MODE_PRIVATE);
+        if (prefs.getInt(StartupActivity.KEY_TOP_SCORE, 0) < gameEngine.roundScore) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt(StartupActivity.KEY_TOP_SCORE, gameEngine.roundScore);
+            editor.commit();
+        }
         super.onStop();
     }
 
