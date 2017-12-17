@@ -1,7 +1,9 @@
 package com.example.danie.ppd_final_project;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +12,12 @@ import android.widget.TextView;
 
 public class StartupActivity extends Activity {
 
+
+    protected static final String KEY_TOP_SCORE_PREFS = "KEY_DUCK_HUNT_TOP_SCORE_PREFS";
+    protected static final String KEY_TOP_SCORE = "KEY_DUCK_HUNT_TOP_SCORE";
     protected Button gameA_start;
     protected Button gameB_start;
+    protected TextView topScoreView;
     MediaPlayer mediaPlayer;
 
     @Override
@@ -54,7 +60,12 @@ public class StartupActivity extends Activity {
                 startActivity(i_start);            }
         });
 
+        topScoreView = (TextView)findViewById(R.id.textView_topScore);
 
+        SharedPreferences prefs = this.getSharedPreferences(KEY_TOP_SCORE_PREFS, Context.MODE_PRIVATE);
+        int topScore = prefs.getInt(KEY_TOP_SCORE, 0);
+
+        topScoreView.setText(getString(R.string.string_topScore, topScore));
     }
 
 
