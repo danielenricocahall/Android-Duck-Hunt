@@ -104,4 +104,20 @@ public class Camera {
     public static float worldYToScreenY(float y) {
         return slope * y + yZeroPx;
     }
+
+    public static float screenXDistToWorldXDist(float x) {
+        return screenXToWorldX(x);
+    }
+
+    public static float screenYDistToWorldYDist(float y) {
+        return Math.abs(y / slope);
+    }
+
+    public static float worldXDistToScreenXDist(float x) {
+        return worldXToScreenX(x);
+    }
+
+    public static float worldYDistToScreenYDist(float y) {
+        return Math.abs(y * slope);
+    }
 }
