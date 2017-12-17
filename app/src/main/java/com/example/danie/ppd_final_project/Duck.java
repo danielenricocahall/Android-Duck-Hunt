@@ -46,13 +46,14 @@ public class Duck extends GameObject {
         physicsComponent.speed = GameConstants.DUCK_SPEED;
         physicsComponent.forward = new Vector2D(
                 new Random().nextFloat(),
-                new Random().nextFloat()*-1.0f);
+                -1.0f);
         sprites = new Bitmap[NUMBER_OF_DUCK_ORIENTATIONS][NUMBER_OF_DUCK_SPRITES];
         duckOrientation = DIAGONAL;//they'll all start diagonally
         this.duckColor = duckColor;
         populateSprites(GameEngine.context);
+        scaleSprites();
         int frame = new Random().nextInt(NUMBER_OF_DUCK_SPRITES);
-        current_sprite = sprites[0][frame];//determines their initial flapping position
+        current_sprite = sprites[GameConstants.DIAGONAL][frame];//determines their initial flapping position
         boolean isFlipped = new Random().nextInt(1000) % 2 == 0;
         if(isFlipped)
         {
@@ -67,7 +68,7 @@ public class Duck extends GameObject {
         timeSinceShot = 0.0f;
         timeToSwitchOrientation = new Random().nextInt(20) + 20;//some degree of randomness to change the sprite
         timeToSwitchHorizontalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
-        timeToSwitchVerticalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
+        timeToSwitchVerticalDirection = new Random().nextInt(60) + 30;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
     }
 
@@ -107,16 +108,16 @@ public class Duck extends GameObject {
 
     @Override
     public void onUpdate() {
-        timeSinceSpawned += GameEngine.DELTA_TIME;
         timeToFlyAway |= (timeSinceSpawned > GameConstants.TIME_ON_SCREEN);
         if(isAlive)
         {
-            GameSoundHandler.playSound(GameConstants.DUCK_FLAP_SOUND);
+            GameSoundHandler.getInstance().playSound(GameConstants.DUCK_FLAP_SOUND);
             if(timeToFlyAway) {
                 flyAway();
             }
             else
             {
+                timeSinceSpawned += GameEngine.DELTA_TIME;
                 performTimeChecks();
             }
         }
@@ -132,7 +133,7 @@ public class Duck extends GameObject {
             {
                 //the duck hasn't started falling yet, so play the falling sound
                 if(this.physicsComponent.forward.y <= 0.0f) {
-                    GameSoundHandler.playSound(GameConstants.DEAD_DUCK_FALL_SOUND);
+                    GameSoundHandler.getInstance().playSound(GameConstants.DEAD_DUCK_FALL_SOUND);
                 }
                     this.physicsComponent.forward.x = 0.0f;
                     this.physicsComponent.forward.y = GRAVITY;
@@ -142,6 +143,7 @@ public class Duck extends GameObject {
         checkBorder();
         frame++;
     }
+
 
     private void performTimeChecks()
     {
@@ -196,8 +198,9 @@ public class Duck extends GameObject {
         if (this.position.y < GameConstants.GROUND) {
             if(!isAlive) {
                 this.destroy = true;
-                GameSoundHandler.pauseAllSounds();
-                GameSoundHandler.playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
+                GameSoundHandler.getInstance().stopAllSounds();
+                //GameSoundHandler.getInstance().pauseAllSounds();
+                GameSoundHandler.getInstance().playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
             }
             else
             {
@@ -224,8 +227,6 @@ public class Duck extends GameObject {
 
     public void flipSprites()
     {
-        Matrix matrix = new Matrix();
-        matrix.postScale(-1, 1, current_sprite.getWidth()/2, current_sprite.getHeight()/2);
         for(int i = 0;i < NUMBER_OF_DUCK_ORIENTATIONS-1; ++i) {
             for (int j = 0; j < NUMBER_OF_DUCK_SPRITES; ++j) {
                 sprites[i][j] = flip(sprites[i][j]);
@@ -257,5 +258,21 @@ public class Duck extends GameObject {
                     context.getResources(),
                     context.getResources().getIdentifier(duckColor+"duck_defeated"+j,"drawable",context.getPackageName()));
         }
+    }
+
+    public void scaleSprites()
+    {
+        for(int i = 0;i < NUMBER_OF_DUCK_ORIENTATIONS-1; ++i) {
+            for (int j = 0; j < NUMBER_OF_DUCK_SPRITES; ++j) {
+                sprites[i][j] = Bitmap.createScaledBitmap(
+                        sprites[i][j], GameEngine.SCREEN_WIDTH/11, GameEngine.SCREEN_WIDTH/11, false);
+            }
+        }
+        sprites[DEFEAT][0] = Bitmap.createScaledBitmap(
+                sprites[DEFEAT][0], GameEngine.SCREEN_WIDTH/11, GameEngine.SCREEN_WIDTH/11, false);
+        sprites[DEFEAT][1] = Bitmap.createScaledBitmap(
+                sprites[DEFEAT][1], GameEngine.SCREEN_WIDTH/11, GameEngine.SCREEN_WIDTH/11, false);
+        sprites[DEFEAT][2] = Bitmap.createScaledBitmap(
+                sprites[DEFEAT][2], GameEngine.SCREEN_WIDTH/20, GameEngine.SCREEN_WIDTH/28, false);
     }
 }

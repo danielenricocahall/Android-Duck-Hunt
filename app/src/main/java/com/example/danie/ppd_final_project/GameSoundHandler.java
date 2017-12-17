@@ -9,21 +9,51 @@ import android.media.SoundPool;
 import android.os.Build;
 import android.util.SparseIntArray;
 
-import java.util.Stack;
+import java.io.IOException;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 
 /**
  * Created by daniel on 12/10/17.
  */
 
-public abstract class GameSoundHandler {
+public class GameSoundHandler implements Runnable {
 
-    public static SoundPool soundPool;
+    public SoundPool soundPool;
     public static MediaPlayer mediaPlayer;
     public static Context context;
-    public static SparseIntArray soundMap = new SparseIntArray();
+    public SparseIntArray soundMap = new SparseIntArray();
+
+    public BlockingQueue<Integer> sounds = new LinkedBlockingQueue<>();
+    public BlockingQueue<Integer> soundsStopIDs = new LinkedBlockingQueue<>();
+
+    volatile boolean isPlaying = true;
+    private static GameSoundHandler gameSoundHandler;
+
+    private GameSoundHandler()
+    {
 
 
-    public static void createSoundPool() {
+    }
+
+
+    public static GameSoundHandler getInstance()
+    {
+        if(gameSoundHandler == null)
+        {
+            gameSoundHandler = new GameSoundHandler();
+            gameSoundHandler.setContext(GameEngine.context);
+            gameSoundHandler.createSoundPool();
+            gameSoundHandler.loadSounds();
+            return gameSoundHandler;
+       }
+       else
+        {
+            return gameSoundHandler;
+        }
+    }
+    public void createSoundPool() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             createNewSoundPool();
         } else {
@@ -32,7 +62,7 @@ public abstract class GameSoundHandler {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public static void createNewSoundPool(){
+    public void createNewSoundPool(){
         AudioAttributes attributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_GAME)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -44,7 +74,7 @@ public abstract class GameSoundHandler {
     }
 
     @SuppressWarnings("deprecation")
-    public static void createOldSoundPool(){
+    public void createOldSoundPool(){
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
     }
 
@@ -62,11 +92,12 @@ public abstract class GameSoundHandler {
     public static void stopLongSound()
     {
         if(mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
             mediaPlayer.reset();
         }
     }
 
-    public static void loadSounds()
+    public void loadSounds()
     {
         soundMap.put(GameConstants.GUN_SHOT_SOUND, soundPool.load(context, GameConstants.GUN_SHOT_SOUND, 1));
         soundMap.put(GameConstants.DUCK_FLAP_SOUND, soundPool.load(context, GameConstants.DUCK_FLAP_SOUND, 1));
@@ -82,18 +113,32 @@ public abstract class GameSoundHandler {
         soundMap.put(GameConstants.GAME_OVER, soundPool.load(context, GameConstants.GAME_OVER, 1));
         soundMap.put(GameConstants.YOU_FAIL, soundPool.load(context, GameConstants.YOU_FAIL, 1));
         soundMap.put(GameConstants.DOG_BARKING_SOUND, soundPool.load(context, GameConstants.DOG_BARKING_SOUND, 1));
-
-
     }
 
 
-    public static void playSound(int sound)
+    public void playSound(int sound)
     {
-         soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f);
+         //sounds.push(soundPool.play(soundMap.get(sound), 1, 1, 1, 0, 1f));
+        sounds.add(soundMap.get(sound));
+    }
+
+   public void stopAllSounds()
+    {
+        while(!soundsStopIDs.isEmpty())
+        {
+            try {
+                soundPool.stop(soundsStopIDs.take());
+            }
+            catch (InterruptedException e)
+            {
+
+            }
+        }
     }
 
 
-    public static void pauseAllSounds()
+
+    public void pauseAllSounds()
     {
         soundPool.autoPause();
         if(mediaPlayer.isPlaying()) {
@@ -103,15 +148,32 @@ public abstract class GameSoundHandler {
 
 
 
-    public static void releaseResources()
+    public void releaseResources()
     {
         soundPool.release();
+        mediaPlayer.release();
     }
 
-    public static void resumeAllSounds()
+
+    public void resumeAllSounds()
     {
         soundPool.autoResume();
         mediaPlayer.start();
+    }
+
+    @Override
+    public void run() {
+        while(isPlaying) {
+            if (!(sounds.isEmpty())) {
+                try {
+                    while (!sounds.isEmpty()) {
+                        soundsStopIDs.add(soundPool.play(sounds.take(), 1, 1, 1, 0, 1f));
+                    }
+                } catch (InterruptedException e) {
+
+                }
+            }
+        }
     }
 
 

@@ -12,12 +12,13 @@ import android.graphics.Paint;
 
 public class UserIndicator extends GameObject {
 
-    private int level;
+    private int round;
 
     protected Paint paint;
 
     private float timeToDisplayLevel = 0.0f;
     private boolean isGameOver = false;
+    private boolean nextRound = false;
 
     Bitmap gameOver;
 
@@ -41,7 +42,6 @@ public class UserIndicator extends GameObject {
         paint.setColor(Color.GREEN);
         paint.setTextSize(50);
         paint.setTextAlign(Paint.Align.RIGHT);
-
     }
 
     @Override
@@ -54,19 +54,30 @@ public class UserIndicator extends GameObject {
         isGameOver = true;
     }
 
+    public void nextRound()
+    {
+        nextRound = true;
+    }
+
     @Override
     public void onDraw(Canvas canvas) {
         paint.setColor(Color.GREEN);
-        canvas.drawText("R="+Integer.toString(level), Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
+        canvas.drawText("R="+Integer.toString(round), Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
         if(timeToDisplayLevel < 1.0f)
         {
             paint.setColor(Color.BLACK);
             timeToDisplayLevel += GameEngine.DELTA_TIME;
-            canvas.drawText("Round "+Integer.toString(level), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
+            canvas.drawText("Round "+Integer.toString(round), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
         }
         if(isGameOver)
         {
             canvas.drawBitmap(gameOver, Camera.worldXToScreenX(0.4f), Camera.worldYToScreenY(0.3f), paint);
+        }
+        if(nextRound)
+        {
+            paint.setColor(Color.BLACK);
+            canvas.drawText("Round "+Integer.toString(round), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
+            canvas.drawText("Complete!", Camera.worldXToScreenX(0.5f), Camera.worldYToScreenY(0.2f), paint);
         }
     }
 
@@ -79,11 +90,11 @@ public class UserIndicator extends GameObject {
     {
         if(level >= 0)
         {
-            this.level = level;
+            this.round = level;
         }
         else
         {
-            this.level = 0;
+            this.round = 0;
         }
     }
 

@@ -11,8 +11,6 @@ import java.util.Random;
 public class DuckFactory {
 
 
-    DynamicPhysicsComponent physicsComponent;
-
     public Duck makeGreenDuck()
     {
         Duck duck = new Duck(new Random().nextFloat(),0 , "green", new BasicPhysicsComponent());

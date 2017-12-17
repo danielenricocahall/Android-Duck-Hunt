@@ -6,7 +6,6 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 public class StartupActivity extends Activity {
 
@@ -20,7 +19,6 @@ public class StartupActivity extends Activity {
         setContentView(R.layout.activity_startup);
         mediaPlayer = MediaPlayer.create(this,R.raw.title_screen);
         mediaPlayer.start();
-
         gameA_start = (Button) findViewById(R.id.gameA_button);
         gameB_start = (Button) findViewById(R.id.gameB_button);
         gameA_start.setOnClickListener(new View.OnClickListener() {

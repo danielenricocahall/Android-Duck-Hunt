@@ -70,7 +70,7 @@ public class GameConstants {
     //public static final float GROUND = -0.16667f;
     public static final float GROUND = -0.216667f;
 
-    public static final float DUCK_SPEED = 0.12f;
+    public static final float DUCK_SPEED = 0.3f;
 
     // Constants concerning background immage placement
     public static final float BACKGROUND_TOP_PERCENTAGE = 0.70f;

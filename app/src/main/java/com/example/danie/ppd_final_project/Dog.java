@@ -34,6 +34,7 @@ public class Dog extends GameObject {
         barked = false;
         sprites = new Bitmap[12];
         populateSprites(GameEngine.context);
+        scaleSprites();
         current_sprite = sprites[0];
         this.physicsComponent.forward = new Vector2D(
                 0.0f,
@@ -86,10 +87,16 @@ public class Dog extends GameObject {
     {
         for (int i=0; i < NUMBER_OF_DOG_SPRITES; i++){
             int j = i + 1;
-            Bitmap bitmap = BitmapFactory.decodeResource(
+            sprites[i] = BitmapFactory.decodeResource(
                     context.getResources(),
                     context.getResources().getIdentifier("dog"+j,"drawable",context.getPackageName()));
-            sprites[i] = bitmap;
+        }
+    }
+    public void scaleSprites()
+    {
+        for (int i=0; i < NUMBER_OF_DOG_SPRITES; i++){
+            sprites[i] = Bitmap.createScaledBitmap(
+                    sprites[i], GameEngine.SCREEN_WIDTH/6, GameEngine.SCREEN_WIDTH/7, false);;
         }
     }
 
@@ -97,7 +104,7 @@ public class Dog extends GameObject {
     {
         layer = GameConstants.MIDGROUND;
         finishingRound = true;
-        position.y = 0.04f;
+        position.y = 0.06f;
         position.x = popUpSpot;
         switch(numDucksShot)
         {
@@ -140,18 +147,18 @@ public class Dog extends GameObject {
     {
         if(!barked) {
             //GameSoundHandler.stopLongSound();
-            GameSoundHandler.playSound(GameConstants.DOG_BARKING_SOUND);
+            GameSoundHandler.getInstance().playSound(GameConstants.DOG_BARKING_SOUND);
             barked = true;
             try
             {
-                Thread.sleep(100);
+                Thread.sleep(300);
             }
             catch (InterruptedException e)
             {
 
             }
         }
-        GameSoundHandler.stopLongSound();
+        GameSoundHandler.getInstance().stopLongSound();
         return;
     }
 
