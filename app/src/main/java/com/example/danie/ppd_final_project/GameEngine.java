@@ -86,6 +86,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 SCREEN_WIDTH,
                 (int)(SCREEN_HEIGHT * GameConstants.BACKGROUND_BOTTOM_PERCENTAGE)
         );
+
         background_bottom.layer = GameConstants.FOREGROUND;
         background_bottom.yPos = (int)(SCREEN_HEIGHT * (1 - GameConstants.BACKGROUND_BOTTOM_PERCENTAGE));
         gameObjects.add(background_bottom);
@@ -229,8 +230,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (Camera.worldRectToScreenRect(pauseButton.box).contains(event.getRawX(), event.getRawY())) {
-                    if (isPlaying == true) {
+                if (Camera.worldRectToScreenRect(pauseButton.pauseButtonBox).contains(event.getRawX(), event.getRawY())) {
+                    if (isPlaying) {
                         pauseButtonPressed = true;
                         pause();
                     } else {
@@ -257,6 +258,21 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                                 }
                             }
                         }
+                    }
+                }
+                else {
+                    if (Camera.worldRectToScreenRect(pauseButton.replayButtonBox).contains(event.getRawX(), event.getRawY())) {
+                        Intent i_start = new Intent(context, MainActivity.class);
+                        Bundle b = new Bundle();
+                        b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage); //Your id
+                        b.putInt(GameConstants.ROUND, 1); //Your id
+                        b.putInt(GameConstants.SCORE, 0);
+                        i_start.putExtras(b);
+                        context.startActivity(i_start);
+                    }
+                    else if (Camera.worldRectToScreenRect(pauseButton.quitButtonBox).contains(event.getRawX(), event.getRawY())) {
+                        Intent i_start = new Intent(context, StartupActivity.class);
+                        context.startActivity(i_start);
                     }
                 }
 
@@ -333,6 +349,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             } catch (InterruptedException e) {
             }
             dog.returnToGrass();
+
             draw();
         }
 
