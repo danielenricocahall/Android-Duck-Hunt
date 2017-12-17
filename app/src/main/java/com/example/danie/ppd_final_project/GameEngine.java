@@ -60,7 +60,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     Stack<Float> deadDuckLandingSpots = new Stack<>();
     int numDucksHitThisStage;
     int numDucksHitThisRound = 0;
-    Lock lock = new Lock();
 
 
     public GameEngine(Context context, int numberOfDucksPerStage, Point point, int round, int score) {
@@ -269,6 +268,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 }
                 else {
                     if (Camera.worldRectToScreenRect(pauseButton.replayButtonBox).contains(event.getRawX(), event.getRawY())) {
+                        GameSoundHandler.getInstance().stopAllSounds();
                         Intent i_start = new Intent(context, MainActivity.class);
                         Bundle b = new Bundle();
                         b.putInt(GameConstants.NUMBER_OF_DUCKS, numberOfDucksPerStage); //Your id
@@ -278,6 +278,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         context.startActivity(i_start);
                     }
                     else if (Camera.worldRectToScreenRect(pauseButton.quitButtonBox).contains(event.getRawX(), event.getRawY())) {
+                        GameSoundHandler.getInstance().stopAllSounds();
                         Intent i_start = new Intent(context, StartupActivity.class);
                         context.startActivity(i_start);
                     }

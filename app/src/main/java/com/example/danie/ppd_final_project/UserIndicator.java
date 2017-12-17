@@ -77,7 +77,7 @@ public class UserIndicator extends GameObject {
         {
             paint.setColor(Color.BLACK);
             canvas.drawText("Round "+Integer.toString(round), Camera.worldXToScreenX(0.6f), Camera.worldYToScreenY(0.3f), paint);
-            canvas.drawText("Complete!", Camera.worldXToScreenX(0.5f), Camera.worldYToScreenY(0.2f), paint);
+            canvas.drawText("Complete!", Camera.worldXToScreenX(0.62f), Camera.worldYToScreenY(0.2f), paint);
         }
     }
 

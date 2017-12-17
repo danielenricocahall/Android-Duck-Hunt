@@ -134,6 +134,7 @@ public class GameSoundHandler implements Runnable {
 
             }
         }
+        stopLongSound();
     }
 
 
