@@ -204,9 +204,15 @@ public class Duck extends GameObject {
                 this.physicsComponent.forward.y *= -1.0f;
             }
         }
-        if(this.position.y > 1 && timeToFlyAway)
+        if(this.position.y > 1)
         {
-            this.destroy = true;
+            if(timeToFlyAway) {
+                this.destroy = true;
+            }
+            else
+            {
+                this.physicsComponent.forward.y *= -1.0f;
+            }
         }
     }
 
