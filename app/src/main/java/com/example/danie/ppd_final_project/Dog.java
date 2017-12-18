@@ -46,7 +46,6 @@ public class Dog extends GameObject {
         paint = new Paint();
         layer = GameConstants.FOREGROUND;
         finishingRound = false;
-
     }
 
     public void init() {
@@ -120,6 +119,7 @@ public class Dog extends GameObject {
         position.x = popUpSpot;
         checkBorders();
     }
+
 
     public void checkBorders()
     {

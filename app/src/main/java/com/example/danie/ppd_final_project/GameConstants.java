@@ -17,11 +17,9 @@ public class GameConstants {
 
     private GameConstants(){};
 
-
     public static final String NUMBER_OF_DUCKS = "Number Of Ducks";
     public static final String ROUND = "Round";
     public static final String SCORE = "Score";
-
 
     public static final int NUMBER_OF_DUCK_SPRITES = 3;
     public static final int NUMBER_OF_DUCK_TYPES = 3;
@@ -29,7 +27,6 @@ public class GameConstants {
     public static final int NUMBER_OF_DOG_SPRITES = 12;
 
     public static final int NUMBER_OF_DUCKS_DEPLOYED = 10;
-
 
     public static final int GREENDUCK = 0;
     public static final int REDDUCK = 1;
@@ -79,17 +76,10 @@ public class GameConstants {
     public static final float BACKGROUND_TOP_PERCENTAGE = 0.70f;
     public static final float BACKGROUND_BOTTOM_PERCENTAGE = 0.40f;
 
-
     static final Map<String , Integer> COLOR_TO_SCORE = new HashMap<String, Integer>() {{
         put("green",    500);
         put("red", 1000);
         put("pink",   1500);
     }};
-
-
-
-
-
-
 
 }
