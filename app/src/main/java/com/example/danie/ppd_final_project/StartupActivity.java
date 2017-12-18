@@ -19,22 +19,25 @@ public class StartupActivity extends Activity {
     protected Button gameA_start;
     protected Button gameB_start;
     protected TextView topScoreView;
-    MediaPlayer mediaPlayer;
+    //MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        mediaPlayer = MediaPlayer.create(this,R.raw.title_screen);
-        mediaPlayer.start();
+        //mediaPlayer = MediaPlayer.create(this,R.raw.title_screen);
+        //mediaPlayer.start();
         gameA_start = (Button) findViewById(R.id.gameA_button);
         gameB_start = (Button) findViewById(R.id.gameB_button);
+        GameSoundHandler.getInstance().setContext(this);
+        GameSoundHandler.getInstance().createSoundPool();
+        GameSoundHandler.getInstance().loadSounds();
+        GameSoundHandler.getInstance().playLongSound(GameConstants.TITLE_SEQUENCE_SOUND);
         gameA_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.stop();
-                mediaPlayer = MediaPlayer.create(StartupActivity.this,R.raw.gun_shot);
-                mediaPlayer.start();
+                GameSoundHandler.getInstance().stopLongSound();
+                GameSoundHandler.getInstance().playLongSound(GameConstants.GUN_SHOT_SOUND);
                 Intent i_start = new Intent(StartupActivity.this, MainActivity.class);
                 Bundle b = new Bundle();
                 b.putInt(GameConstants.NUMBER_OF_DUCKS, 1); //Your id
@@ -48,9 +51,11 @@ public class StartupActivity extends Activity {
         gameB_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.stop();
+                /*mediaPlayer.stop();
                 mediaPlayer = MediaPlayer.create(StartupActivity.this,R.raw.gun_shot);
-                mediaPlayer.start();
+                mediaPlayer.start();*/
+                GameSoundHandler.getInstance().stopLongSound();
+                GameSoundHandler.getInstance().playLongSound(GameConstants.GUN_SHOT_SOUND);
                 Intent i_start = new Intent(StartupActivity.this, MainActivity.class);
                 Bundle b = new Bundle();
                 b.putInt(GameConstants.NUMBER_OF_DUCKS, 2); //Your id

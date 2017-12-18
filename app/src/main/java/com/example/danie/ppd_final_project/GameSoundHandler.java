@@ -45,9 +45,6 @@ public class GameSoundHandler implements Runnable {
         if(gameSoundHandler == null)
         {
             gameSoundHandler = new GameSoundHandler();
-            gameSoundHandler.setContext(GameEngine.context);
-            gameSoundHandler.createSoundPool();
-            gameSoundHandler.loadSounds();
             return gameSoundHandler;
        }
        else
@@ -95,7 +92,6 @@ public class GameSoundHandler implements Runnable {
     {
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
-            mediaPlayer.reset();
         }
     }
     //loads all necessary sounds to a map of sounds, to be used by the sound pool

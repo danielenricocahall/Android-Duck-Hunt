@@ -55,6 +55,7 @@ public class GameConstants {
     public static final float DELAY_AFTER_SHOT = 0.5f;
     public static final float DELAY_TO_DISPLAY_SCORE = 1.0f;
     public static final float TIME_ON_SCREEN = 5.0f;
+    public static final float SHOOTING_RADIUS = 75.0f;
 
     public static final float DOG_JUMPING_TIME = 0.42f;
     public static final float DOG_JUMPING_SPEED = -GameEngine.SCREEN_HEIGHT*0.006f;
