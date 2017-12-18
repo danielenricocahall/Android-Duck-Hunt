@@ -24,7 +24,7 @@ public class GameSoundHandler implements Runnable {
     public static MediaPlayer mediaPlayer;
     public static Context context;
     public SparseIntArray soundMap = new SparseIntArray();
-
+    //public SparseIntArray soundToStopID = new SparseIntArray();
     public BlockingQueue<Integer> sounds = new LinkedBlockingQueue<>();
     public BlockingQueue<Integer> soundsStopIDs = new LinkedBlockingQueue<>();
 
@@ -167,6 +167,10 @@ public class GameSoundHandler implements Runnable {
             if (!(sounds.isEmpty())) {
                 try {
                     while (!sounds.isEmpty()) {
+                        if(soundsStopIDs.size() > 10)
+                        {
+                            soundsStopIDs.clear();
+                        }
                         soundsStopIDs.add(soundPool.play(sounds.take(), 1, 1, 1, 0, 1f));
                     }
                 } catch (InterruptedException e) {

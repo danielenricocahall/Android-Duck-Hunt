@@ -57,9 +57,15 @@ public class GameConstants {
     public static final float DELAY_TO_DISPLAY_SCORE = 1.0f;
     public static final float TIME_ON_SCREEN = 5.0f;
 
+    public static final float DOG_JUMPING_TIME = 0.42f;
+    public static final float DOG_JUMPING_SPEED = -GameEngine.SCREEN_HEIGHT*0.006f;
+
+    public static final float DOG_SPEED = 0.088f;
+
 
     public static final float GRAVITY = 10.0f;
     public static final float ESCAPE_VELOCITY = -10.0f;
+
 
 
     public static final int BACKGROUND = 1;

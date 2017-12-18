@@ -138,7 +138,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 draw();
                 currentTimeMillis = System.currentTimeMillis();
                 DELTA_TIME = (currentTimeMillis - previousTimeMillis) / 1000.0f;
-                System.out.println(DELTA_TIME);
                 try {
                     gameThread.sleep(TIME_BETWEEN_FRAMES);
                 } catch (InterruptedException e) {

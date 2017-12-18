@@ -30,6 +30,7 @@ public class Duck extends GameObject {
     protected float deathPoint;
     protected Paint paint;
     protected Bitmap[][] sprites;
+
     int frame;
     int duckOrientation;
     float timeSinceShot;
@@ -45,7 +46,7 @@ public class Duck extends GameObject {
         this.physicsComponent = physicsComponent;
         physicsComponent.speed = GameConstants.DUCK_SPEED;
         physicsComponent.forward = new Vector2D(
-                new Random().nextFloat(),
+                new Random().nextFloat()*0.5f+0.25f,
                 -1.0f);
         sprites = new Bitmap[NUMBER_OF_DUCK_ORIENTATIONS][NUMBER_OF_DUCK_SPRITES];
         duckOrientation = DIAGONAL;//they'll all start diagonally
@@ -67,8 +68,8 @@ public class Duck extends GameObject {
         timeSinceSpawned = 0.0f;
         timeSinceShot = 0.0f;
         timeToSwitchOrientation = new Random().nextInt(20) + 20;//some degree of randomness to change the sprite
-        timeToSwitchHorizontalDirection = new Random().nextInt(30) + 20;//some degree of randomness to change direction
-        timeToSwitchVerticalDirection = new Random().nextInt(60) + 30;//some degree of randomness to change direction
+        timeToSwitchHorizontalDirection = new Random().nextInt(60) + 30;//some degree of randomness to change direction
+        timeToSwitchVerticalDirection = new Random().nextInt(90) + 60;//some degree of randomness to change direction
         layer = GameConstants.BACKGROUND;
     }
 
@@ -241,23 +242,23 @@ public class Duck extends GameObject {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-    public void populateSprites(Context context)
-    {
-        for (int i=0; i<NUMBER_OF_DUCK_SPRITES; i++){
+    public void populateSprites(Context context) {
+        for (int i = 0; i < NUMBER_OF_DUCK_SPRITES; i++) {
             int j = i + 1;
-            sprites[DIAGONAL][i] =  BitmapFactory.decodeResource(
+            sprites[DIAGONAL][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duckColor+"duck_diagonal"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor + "duck_diagonal" + j, "drawable", context.getPackageName()));
             sprites[HORIZONTAL][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duckColor+"duck_horizontal"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor + "duck_horizontal" + j, "drawable", context.getPackageName()));
             sprites[BACK][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duckColor+"duck_back"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor + "duck_back" + j, "drawable", context.getPackageName()));
             sprites[DEFEAT][i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier(duckColor+"duck_defeated"+j,"drawable",context.getPackageName()));
+                    context.getResources().getIdentifier(duckColor + "duck_defeated" + j, "drawable", context.getPackageName()));
         }
+
     }
 
     public void scaleSprites()
