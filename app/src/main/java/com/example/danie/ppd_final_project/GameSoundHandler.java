@@ -45,6 +45,9 @@ public class GameSoundHandler implements Runnable {
         if(gameSoundHandler == null)
         {
             gameSoundHandler = new GameSoundHandler();
+            gameSoundHandler.setContext(GameEngine.context);
+            gameSoundHandler.getInstance().createSoundPool();
+            gameSoundHandler.getInstance().loadSounds();
             return gameSoundHandler;
        }
        else

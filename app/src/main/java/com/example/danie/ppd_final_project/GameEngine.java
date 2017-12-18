@@ -122,9 +122,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
             duckies.push(duckFactory.makeRandomDuck());
         }
         completedStartingSequence = false;
-        GameSoundHandler.getInstance().setContext(GameEngine.context);
-        GameSoundHandler.getInstance().createSoundPool();
-        GameSoundHandler.getInstance().loadSounds();
         GameSoundHandler.getInstance().playLongSound(GameConstants.STARTING_SEQUENCE_SOUND);
 
     }
