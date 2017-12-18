@@ -27,7 +27,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     volatile boolean isPlaying = false;
     protected Thread gameThread;
     protected SurfaceHolder surfaceHolder;
-    private static final int DESIRED_FPS = 35;
+    private static final int DESIRED_FPS = 30;
     private static final int TIME_BETWEEN_FRAMES = 1000 / DESIRED_FPS;
     private long previousTimeMillis;
     private long currentTimeMillis;

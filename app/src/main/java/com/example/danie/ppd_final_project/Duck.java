@@ -121,6 +121,12 @@ public class Duck extends GameObject {
         if(isAlive)
         {
             GameSoundHandler.getInstance().playSound(GameConstants.DUCK_FLAP_SOUND);//play the duck flap sound
+            try {
+                Thread.sleep(50);
+            }
+            catch(InterruptedException e)
+            {
+            }
             if(timeToFlyAway) {
                 flyAway();//if the user ran out of bullets or ran out of time, the duck flutters off
             }

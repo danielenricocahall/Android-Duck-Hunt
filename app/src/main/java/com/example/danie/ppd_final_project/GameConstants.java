@@ -50,8 +50,6 @@ public class GameConstants {
     public static final int GAME_OVER = R.raw.game_over;
     public static final int YOU_FAIL = R.raw.fail;
 
-
-
     public static final int DIAGONAL = 0;
     public static final int HORIZONTAL = 1;
     public static final int BACK = 2;
@@ -64,22 +62,18 @@ public class GameConstants {
     public static final float DOG_JUMPING_TIME = 0.42f;
     public static final float DOG_JUMPING_SPEED = -GameEngine.SCREEN_HEIGHT*0.006f;
 
-    public static final float DOG_SPEED = 0.088f;
-
+    public static final float DOG_SPEED = 0.09f;
 
     public static final float GRAVITY = 0.6f;
     public static final float ESCAPE_VELOCITY = -10.0f;
-
-
 
     public static final int BACKGROUND = 1;
     public static final int MIDGROUND = 2;
     public static final int FOREGROUND = 3;
 
-    //public static final float GROUND = -0.16667f;
     public static final float GROUND = -0.216667f;
 
-    public static final float DUCK_SPEED = 0.6f;
+    public static final float DUCK_SPEED = 0.64f;
 
     // Constants concerning background image placement
     public static final float BACKGROUND_TOP_PERCENTAGE = 0.70f;
