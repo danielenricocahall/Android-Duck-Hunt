@@ -119,14 +119,13 @@ public class Dog extends GameObject {
         }
         position.x = popUpSpot;
         checkBorders();
-
     }
 
     public void checkBorders()
     {
         if (position.x > (1 - Camera.screenXToWorldX(current_sprite.getWidth()))) {
             // shift the dog over a bit so the sprite doesn't get cutoff at screen edges
-            this.position.x = 1 - Camera.screenXToWorldX(current_sprite.getWidth());
+            position.x = 1 - Camera.screenXToWorldX(current_sprite.getWidth());
         }
         if (position.x < 0) {
             // shift the dog over a bit so the sprite doesn't get cutoff at screen edges

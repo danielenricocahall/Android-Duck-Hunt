@@ -67,7 +67,7 @@ public class GameConstants {
     public static final float DOG_SPEED = 0.088f;
 
 
-    public static final float GRAVITY = 10.0f;
+    public static final float GRAVITY = 0.6f;
     public static final float ESCAPE_VELOCITY = -10.0f;
 
 

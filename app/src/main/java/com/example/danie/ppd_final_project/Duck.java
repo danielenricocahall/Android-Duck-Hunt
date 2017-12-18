@@ -145,7 +145,8 @@ public class Duck extends GameObject {
                     GameSoundHandler.getInstance().playSound(GameConstants.DEAD_DUCK_FALL_SOUND);//start playing the falling sound immediately before the duck falls
                 }
                     this.physicsComponent.forward.x = 0.0f;
-                    this.physicsComponent.forward.y = GRAVITY;
+                    this.physicsComponent.forward.y = 5.0f;
+                    this.physicsComponent.speed = GRAVITY;
             }
         }
         physicsComponent.update(this);//moves the duck using whatever physics handler was passed in
