@@ -8,9 +8,9 @@ import android.graphics.Canvas;
 
 public abstract class GameObject {
 
-    public int layer;
-    public Vector2D position;
-    public boolean destroy;
+    public int layer; // determines when the object is rendered
+    public Vector2D position; // determines the position of the object
+    public boolean destroy;// determines whether or not the object should continue being updated and drawn in the game engine
 
     public abstract void init();
 

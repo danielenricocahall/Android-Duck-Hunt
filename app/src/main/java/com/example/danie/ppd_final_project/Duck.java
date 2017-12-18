@@ -23,6 +23,7 @@ import static com.example.danie.ppd_final_project.GameConstants.NUMBER_OF_DUCK_S
  * Created by danie on 11/28/2017.
  */
 
+//class which represents the duck in the game
 public class Duck extends GameObject {
 
     public boolean isAlive;
@@ -42,6 +43,9 @@ public class Duck extends GameObject {
     private String duckColor;
     DynamicPhysicsComponent physicsComponent;
 
+    //huge constructor
+    //this should be cleaned up sometime
+    //but currently initializes all necessary fields
     public Duck(float x, float y, String duckColor, final DynamicPhysicsComponent physicsComponent) {
         this.physicsComponent = physicsComponent;
         physicsComponent.speed = GameConstants.DUCK_SPEED;
@@ -81,11 +85,13 @@ public class Duck extends GameObject {
 
     @Override
     public void onDraw(Canvas canvas) {
+        //if the duck is alive, just sift through the sprites in the current row to animate
         if(isAlive) {
             current_sprite = sprites[duckOrientation][frame % NUMBER_OF_DUCK_SPRITES];
         }
         else
         {
+            //the duck was shot, now to handle the duck freezing and falling
             duckOrientation = DEFEAT;
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
@@ -94,10 +100,12 @@ public class Duck extends GameObject {
             }
             else
             {
+                //display the score as the duck falls
                 if(timeSinceShot < DELAY_TO_DISPLAY_SCORE)
                 {
                     canvas.drawBitmap(sprites[duckOrientation][2], Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(deathPoint), paint);
                 }
+                //ensure the duck appears to spin as it falls
                 current_sprite = sprites[duckOrientation][1];
                 if (frame % 2 == 0) {
                     current_sprite = flip(current_sprite);
@@ -112,21 +120,21 @@ public class Duck extends GameObject {
         timeToFlyAway |= (timeSinceSpawned > GameConstants.TIME_ON_SCREEN);
         if(isAlive)
         {
-            GameSoundHandler.getInstance().playSound(GameConstants.DUCK_FLAP_SOUND);
+            GameSoundHandler.getInstance().playSound(GameConstants.DUCK_FLAP_SOUND);//play the duck flap sound
             if(timeToFlyAway) {
-                flyAway();
+                flyAway();//if the user ran out of bullets or ran out of time, the duck flutters off
             }
             else
             {
-                timeSinceSpawned += GameEngine.DELTA_TIME;
-                performTimeChecks();
+                timeSinceSpawned += GameEngine.DELTA_TIME;//accumulate time since the duck was spawned
+                performTimeChecks();//check if it's time to switch direction or sprite
             }
         }
         else
         {
             if(timeSinceShot < DELAY_AFTER_SHOT)
             {
-                timeSinceShot += GameEngine.DELTA_TIME;
+                timeSinceShot += GameEngine.DELTA_TIME;//accumulate time after being shot
                 this.physicsComponent.forward.x = 0.0f;
                 this.physicsComponent.forward.y = 0.0f;
             }
@@ -134,14 +142,14 @@ public class Duck extends GameObject {
             {
                 //the duck hasn't started falling yet, so play the falling sound
                 if(this.physicsComponent.forward.y <= 0.0f) {
-                    GameSoundHandler.getInstance().playSound(GameConstants.DEAD_DUCK_FALL_SOUND);
+                    GameSoundHandler.getInstance().playSound(GameConstants.DEAD_DUCK_FALL_SOUND);//start playing the falling sound immediately before the duck falls
                 }
                     this.physicsComponent.forward.x = 0.0f;
                     this.physicsComponent.forward.y = GRAVITY;
             }
         }
-        physicsComponent.update(this);
-        checkBorder();
+        physicsComponent.update(this);//moves the duck using whatever physics handler was passed in
+        checkBorder();//check to see if the duck hit the sides of the screen or hit the top without trying to fly away
         frame++;
     }
 
@@ -153,6 +161,7 @@ public class Duck extends GameObject {
         checkVerticalDirectionTime();
     }
 
+    //checks in case the duck has to switch horizontal direction (flying left and right)
     private void checkHorizontalDirectionTime()
     {
         if(frame > 0 && frame % timeToSwitchHorizontalDirection == 0)
@@ -162,6 +171,7 @@ public class Duck extends GameObject {
         }
     }
 
+    //checks in case the duck has to switch vertical direction (flying up and down)
     private void checkVerticalDirectionTime()
     {
         if(frame > 0 && frame % timeToSwitchVerticalDirection == 0)
@@ -170,6 +180,7 @@ public class Duck extends GameObject {
         }
     }
 
+    //checks in case the duck has to switch orientation (diagonal, horizontal, or back)
     private void checkOrientationTime()
     {
         if(frame > 0 && frame % timeToSwitchOrientation == 0) {
@@ -177,6 +188,8 @@ public class Duck extends GameObject {
         }
     }
 
+    //sets the ducks orientation and velocity to fly straight up and away
+    //this happens if the user runs out of bullets or time
     private void flyAway()
     {
         duckOrientation = GameConstants.BACK;
@@ -184,6 +197,7 @@ public class Duck extends GameObject {
         this.physicsComponent.forward.x = 0.0f;
     }
 
+    //checks to ensure the duck will switch direction if it hits the border of the screen
     public void checkBorder()
     {
         if (this.position.x > (1 - Camera.screenXToWorldX(current_sprite.getWidth()))) {
@@ -200,7 +214,6 @@ public class Duck extends GameObject {
             if(!isAlive) {
                 this.destroy = true;
                 GameSoundHandler.getInstance().stopAllSounds();
-                //GameSoundHandler.getInstance().pauseAllSounds();
                 GameSoundHandler.getInstance().playSound(GameConstants.DEAD_DUCK_LAND_SOUND);
             }
             else
@@ -220,12 +233,15 @@ public class Duck extends GameObject {
         }
     }
 
+    //returns duck color
+    //this is primarily used for determining score in the game engine
     public String getDuckColor()
     {
         return duckColor;
     }
 
 
+    //flips all sprites to ensure they are in the proper orientation
     public void flipSprites()
     {
         for(int i = 0;i < NUMBER_OF_DUCK_ORIENTATIONS-1; ++i) {
@@ -235,6 +251,7 @@ public class Duck extends GameObject {
         }
     }
 
+    //flips the sprite
     public Bitmap flip(Bitmap bitmap)
     {
         Matrix matrix = new Matrix();
@@ -242,6 +259,7 @@ public class Duck extends GameObject {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
+    //populates the 2D bitmap array for all the duck sprites
     public void populateSprites(Context context) {
         for (int i = 0; i < NUMBER_OF_DUCK_SPRITES; i++) {
             int j = i + 1;
@@ -261,6 +279,7 @@ public class Duck extends GameObject {
 
     }
 
+    //scales the sprites w.r.t to the screen size so the game is (somewhat) scalable
     public void scaleSprites()
     {
         for(int i = 0;i < NUMBER_OF_DUCK_ORIENTATIONS-1; ++i) {

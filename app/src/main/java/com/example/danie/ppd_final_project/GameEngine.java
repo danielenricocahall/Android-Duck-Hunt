@@ -128,8 +128,11 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     @Override
     public void run() {
-        //previousTimeMillis = System.currentTimeMillis();
-        //currentTimeMillis = System.currentTimeMillis();
+        // runs the game thread
+        // it's a bit different than the one we implemented in class
+        // because handleGameLogic can take a while due to the delay
+        // required to play the tune after each round, which then throws off delta_t
+        // and gives the ducks a jerky movement when first spawned
         while (isPlaying) {
             handleGameLogic();
             previousTimeMillis = System.currentTimeMillis();
@@ -143,9 +146,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 } catch (InterruptedException e) {
 
                 }
-                //previousTimeMillis = currentTimeMillis;
             } else {
-                goToNextLevel();
+                goToNextRound();
                 isPlaying = false;
             }
         }
@@ -174,6 +176,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
 
+    // updates each game object in the list
     public void update() {
         for (Iterator<GameObject> iterator = gameObjects.iterator(); iterator.hasNext(); ) {
             GameObject gameObject = iterator.next();
@@ -185,6 +188,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
     }
 
+    // draws each game object in order of layers
+    // so the objects in the background are drawn first, midground second, and foreground last
+    // this enables some of the nifty animations we have
     public void draw() {
         if (surfaceHolder.getSurface().isValid()) {
             Canvas canvas = surfaceHolder.lockCanvas();
@@ -200,6 +206,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
     }
 
+
+    // pauses the game, plays the pause sound, and displays the restart/quit options
+    // the pauseButtonPressed flag is used because onPause() is called after finish()
+    // and we don't want to play the pause sound every time our activity ends
     public void pause() {
         if (pauseButtonPressed) {
             pauseButton.paused = true;
@@ -218,6 +228,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
 
+    //resumes the game after being paused
     public void resume() {
         pauseButton.paused = false;
         isPlaying = true;
@@ -233,6 +244,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                //handles if the user pressed the pause/start button
                 if (Camera.worldRectToScreenRect(pauseButton.pauseButtonBox).contains(event.getRawX(), event.getRawY())) {
                     if (isPlaying) {
                         pauseButtonPressed = true;
@@ -244,20 +256,24 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     break;
                 }
                 if (!pauseButton.paused) {
+                    // ensures the shot sound doesn't play if the game is paused
+                    // or if the user is out of bulelts
                     if(!outOFBullets) {
                         GameSoundHandler.getInstance().playSound(GameConstants.GUN_SHOT_SOUND);
                     }
                     outOFBullets = indicatorShots.shoot();
+                    // checks if the user actually hit a duck
                     for (GameObject o : gameObjects) {
                         if (o instanceof Duck) {
                             if(!((Duck) o).timeToFlyAway) {
                                 Vector2D screenPos = Camera.worldToScreen(((Duck) o).position);
-                                float delta_x = event.getRawX() - screenPos.x;
-                                float delta_y = event.getRawY() - screenPos.y;
+                                float delta_x = event.getRawX() - screenPos.x; // difference in x position between shot and duck
+                                float delta_y = event.getRawY() - screenPos.y; // difference in y position between the shot and duck
                                 float distance = (float) Math.sqrt(delta_x * delta_x + delta_y * delta_y);
                                 if (distance < 100.0f && ((Duck) o).isAlive) {
                                     shootDuck(((Duck) o));
                                 }
+                                // if the user ran out of bullets and the duck is alive, the duck should fly away
                                 else if(outOFBullets && ((Duck) o).isAlive){
                                     ((Duck) o).timeToFlyAway = true;
                                 }
@@ -266,6 +282,9 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                     }
                 }
                 else {
+                    // handles if the user pressed restart or quit after pressing pause
+                    // restart - starts the game from Round 1
+                    // quit - brings the user back to main menu
                     if (Camera.worldRectToScreenRect(pauseButton.replayButtonBox).contains(event.getRawX(), event.getRawY())) {
                         GameSoundHandler.getInstance().stopAllSounds();
                         Intent i_start = new Intent(context, MainActivity.class);
@@ -294,6 +313,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         return false;
     }
 
+    // sets the status of the duck from alive to dead
+    // records the position where it was shot for the dog to collect and appear
+    // adds to the current stage and round scores
+    // increments the number of ducks per stage and round accumulators
     public void shootDuck(Duck duck)
     {
         duck.isAlive = false;
@@ -306,6 +329,10 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         numDucksHitThisRound++;
     }
 
+    // pops a 1 or two ducks off of the stack (depending on the Game Mode A or B)
+    // and adds them to the game object list, which places them in the game to be updated and drawn
+    // also resets the out of bullets flag, sets number of bullets available to 3
+    // and adds to the potential scores for the current stage and round
     public void addMoreDucks()
     {
         maxPotentialStageScore = 0;
@@ -319,7 +346,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
         for (int ii = 0; ii < numberOfDucksPerStage; ++ii) {
             Duck duck = duckies.pop();
-            duck.physicsComponent.setSpeed((round) * 0.5f * GameConstants.DUCK_SPEED);
+            duck.physicsComponent.setSpeed((round) * 0.5f * GameConstants.DUCK_SPEED); // the speed of each duck is linear with respect to round
+            // so later rounds have faster ducks, presumably making it more difficult
             gameObjects.add(duck);
             indicatorShots.setNumShots(3);
             outOFBullets = false;
@@ -328,28 +356,32 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
     }
 
+    // handles the end of a stage (which is after 1 duck or 2 ducks, depending on the mode)
+    // the dog pops up holding up one duck, two ducks, or laughing based on how many ducks the user killed,
+    // and the location is based on where the duck was shot. If no ducks were killed, he appears at the center of the screen
+    // also updates the duck indicators at the bottom - if a duck was hit, it should have been set red earlier
+    // otherwise, it's set to white
+    // also, either a victorious tune plays, or the dog laughs at you (depending on the number of ducks hit
     public void handleEndOfStage() {
         if (maxPotentialRoundScore != 0) {
             float popUpSpot;
             if(numDucksHitThisStage > 0){
                 popUpSpot = deadDuckLandingSpots.pop();
+                GameSoundHandler.getInstance().playSound(GameConstants.GOT_DUCK);
             } else {
                 popUpSpot = 0.5f - Camera.screenXToWorldX(dog.current_sprite.getWidth());
-            }
+                GameSoundHandler.getInstance().playSound(GameConstants.DOG_LAUGH);
 
-            for(int i = 0; i < (numberOfDucksPerStage - numDucksHitThisStage); i++){
-                indicatorDucks.hitDuck(false);
             }
             dog.comeUpToFinishRound(numDucksHitThisStage, popUpSpot);
             draw();
-            if (numDucksHitThisStage > 0) {
-                GameSoundHandler.getInstance().playSound(GameConstants.GOT_DUCK);
-            } else {
-                GameSoundHandler.getInstance().playSound(GameConstants.DOG_LAUGH);
-            }
+            // delay to play the tune/laugh
             try {
                 soundThread.sleep(1500);
             } catch (InterruptedException e) {
+            }
+            for(int i = 0; i < (numberOfDucksPerStage - numDucksHitThisStage); i++){
+                indicatorDucks.hitDuck(false);
             }
             dog.returnToGrass();
             draw();
@@ -357,6 +389,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     }
 
+    // returns how many ducks need to be killed in a round to progress to the next one
     private int ducksRequiredToProgress()
     {
         if(round < 10)
@@ -382,12 +415,15 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     }
 
-    public void goToNextLevel() {
+    // either sends the user to the next round if they successfully killed enough ducks
+    // or sends them to the main menu if they failed. Also plays a tune based on
+    // the results
+    public void goToNextRound() {
         GameSoundHandler.getInstance().stopAllSounds();
         if (ducksRequiredToProgress() <= numDucksHitThisRound) {
             userIndicator.nextRound();
             draw();
-            GameSoundHandler.playLongSound(GameConstants.ROUND_CLEAR);
+            GameSoundHandler.getInstance().playLongSound(GameConstants.ROUND_CLEAR);
             try {
                 Thread.sleep(4000);
             } catch (InterruptedException e) {

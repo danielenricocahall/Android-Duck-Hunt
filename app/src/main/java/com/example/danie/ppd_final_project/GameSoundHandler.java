@@ -18,13 +18,15 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Created by daniel on 12/10/17.
  */
 
+
+//Singleton which handles the sounds within the game
+//All sounds are handled on a separate thread
 public class GameSoundHandler implements Runnable {
 
     public SoundPool soundPool;
-    public static MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer;
     public static Context context;
     public SparseIntArray soundMap = new SparseIntArray();
-    //public SparseIntArray soundToStopID = new SparseIntArray();
     public BlockingQueue<Integer> sounds = new LinkedBlockingQueue<>();
     public BlockingQueue<Integer> soundsStopIDs = new LinkedBlockingQueue<>();
 
@@ -78,25 +80,25 @@ public class GameSoundHandler implements Runnable {
         soundPool = new SoundPool(10, AudioManager.STREAM_MUSIC,0);
     }
 
-    public static void setContext(Context app_context)
+    public void setContext(Context app_context)
     {
         context = app_context;
     }
 
-    public static void playLongSound(int long_sound)
+    public void playLongSound(int long_sound)
     {
         mediaPlayer = MediaPlayer.create(context,long_sound);
         mediaPlayer.start();
     }
-
-    public static void stopLongSound()
+    //stops a long sound
+    public void stopLongSound()
     {
         if(mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.reset();
         }
     }
-
+    //loads all necessary sounds to a map of sounds, to be used by the sound pool
     public void loadSounds()
     {
         soundMap.put(GameConstants.GUN_SHOT_SOUND, soundPool.load(context, GameConstants.GUN_SHOT_SOUND, 1));
@@ -115,12 +117,12 @@ public class GameSoundHandler implements Runnable {
         soundMap.put(GameConstants.DOG_BARKING_SOUND, soundPool.load(context, GameConstants.DOG_BARKING_SOUND, 1));
     }
 
-
+    //plays a short sound with the soundpool
     public void playSound(int sound)
     {
         sounds.add(soundMap.get(sound));
     }
-
+    //stops sounds from the soundpool and mediaplayer
    public void stopAllSounds()
     {
         while(!soundsStopIDs.isEmpty())
@@ -137,7 +139,7 @@ public class GameSoundHandler implements Runnable {
     }
 
 
-
+    //pauses all sounds in soundpool and mediaplayer
     public void pauseAllSounds()
     {
         soundPool.autoPause();
@@ -146,28 +148,26 @@ public class GameSoundHandler implements Runnable {
         }
     }
 
-
-
-    public void releaseResources()
-    {
-        soundPool.release();
-        mediaPlayer.release();
-    }
-
-
+    //resumes all sounds in soundpool and mediaplayer
     public void resumeAllSounds()
     {
         soundPool.autoResume();
         mediaPlayer.start();
     }
 
+
+    //ensures the thread runs throughout duration of game
+    //all sound IDs are added to the queue in case of a sudden stop
+    //and the size of the queue is no bigger than 20 at one time for the sake of memory
+    //there's a smarter way to do this (probably using another map, a mulitmap, or something)
+    //but this seems to be working okay
     @Override
     public void run() {
         while(isPlaying) {
             if (!(sounds.isEmpty())) {
                 try {
                     while (!sounds.isEmpty()) {
-                        if(soundsStopIDs.size() > 10)
+                        if(soundsStopIDs.size() > 20)
                         {
                             soundsStopIDs.clear();
                         }

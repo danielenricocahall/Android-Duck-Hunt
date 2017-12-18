@@ -9,7 +9,11 @@ import java.util.Map;
 
 public class GameConstants {
 
-    //I think this is bad practice, but it's convenient for such a small project...
+    // (12/3/2017) I think this is bad practice, but it's convenient for such a small project.../
+    // (12/17/2017) Oh god this thing became gigantic
+    // Well, these are all the constants used within the game, conveniently defined
+    // in one central location
+    // I think most of the names are pretty self explanatory
 
     private GameConstants(){};
 

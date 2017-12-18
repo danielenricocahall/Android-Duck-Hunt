@@ -25,9 +25,8 @@ public class Dog extends GameObject {
     boolean barked;
     boolean finishingRound;
 
-
-    public Dog(DynamicPhysicsComponent physicsComponent)
-    {
+    //class which represents the dog in the game
+    public Dog(DynamicPhysicsComponent physicsComponent) {
         this.physicsComponent = physicsComponent;
         readyToJump = false;
         jumpingTime = 0.0f;
@@ -50,14 +49,13 @@ public class Dog extends GameObject {
 
     }
 
-    public void init()
-    {
+    public void init() {
 
     }
 
-    public void onDraw(Canvas canvas)
-    {
-        if(!readyToJump) {
+    public void onDraw(Canvas canvas) {
+        //this logic handles the dog walking up to the center of the screen
+        if (!readyToJump) {
             this.physicsComponent.forward.y = 0.0f;
             if (this.position.x < 0.5 - Camera.screenXToWorldX(current_sprite.getWidth())) {
                 current_sprite = sprites[frame % 5];
@@ -66,11 +64,10 @@ public class Dog extends GameObject {
                 this.physicsComponent.forward.x = 0.0f;
                 readyToJump = true;
             }
-        }
-        else
-        {
-            if(!finishingRound)
-            {
+        } else {
+            //this logic handles the dog bark once he's gotten to the center of the screen
+            //and his jump into the bushes
+            if (!finishingRound) {
                 bark();
                 jump();
             }
@@ -78,64 +75,82 @@ public class Dog extends GameObject {
         canvas.drawBitmap(current_sprite, Camera.worldXToScreenX(position.x), Camera.worldYToScreenY(position.y), paint);
     }
 
-    public void onUpdate()
-    {
+    public void onUpdate() {
         this.physicsComponent.update(this);
         frame++;
     }
-    public void populateSprites(Context context)
-    {
-        for (int i=0; i < NUMBER_OF_DOG_SPRITES; i++){
+
+    //populates the dog sprite array
+    public void populateSprites(Context context) {
+        for (int i = 0; i < NUMBER_OF_DOG_SPRITES; i++) {
             int j = i + 1;
             sprites[i] = BitmapFactory.decodeResource(
                     context.getResources(),
-                    context.getResources().getIdentifier("dog"+j,"drawable",context.getPackageName()));
-        }
-    }
-    public void scaleSprites()
-    {
-        for (int i=0; i < NUMBER_OF_DOG_SPRITES; i++){
-            sprites[i] = Bitmap.createScaledBitmap(
-                    sprites[i], GameEngine.SCREEN_WIDTH/6, GameEngine.SCREEN_WIDTH/7, false);;
+                    context.getResources().getIdentifier("dog" + j, "drawable", context.getPackageName()));
         }
     }
 
-    public void comeUpToFinishRound(int numDucksShot, float popUpSpot)
-    {
+    //scaling the sprites so that the game can be played on several screen sizes
+    //this scaling isn't perfect, but it's a ballpark that seemed to look okay on the one or two devices tested
+    public void scaleSprites() {
+        for (int i = 0; i < NUMBER_OF_DOG_SPRITES; i++) {
+            sprites[i] = Bitmap.createScaledBitmap(
+                    sprites[i], GameEngine.SCREEN_WIDTH / 6, GameEngine.SCREEN_WIDTH / 7, false);
+            ;
+        }
+    }
+
+
+    //handles when the dog comes up after each stage (holding up one duck, two duck, or laugh)
+    public void comeUpToFinishRound(int numDucksShot, float popUpSpot) {
         layer = GameConstants.MIDGROUND;
         finishingRound = true;
         position.y = 0.06f;
+        switch (numDucksShot) {
+            case 1:
+                current_sprite = sprites[8];
+                break;
+            case 2:
+                current_sprite = sprites[9];
+                break;
+            case 0:
+                current_sprite = sprites[10];
+                break;
+        }
         position.x = popUpSpot;
-        switch(numDucksShot)
-        {
-            case 1: current_sprite = sprites[8];
-                break;
-            case 2: current_sprite = sprites[9];
-                break;
-            case 0: current_sprite = sprites[10];
-                break;
+        checkBorders();
+
+    }
+
+    public void checkBorders()
+    {
+        if (position.x > (1 - Camera.screenXToWorldX(current_sprite.getWidth()))) {
+            // shift the dog over a bit so the sprite doesn't get cutoff at screen edges
+            this.position.x = 1 - Camera.screenXToWorldX(current_sprite.getWidth());
+        }
+        if (position.x < 0) {
+            // shift the dog over a bit so the sprite doesn't get cutoff at screen edges
+            position.x = 0;
         }
     }
 
-    public void returnToGrass()
-    {
+    //ensures the dog goes back into the grass after coming up for the end of the stage
+    public void returnToGrass() {
         position.y = GameConstants.GROUND;
         layer = GameConstants.BACKGROUND;
     }
 
-    public void jump()
-    {
-        jumpingTime+=GameEngine.DELTA_TIME;
-        if(jumpingTime < GameConstants.DOG_JUMPING_TIME) {
+    //handles the dog jumping behind the bush logic
+    public void jump() {
+        jumpingTime += GameEngine.DELTA_TIME;
+        if (jumpingTime < GameConstants.DOG_JUMPING_TIME) {
             current_sprite = sprites[6];
             this.physicsComponent.forward.y = GameConstants.DOG_JUMPING_SPEED;
-        }
-        else if(jumpingTime > GameConstants.DOG_JUMPING_TIME && this.position.y > GameConstants.GROUND) {
+        } else if (jumpingTime > GameConstants.DOG_JUMPING_TIME && this.position.y > GameConstants.GROUND) {
             current_sprite = sprites[7];
             this.physicsComponent.forward.y = -GameConstants.DOG_JUMPING_SPEED;
             layer = GameConstants.BACKGROUND;
-        }
-        else {
+        } else {
             //this.destroy = true;//remove this when layers are added
             this.physicsComponent.forward.y = 0.0f;
             this.physicsComponent.forward.x = 0.0f;
@@ -143,26 +158,19 @@ public class Dog extends GameObject {
         }
     }
 
-    public void bark()
-    {
-        if(!barked) {
-            //GameSoundHandler.stopLongSound();
+    //handles the dog barking logic
+    public void bark() {
+        if (!barked) {
+            GameSoundHandler.getInstance().stopLongSound();
             GameSoundHandler.getInstance().playSound(GameConstants.DOG_BARKING_SOUND);
             barked = true;
-            try
-            {
+            try {
                 Thread.sleep(300);
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
 
             }
         }
-        GameSoundHandler.getInstance().stopLongSound();
-        return;
     }
-
-
 
 
 }
