@@ -8,7 +8,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
 
 
 //courtesy of StackOverflow, this class and it's corresponding listener
@@ -34,12 +33,6 @@ public class HomeWatcher {
     public void startWatch() {
         if (recevier != null) {
             context.registerReceiver(recevier, filter);
-        }
-    }
-
-    public void stopWatch() {
-        if (recevier != null) {
-            context.unregisterReceiver(recevier);
         }
     }
 
