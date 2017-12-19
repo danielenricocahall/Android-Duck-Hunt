@@ -292,14 +292,18 @@ public class Duck extends GameObject {
         for(int i = 0;i < NUMBER_OF_DUCK_ORIENTATIONS-1; ++i) {
             for (int j = 0; j < NUMBER_OF_DUCK_SPRITES; ++j) {
                 sprites[i][j] = Bitmap.createScaledBitmap(
-                        sprites[i][j], GameEngine.SCREEN_WIDTH/11, GameEngine.SCREEN_WIDTH/11, false);
+                        sprites[i][j], Math.round(Camera.worldXDistToScreenXDist(1.0f/11.0f)),
+                        Math.round(Camera.worldYDistToScreenYDist(1.0f/11.0f)), false);
             }
         }
         sprites[DEFEAT][0] = Bitmap.createScaledBitmap(
-                sprites[DEFEAT][0], GameEngine.SCREEN_WIDTH/11, GameEngine.SCREEN_WIDTH/11, false);
+                sprites[DEFEAT][0], Math.round(Camera.worldXDistToScreenXDist(1.0f/11.0f)),
+                Math.round(Camera.worldYDistToScreenYDist(1.0f/11.0f)), false);
         sprites[DEFEAT][1] = Bitmap.createScaledBitmap(
-                sprites[DEFEAT][1], GameEngine.SCREEN_WIDTH/11, GameEngine.SCREEN_WIDTH/11, false);
+                sprites[DEFEAT][1], Math.round(Camera.worldXDistToScreenXDist(1.0f/11.0f)),
+                Math.round(Camera.worldYDistToScreenYDist(1.0f/11.0f)), false);
         sprites[DEFEAT][2] = Bitmap.createScaledBitmap(
-                sprites[DEFEAT][2], GameEngine.SCREEN_WIDTH/20, GameEngine.SCREEN_WIDTH/28, false);
+                sprites[DEFEAT][2], Math.round(Camera.worldXDistToScreenXDist(0.05f)),
+                Math.round(Camera.worldYDistToScreenYDist(0.03571f)), false);
     }
 }

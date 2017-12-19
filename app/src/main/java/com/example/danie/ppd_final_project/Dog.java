@@ -94,7 +94,7 @@ public class Dog extends GameObject {
     public void scaleSprites() {
         for (int i = 0; i < NUMBER_OF_DOG_SPRITES; i++) {
             sprites[i] = Bitmap.createScaledBitmap(
-                    sprites[i], GameEngine.SCREEN_WIDTH / 5, GameEngine.SCREEN_WIDTH / 7, false);
+                    sprites[i], Math.round(Camera.worldXDistToScreenXDist(0.2f)), Math.round(Camera.worldYDistToScreenYDist(1.0f/7.0f)), false);
             ;
         }
     }
