@@ -137,6 +137,14 @@ public class GameSoundHandler implements Runnable {
         stopLongSound();
     }
 
+    public void releaseAllResources()
+    {
+        stopAllSounds();
+        mediaPlayer.reset();
+        mediaPlayer.reset();
+        soundPool.release();
+    }
+
 
     //pauses all sounds in soundpool and mediaplayer
     public void pauseAllSounds()
@@ -154,22 +162,23 @@ public class GameSoundHandler implements Runnable {
         mediaPlayer.start();
     }
 
+    public void purgeSounds()
+    {
+        soundsStopIDs.clear();
+    }
+
 
     //ensures the thread runs throughout duration of game
     //all sound IDs are added to the queue in case of a sudden stop
-    //and the size of the queue is no bigger than 20 at one time for the sake of memory
-    //there's a smarter way to do this (probably using another map, a mulitmap, or something)
-    //but this seems to be working okay
+    //and the queue is purged at the end of each stage
+    //there's a smarter way to do this (probably using another map, a multimap, or something)
+    //but this seems to be working okay - would certainly change if this went into production or something
     @Override
     public void run() {
         while(isPlaying) {
             if (!(sounds.isEmpty())) {
                 try {
                     while (!sounds.isEmpty()) {
-                        if(soundsStopIDs.size() > 20)
-                        {
-                            soundsStopIDs.clear();
-                        }
                         soundsStopIDs.add(soundPool.play(sounds.take(), 1, 1, 1, 0, 1f));
                     }
                 } catch (InterruptedException e) {

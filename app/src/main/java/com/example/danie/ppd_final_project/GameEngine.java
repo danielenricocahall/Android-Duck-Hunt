@@ -126,6 +126,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     }
 
 
+
     @Override
     public void run() {
         // runs the game thread
@@ -230,6 +231,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
 
     //resumes the game after being paused
     public void resume() {
+        pauseButtonPressed = false;
         pauseButton.paused = false;
         isPlaying = true;
         GameSoundHandler.getInstance().isPlaying = true;
@@ -250,7 +252,6 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                         pauseButtonPressed = true;
                         pause();
                     } else {
-                        pauseButtonPressed = false;
                         resume();
                     }
                     break;
@@ -363,6 +364,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
     // otherwise, it's set to white
     // also, either a victorious tune plays, or the dog laughs at you (depending on the number of ducks hit
     public void handleEndOfStage() {
+        GameSoundHandler.getInstance().purgeSounds();
         if (maxPotentialRoundScore != 0) {
             float popUpSpot;
             if(numDucksHitThisStage > 0){

@@ -122,7 +122,7 @@ public class Duck extends GameObject {
         {
             GameSoundHandler.getInstance().playSound(GameConstants.DUCK_FLAP_SOUND);//play the duck flap sound
             try {
-                Thread.sleep(30);
+                Thread.sleep(15);
             }
             catch(InterruptedException e)
             {

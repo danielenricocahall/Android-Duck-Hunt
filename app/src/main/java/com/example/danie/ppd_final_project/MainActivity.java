@@ -25,6 +25,15 @@ public class MainActivity extends Activity {
 
         gameEngine = new GameEngine(this, numberOfDucks, point, level,score);
         setContentView(gameEngine);
+        HomeWatcher homeWatcher = new HomeWatcher(this);
+        homeWatcher.setOnHomePressedListener(new OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                gameEngine.pauseButtonPressed = true;
+                gameEngine.pause();
+            }
+        });
+        homeWatcher.startWatch();
     }
 
 
