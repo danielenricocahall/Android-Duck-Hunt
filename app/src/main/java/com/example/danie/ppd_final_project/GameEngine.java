@@ -373,7 +373,7 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
                 GameSoundHandler.getInstance().playSound(GameConstants.DOG_LAUGH);
 
             }
-            dog.comeUpToFinishRound(numDucksHitThisStage, popUpSpot);
+            dog.comeUpToFinishStage(numDucksHitThisStage, popUpSpot);
             draw();
             // delay to play the tune/laugh
             try {

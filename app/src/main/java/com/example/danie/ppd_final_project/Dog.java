@@ -23,7 +23,7 @@ public class Dog extends GameObject {
     DynamicPhysicsComponent physicsComponent;
     float jumpingTime;
     boolean barked;
-    boolean finishingRound;
+    boolean finishingStage;
 
     //class which represents the dog in the game
     public Dog(DynamicPhysicsComponent physicsComponent) {
@@ -45,7 +45,7 @@ public class Dog extends GameObject {
         position = new Vector2D(0.0f, GameConstants.GROUND);
         paint = new Paint();
         layer = GameConstants.FOREGROUND;
-        finishingRound = false;
+        finishingStage = false;
     }
 
     public void init() {
@@ -66,7 +66,7 @@ public class Dog extends GameObject {
         } else {
             //this logic handles the dog bark once he's gotten to the center of the screen
             //and his jump into the bushes
-            if (!finishingRound) {
+            if (!finishingStage) {
                 bark();
                 jump();
             }
@@ -101,9 +101,9 @@ public class Dog extends GameObject {
 
 
     //handles when the dog comes up after each stage (holding up one duck, two duck, or laugh)
-    public void comeUpToFinishRound(int numDucksShot, float popUpSpot) {
+    public void comeUpToFinishStage(int numDucksShot, float popUpSpot) {
         layer = GameConstants.MIDGROUND;
-        finishingRound = true;
+        finishingStage = true;
         position.y = 0.06f;
         switch (numDucksShot) {
             case 1:
