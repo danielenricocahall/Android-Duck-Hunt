@@ -123,8 +123,8 @@ public class GameEngine extends SurfaceView implements Runnable, View.OnTouchLis
         }
         completedStartingSequence = false;
         GameSoundHandler.getInstance().playLongSound(GameConstants.STARTING_SEQUENCE_SOUND);
-
     }
+
 
     @Override
     public void run() {
