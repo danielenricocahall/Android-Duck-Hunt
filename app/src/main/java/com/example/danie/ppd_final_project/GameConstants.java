@@ -58,7 +58,7 @@ public class GameConstants {
     public static final float SHOOTING_RADIUS = 75.0f;
 
     public static final float DOG_JUMPING_TIME = 0.42f;
-    public static final float DOG_JUMPING_SPEED = -GameEngine.SCREEN_HEIGHT*0.006f;
+    public static final float DOG_JUMPING_SPEED = -Camera.worldYDistToScreenYDist(0.01f);
 
     public static final float DOG_SPEED = 0.09f;
 
