@@ -105,18 +105,38 @@ public class Camera {
         return slope * y + yZeroPx;
     }
 
+    /**
+     * @brief Converts a screen x distance to a world x distance
+     * @param x Distance in pixels
+     * @return Distance in world coordinates
+     */
     public static float screenXDistToWorldXDist(float x) {
         return screenXToWorldX(x);
     }
 
+    /**
+     * @brief Converts screen y distance to a world y distance
+     * @param y Distance in pixels
+     * @return Distance in world coordinates
+     */
     public static float screenYDistToWorldYDist(float y) {
         return Math.abs(y / slope);
     }
 
+    /**
+     * @brief Converts world x distance to a screen x distance
+     * @param x Distance in world coordinates
+     * @return Distance in pixels
+     */
     public static float worldXDistToScreenXDist(float x) {
         return worldXToScreenX(x);
     }
 
+    /**
+     * @brief Converts a world y distance to a screen y distance
+     * @param y Distance in world coordinates
+     * @return Distance in pixels
+     */
     public static float worldYDistToScreenYDist(float y) {
         return Math.abs(y * slope);
     }
