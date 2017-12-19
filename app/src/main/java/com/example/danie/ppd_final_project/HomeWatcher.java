@@ -14,7 +14,6 @@ import android.content.IntentFilter;
 // are used to pause the game if the home button is pressed
 public class HomeWatcher {
 
-    static final String TAG = "hg";
     private Context context;
     private IntentFilter filter;
     private OnHomePressedListener listener;
