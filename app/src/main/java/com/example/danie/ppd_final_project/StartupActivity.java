@@ -62,12 +62,16 @@ public class StartupActivity extends Activity {
                 startActivity(i_start);            }
         });
 
+        // Get the TextView containing the top score
         topScoreView = (TextView)findViewById(R.id.textView_topScore);
         topScoreView.setTextColor(Color.GREEN);
 
+        // Get the SharedPreferences containing the top score
         SharedPreferences prefs = this.getSharedPreferences(KEY_TOP_SCORE_PREFS, Context.MODE_PRIVATE);
+        // Retrive the top score, default to 0 if it does not exist
         int topScore = prefs.getInt(KEY_TOP_SCORE, 0);
 
+        // Set the top score text
         topScoreView.setText(getString(R.string.string_topScore, topScore));
     }
 
