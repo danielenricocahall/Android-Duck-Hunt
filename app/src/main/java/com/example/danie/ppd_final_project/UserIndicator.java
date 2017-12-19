@@ -10,6 +10,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+
+// indicates the round to the user, as well as if the round is complete
 public class UserIndicator extends GameObject {
 
     private int round;
