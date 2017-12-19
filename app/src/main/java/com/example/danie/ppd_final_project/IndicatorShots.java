@@ -93,6 +93,11 @@ public class IndicatorShots extends GameObject {
         return numShots;
     }
 
+    // Call this method to inform the indicator that
+    // the user has shot a bullet.
+    // The indicator will update its visual feedback
+    // and return a boolean indicating if the player
+    // is out of bullets
     public boolean shoot() {
         numShots--;
         if(numShots <= 0) {
