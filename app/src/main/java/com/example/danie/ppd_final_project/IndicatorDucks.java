@@ -66,6 +66,7 @@ public class IndicatorDucks extends GameObject {
 
     }
 
+    // This method updates the indicator
     public void hitDuck(boolean gotDuck) {
 
         // This should never happen, but it's handled
@@ -73,8 +74,8 @@ public class IndicatorDucks extends GameObject {
         if (numDucksServiced > NUM_DUCKS - 1) return;
 
         if(gotDuck){
-            hits[numDucksServiced] = true;
-            numDucksHit++;
+            hits[numDucksServiced] = true; // Setting this true adds a red duck
+            numDucksHit++;                 // Keep track of number of hits
         }
 
         numDucksServiced++;
