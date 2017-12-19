@@ -4,3 +4,5 @@
  To run, just clone the repo and open in Android Studio. You should be able to run on the emulator or another connected (Android) device.
  Hindsight being 20/20, the game probably would have been written differently. That being said, it's probably not the worst architecture you've ever seen.
  
+ 
+ ![alt text](https://github.com/danielenricocahall/PPD_Final_Project/blob/master/nes_container.jpg)
