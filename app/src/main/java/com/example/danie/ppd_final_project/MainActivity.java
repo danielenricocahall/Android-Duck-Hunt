@@ -69,10 +69,10 @@ public class MainActivity extends Activity {
         // Get the SharedPreferences that the top score is stored in
         SharedPreferences prefs = this.getSharedPreferences(StartupActivity.KEY_TOP_SCORE_PREFS, Context.MODE_PRIVATE);
         // If the current score is greater than the stored score
-        if (prefs.getInt(StartupActivity.KEY_TOP_SCORE, 0) < gameEngine.roundScore) {
+        if (prefs.getInt(StartupActivity.KEY_TOP_SCORE, 0) < gameEngine.indicatorScore.getScore()) {
             // Replace the stored score with the current score
             SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt(StartupActivity.KEY_TOP_SCORE, gameEngine.roundScore);
+            editor.putInt(StartupActivity.KEY_TOP_SCORE, gameEngine.indicatorScore.getScore());
             // Save the preferences
             editor.commit();
         }
